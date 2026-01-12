@@ -43,7 +43,10 @@ app_license = "mit"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"Material Request" : "public/js/material_request.js"}
+doctype_js = {
+	"Material Request": "public/js/material_request.js",
+	"Production Plan": "public/js/production_plan.js"
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -141,6 +144,10 @@ doc_events = {
 	"Production Plan": {
 		"validate": "bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty",
 		"on_submit": "bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty"
+
+	},
+	"Item": {
+		"on_trash": "bartakke_erp.bartakke_erp.api.item.delete_store_item_on_item_trash"
 	}
 }
 
@@ -245,4 +252,3 @@ doc_events = {
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
-

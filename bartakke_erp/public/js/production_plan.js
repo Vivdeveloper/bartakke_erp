@@ -1,0 +1,73 @@
+// Copyright (c) 2026, Viv Choudhary and contributors
+// For license information, please see license.txt
+
+function set_custom_indent_from_rows(frm) {
+	if (frm.doc.custom_indent) {
+		return;
+	}
+
+	let indent = null;
+	(frm.doc.material_requests || []).some((row) => {
+		if (row.material_request) {
+			indent = row.material_request;
+			return true;
+		}
+		return false;
+	});
+
+	if (!indent) {
+		(frm.doc.po_items || []).some((row) => {
+			if (row.material_request) {
+				indent = row.material_request;
+				return true;
+			}
+			return false;
+		});
+	}
+
+	if (indent) {
+		frm.set_value("custom_indent", indent);
+	}
+}
+
+frappe.ui.form.on("Production Plan", {
+	onload(frm) {
+		if (!frm.is_new() || !frappe.route_options) {
+			return;
+		}
+
+		const material_request = frappe.route_options.material_request;
+		if (material_request) {
+			frm.set_value("get_items_from", "Material Request");
+			if (!frm.doc.material_requests || frm.doc.material_requests.length === 0) {
+				const row = frm.add_child("material_requests");
+				row.material_request = material_request;
+				frm.refresh_field("material_requests");
+			}
+			frm.set_value("custom_indent", material_request);
+		}
+
+		frappe.route_options = null;
+	},
+	refresh(frm) {
+		set_custom_indent_from_rows(frm);
+	},
+	material_requests(frm) {
+		set_custom_indent_from_rows(frm);
+	},
+	po_items(frm) {
+		set_custom_indent_from_rows(frm);
+	}
+});
+
+frappe.ui.form.on("Production Plan Material Request", {
+	material_request(frm) {
+		set_custom_indent_from_rows(frm);
+	}
+});
+
+frappe.ui.form.on("Production Plan Item", {
+	material_request(frm) {
+		set_custom_indent_from_rows(frm);
+	}
+});

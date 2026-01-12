@@ -1,0 +1,162 @@
+{
+ "actions": [],
+ "creation": "2025-12-26 11:17:35.046685",
+ "default_view": "List",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "material",
+  "accessories",
+  "accessories_type",
+  "design",
+  "column_break_gkxo",
+  "hsn",
+  "weight",
+  "price",
+  "accessories_name",
+  "column_break_jydb",
+  "description",
+  "column_break_samz",
+  "w",
+  "d",
+  "h",
+  "t"
+ ],
+ "fields": [
+  {
+   "fieldname": "material",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Material",
+   "options": "Material",
+   "reqd": 1
+  },
+  {
+   "fieldname": "accessories",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Accessories",
+   "reqd": 1
+  },
+  {
+   "fieldname": "accessories_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Accessories Type",
+   "options": "Accessories Type",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "design",
+   "fieldtype": "Link",
+   "label": "Design",
+   "options": "Design"
+  },
+  {
+   "fieldname": "column_break_gkxo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hsn",
+   "fieldtype": "Link",
+   "label": "HSN",
+   "options": "GST HSN Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "weight",
+   "fieldtype": "Float",
+   "label": "Weight"
+  },
+  {
+   "fieldname": "price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Price",
+   "reqd": 1
+  },
+  {
+   "fieldname": "accessories_name",
+   "fieldtype": "Data",
+   "label": "Accessories Name",
+   "no_copy": 1,
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_jydb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Long Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_samz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "w",
+   "fieldtype": "Float",
+   "in_standard_filter": 1,
+   "label": "W"
+  },
+  {
+   "fieldname": "d",
+   "fieldtype": "Float",
+   "in_standard_filter": 1,
+   "label": "D"
+  },
+  {
+   "fieldname": "h",
+   "fieldtype": "Float",
+   "in_standard_filter": 1,
+   "label": "H"
+  },
+  {
+   "fieldname": "t",
+   "fieldtype": "Float",
+   "in_standard_filter": 1,
+   "label": "T"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Item",
+   "link_fieldname": "custom_accessories"
+  }
+ ],
+ "modified": "2026-01-12 18:30:58.907076",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Accessories",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "accessories_name"
+}

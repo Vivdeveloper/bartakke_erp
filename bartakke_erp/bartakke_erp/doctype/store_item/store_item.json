@@ -1,0 +1,231 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-12-26 18:54:07.549118",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "item_group",
+  "is_stock_item",
+  "item_name",
+  "column_break_qmfi",
+  "material_type",
+  "process_type",
+  "price",
+  "column_break_igtg",
+  "color",
+  "hsn",
+  "uom",
+  "section_break_yaey",
+  "column_break_fpcc",
+  "naming_series",
+  "stock_type_code",
+  "item_group_code",
+  "column_break_uytq",
+  "material_type_code",
+  "process_type_code",
+  "column_break_frhg",
+  "color_code",
+  "dot"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Item Group",
+   "link_filters": "[[\"Item Group\",\"is_group\",\"=\",0],[\"Item Group\",\"custom_is_store_item_group\",\"=\",\"Yes\"]]",
+   "options": "Item Group",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_stock_item",
+   "fieldtype": "Check",
+   "label": "is_stock_item",
+   "no_copy": 1,
+   "read_only": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Item Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_qmfi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "material_type",
+   "fieldtype": "Link",
+   "label": "Material Type",
+   "options": "Material Type",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "process_type",
+   "fieldtype": "Link",
+   "label": "Process Type",
+   "options": "Process",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Price"
+  },
+  {
+   "fieldname": "column_break_igtg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "color",
+   "fieldtype": "Link",
+   "label": "Color",
+   "options": "Color",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "hsn",
+   "fieldtype": "Link",
+   "label": "HSN",
+   "options": "GST HSN Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "UOM",
+   "options": "UOM",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_yaey",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_fpcc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "naming_series",
+   "read_only": 1
+  },
+  {
+   "default": "8",
+   "fetch_from": "stock_type.stock_type_code",
+   "fetch_if_empty": 1,
+   "fieldname": "stock_type_code",
+   "fieldtype": "Data",
+   "label": "Stock Type Code",
+   "no_copy": 1,
+   "read_only": 1,
+   "set_only_once": 1
+  },
+  {
+   "fetch_from": "item_group.custom_item_group_code",
+   "fetch_if_empty": 1,
+   "fieldname": "item_group_code",
+   "fieldtype": "Data",
+   "label": "Item Group Code",
+   "no_copy": 1,
+   "read_only": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "column_break_uytq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "material_type.material_type_code",
+   "fetch_if_empty": 1,
+   "fieldname": "material_type_code",
+   "fieldtype": "Data",
+   "label": "Material Type Code",
+   "no_copy": 1,
+   "read_only": 1,
+   "set_only_once": 1
+  },
+  {
+   "fetch_from": "process_type.process_code",
+   "fetch_if_empty": 1,
+   "fieldname": "process_type_code",
+   "fieldtype": "Data",
+   "label": "Process Type Code",
+   "no_copy": 1,
+   "read_only": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "column_break_frhg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "color.custom_color_code",
+   "fetch_if_empty": 1,
+   "fieldname": "color_code",
+   "fieldtype": "Data",
+   "label": "Color Code",
+   "no_copy": 1,
+   "read_only": 1,
+   "set_only_once": 1
+  },
+  {
+   "default": ".",
+   "fieldname": "dot",
+   "fieldtype": "Data",
+   "label": "Dot",
+   "read_only": 1,
+   "set_only_once": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Item",
+   "link_fieldname": "custom_store_item"
+  }
+ ],
+ "modified": "2026-01-12 18:39:54.593617",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Store Item",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
