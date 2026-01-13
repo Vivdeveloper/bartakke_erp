@@ -9,6 +9,7 @@
   "item_group",
   "is_stock_item",
   "item_name",
+  "disabled",
   "column_break_qmfi",
   "material_type",
   "process_type",
@@ -111,7 +112,8 @@
    "in_standard_filter": 1,
    "label": "UOM",
    "options": "UOM",
-   "reqd": 1
+   "reqd": 1,
+   "set_only_once": 1
   },
   {
    "fieldname": "section_break_yaey",
@@ -193,6 +195,12 @@
    "label": "Dot",
    "read_only": 1,
    "set_only_once": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
   }
  ],
  "grid_page_length": 50,
@@ -203,7 +211,7 @@
    "link_fieldname": "custom_store_item"
   }
  ],
- "modified": "2026-01-12 18:39:54.593617",
+ "modified": "2026-01-13 12:04:42.502800",
  "modified_by": "Administrator",
  "module": "Bartakke ERP",
  "name": "Store Item",

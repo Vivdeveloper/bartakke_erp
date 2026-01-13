@@ -7,34 +7,20 @@ from frappe.model.document import Document
 
 class StoreItem(Document):
 	def after_insert(self):
-		"""Create or link Item after Store Item is saved"""
-		if not frappe.db.exists("Item", self.name):
-			self.create_item()
-		else:
-			frappe.db.set_value("Item", self.name, "custom_store_item", self.name)
-			frappe.db.commit()
+		"""Auto-create Item after Store Item is saved"""
+		self.sync_item()
 
 	def on_update(self):
-		"""Update linked Item when Store Item is updated"""
-		item_name = frappe.db.get_value("Item", {"custom_store_item": self.name}, "name")
-		if not item_name:
-			return
+		"""Auto-update Item when Store Item is updated"""
+		self.sync_item()
 
-		frappe.db.set_value("Item", item_name, {
-			"item_code": self.name,
-			"item_name": self.item_name or self.name,
-			"item_group": self.item_group,
-			"is_stock_item": self.is_stock_item or 1,
-			"stock_uom": self.uom,
-			"gst_hsn_code": self.hsn,
-			"description": self.item_name or self.name,
-			"custom_store_item": self.name,
-			"custom_material_type": self.material_type,
-			"custom_color": self.color,
-			"custom_process": self.process_type,
-			"standard_rate": self.price if self.price else None
-		})
-		frappe.db.commit()
+	def validate(self):
+		"""Validate before save"""
+		# Check if another Store Item already links to this Item code
+		if self.is_new():
+			existing_link = frappe.db.get_value("Item", self.name, "custom_store_item")
+			if existing_link and existing_link != self.name:
+				frappe.throw(f"Item {self.name} is already linked to Store Item {existing_link}")
 
 	def on_trash(self):
 		"""Delete linked Item when Store Item is deleted"""
@@ -49,40 +35,77 @@ class StoreItem(Document):
 			finally:
 				frappe.flags.in_store_item_delete = False
 
-	def create_item(self):
-		"""Create Item from Store Item"""
-		if frappe.db.exists("Item", self.name):
+	def sync_item(self):
+		"""Create or update Item linked to Store Item"""
+		# Skip if this update came from Item sync
+		if getattr(frappe.flags, "in_item_sync", False):
 			return
 
-		item = frappe.get_doc({
-			"doctype": "Item",
-			"item_code": self.name,
-			"item_name": self.item_name,
-			"item_group": self.item_group,
-			"stock_uom": self.uom,
-			"is_stock_item": self.is_stock_item or 1,
-			"custom_store_item": self.name,
-			"gst_hsn_code": self.hsn,
-			"description": self.item_name or self.name,
-			"custom_material_type": self.material_type,
-			"custom_color": self.color,
-			"custom_process": self.process_type,
-			"standard_rate": self.price if self.price else None
-		})
+		# Find Item linked with Store Item
+		existing_item = frappe.db.get_value("Item", {"custom_store_item": self.name}, "name")
 
-		item.insert(ignore_permissions=True, set_name=self.name)
-		frappe.db.commit()
-		frappe.msgprint(f"Item {item.name} created successfully", alert=True, indicator="green")
+		# Set flag to prevent infinite loop
+		frappe.flags.in_store_item_sync = True
+		try:
+			if not existing_item:
+				# CREATE ITEM (FIRST TIME)
+				if not self.uom:
+					frappe.throw("UOM is required to create Item")
+
+				item = frappe.get_doc({
+					"doctype": "Item",
+					"item_code": self.name,
+					"item_name": self.item_name,
+					"item_group": self.item_group,
+					"stock_uom": self.uom,
+					"is_stock_item": self.is_stock_item or 1,
+					"disabled": self.disabled or 0,
+					"custom_store_item": self.name,
+					"gst_hsn_code": self.hsn,
+					"description": self.item_name or self.name,
+					"custom_material_type": self.material_type,
+					"custom_color": self.color,
+					"custom_process": self.process_type,
+					"standard_rate": self.price if self.price else None
+				})
+				item.insert(ignore_permissions=True, set_name=self.name)
+				frappe.msgprint(f"Item {item.name} created successfully", alert=True, indicator="green")
+			else:
+				# UPDATE + RENAME ITEM
+				item = frappe.get_doc("Item", existing_item)
+
+				# Rename Item code if Store Item name changed
+				if item.name != self.name:
+					frappe.rename_doc("Item", item.name, self.name, force=True, ignore_permissions=True)
+					item = frappe.get_doc("Item", self.name)
+
+				# Update remaining fields
+				item.item_name = self.item_name
+				item.item_group = self.item_group
+				item.stock_uom = self.uom
+				item.is_stock_item = self.is_stock_item or 1
+				item.disabled = self.disabled or 0
+				item.gst_hsn_code = self.hsn
+				item.description = self.item_name or self.name
+				item.custom_material_type = self.material_type
+				item.custom_color = self.color
+				item.custom_process = self.process_type
+				item.standard_rate = self.price if self.price else None
+
+				item.save(ignore_permissions=True)
+
+			frappe.db.commit()
+		finally:
+			frappe.flags.in_store_item_sync = False
 
 
 @frappe.whitelist()
 def create_item_from_store_item(store_item_name):
-	"""Manually create Item from Store Item"""
+	"""Manually create/update Item from Store Item"""
 	try:
 		store_item = frappe.get_doc("Store Item", store_item_name)
-		store_item.create_item()
-		frappe.db.commit()
+		store_item.sync_item()
 		return True
 	except Exception as e:
-		frappe.log_error(f"Error creating Item: {str(e)}", "Store Item to Item Creation Error")
-		frappe.throw(f"Failed to create Item: {str(e)}")
+		frappe.log_error(f"Error syncing Item: {str(e)}", "Store Item to Item Sync Error")
+		frappe.throw(f"Failed to sync Item: {str(e)}")
