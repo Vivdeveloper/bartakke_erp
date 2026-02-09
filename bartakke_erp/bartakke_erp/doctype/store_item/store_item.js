@@ -58,5 +58,12 @@ frappe.ui.form.on("Store Item", {
 				}
 			});
 		}
+	},
+	item_group(frm) {
+		frappe.db.get_value("Item Group", { name: frm.doc.item_group }, "parent_item_group", (r) => {
+				if (r.parent_item_group == 'Repairs Maint M/C') {
+					frm.set_value('stock_type_code', 6)
+				}
+			});
 	}
 });

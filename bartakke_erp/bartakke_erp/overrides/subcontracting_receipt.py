@@ -1,0 +1,7 @@
+import frappe
+from erpnext.subcontracting.doctype.subcontracting_receipt.subcontracting_receipt import SubcontractingReceipt
+from bartakke_erp.bartakke_erp.overrides.subcontracting_controller import OverrideSubcontractingController
+
+
+class OverrideSubcontractingReceipt(SubcontractingReceipt, OverrideSubcontractingController):
+    pass

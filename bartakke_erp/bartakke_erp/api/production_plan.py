@@ -1,5 +1,8 @@
 import frappe
 from frappe import _
+import json
+from frappe.model.mapper import get_mapped_doc
+from frappe.utils import flt
 
 
 def validate_production_plan_qty(doc, method=None):
@@ -63,3 +66,67 @@ def validate_production_plan_qty(doc, method=None):
 					already_planned
 				)
 			)
+
+def set_missing_values(source, target):
+    target.run_method("set_missing_values")
+    target.run_method("calculate_taxes_and_totals")
+
+    if hasattr(target, "set_use_serial_batch_fields"):
+        target.run_method("set_use_serial_batch_fields")
+
+
+@frappe.whitelist()
+def make_so(source_name, target_doc=None, args=None):
+    if not args:
+        args = {}
+    if isinstance(args, str):
+        args = json.loads(args)
+
+    def update_item(source, target, source_parent):
+        qty = flt(source.pending_qty or source.planned_qty)
+
+        target.qty = qty
+        target.stock_qty = qty * flt(target.conversion_factor or 1)
+        target.rate = frappe.db.get_value(
+			"Item Price",
+			{
+				"item_code": target.item_code,
+				"selling": 1
+			},
+			"price_list_rate"
+		) or 0
+        target.amount = qty * target.rate
+
+
+    def select_item(d):
+        filtered_items = args.get("filtered_children")
+        return d.name in filtered_items if filtered_items else True
+
+    doc = get_mapped_doc(
+        "Production Plan",
+        source_name,
+        {
+            "Production Plan": {
+                "doctype": "Sales Order",
+                "validation": {
+                    "docstatus": ["=", 1],
+                },
+            },
+            "Production Plan Item": {
+                "doctype": "Sales Order Item",
+                "field_map": {
+                    "parent": "production_plan",
+                },
+                "condition": select_item,
+                "postprocess": update_item,
+            },
+            "Sales Taxes and Charges": {
+                "doctype": "Sales Taxes and Charges",
+                "reset_value": True,
+            },
+        },
+        target_doc,
+        set_missing_values,
+    )
+
+    return doc
