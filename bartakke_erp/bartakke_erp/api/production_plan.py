@@ -101,6 +101,9 @@ def make_so(source_name, target_doc=None, args=None):
     def select_item(d):
         filtered_items = args.get("filtered_children")
         return d.name in filtered_items if filtered_items else True
+	
+    def set_header_values(source, target, source_parent=None):
+        target.customer = source.custom_customer_name
 
     doc = get_mapped_doc(
         "Production Plan",
@@ -111,6 +114,7 @@ def make_so(source_name, target_doc=None, args=None):
                 "validation": {
                     "docstatus": ["=", 1],
                 },
+                "postprocess": set_header_values,
             },
             "Production Plan Item": {
                 "doctype": "Sales Order Item",
