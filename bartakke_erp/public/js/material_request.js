@@ -22,10 +22,10 @@ frappe.ui.form.on('Material Request', {
 						frm.add_custom_button(__('Production Plan'), function() {
 							// Show pending items before creating
 							frappe.msgprint({
-								title: __('Pending Items for Production Plan'),
+								title: __('Pending Items for Work Order'),
 								message: pending_info.replace(/\n/g, '<br>'),
 								primary_action: {
-									label: __('Create Production Plan'),
+									label: __('Create Work Order'),
 									action: function() {
 										frappe.call({
 											method: 'bartakke_erp.bartakke_erp.api.material_request.create_production_plan',
@@ -34,7 +34,7 @@ frappe.ui.form.on('Material Request', {
 											},
 											callback: function(r) {
 												if (r.message) {
-													frappe.msgprint(__('Production Plan {0} created', [r.message]));
+													frappe.msgprint(__('Work Order {0} created', [r.message]));
 													frappe.set_route('Form', 'Production Plan', r.message);
 												}
 											}

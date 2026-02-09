@@ -47,6 +47,17 @@ def create_production_plan(material_request):
 			"planned_start_date": frappe.utils.now()
 		})
 
+		bom = frappe.get_doc("BOM", item_data["bom_no"])
+		if bom.exploded_items:
+			for exploded in bom.exploded_items:
+				pp.append("custom_assembly_item", {
+					"item_code": exploded.item_code,
+					"item_name": exploded.item_name,
+					"item_description": exploded.description,
+					"uom": exploded.stock_uom,
+					"qty": exploded.stock_qty
+				}) 
+
 	pp.insert()
 
 	frappe.msgprint(_("Production Plan {0} created successfully").format(pp.name))

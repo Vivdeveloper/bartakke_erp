@@ -51,7 +51,32 @@ frappe.ui.form.on("Production Plan", {
 	},
 	refresh(frm) {
 		set_custom_indent_from_rows(frm);
+
+		if (frm.doc.docstatus === 1) {
+			frm.add_custom_button(
+				__('Sales Order'),
+				() => {
+					frm.trigger('make_so');
+				},
+				__('Create')
+			);
+		}
+		frm.remove_custom_button(
+    __('Work Order / Subcontract PO'),
+			__('Create')
+		);
+
 	},
+
+	make_so(frm) {
+		frappe.model.open_mapped_doc({
+			method: "bartakke_erp.bartakke_erp.api.production_plan.make_so",
+			frm: frm,
+			freeze: true,
+			freeze_message: __("Creating Sales Order...")
+		});
+	},
+
 	material_requests(frm) {
 		set_custom_indent_from_rows(frm);
 	},

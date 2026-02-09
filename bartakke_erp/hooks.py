@@ -45,7 +45,8 @@ app_license = "mit"
 # include js in doctype views
 doctype_js = {
 	"Material Request": "public/js/material_request.js",
-	"Production Plan": "public/js/production_plan.js"
+	"Production Plan": "public/js/production_plan.js",
+    "Sales Order": "public/js/sales_order.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -132,9 +133,11 @@ doctype_js = {
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"Purchase Order": "bartakke_erp.bartakke_erp.overrides.purchase_order.OverridePurchaseOrder",
+    "Subcontracting Order": "bartakke_erp.bartakke_erp.overrides.subcontracting_order.OverrideSubcontractingOrder",
+    "Subcontracting Receipt": "bartakke_erp.bartakke_erp.overrides.subcontracting_receipt.OverrideSubcontractingReceipt",
+}
 
 # Document Events
 # ---------------
