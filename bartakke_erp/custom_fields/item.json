@@ -1,0 +1,18 @@
+{
+ "Item": [
+  {
+    "fieldname": "custom_add_revision",
+    "fieldtype": "Button",
+    "insert_after": "custom_revision",
+    "label": "Add Revision",
+    "module": "Bartakke ERP"
+  },
+  {
+    "fieldname": "custom_add_drawing",
+    "fieldtype": "Button",
+    "insert_after": "custom_drawing_no",
+    "label": "Add Drawing",
+    "module": "Bartakke ERP"
+  }
+ ]
+}

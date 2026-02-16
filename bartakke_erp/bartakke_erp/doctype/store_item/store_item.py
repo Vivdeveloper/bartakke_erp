@@ -22,18 +22,18 @@ class StoreItem(Document):
 			if existing_link and existing_link != self.name:
 				frappe.throw(f"Item {self.name} is already linked to Store Item {existing_link}")
 
-	def on_trash(self):
-		"""Delete linked Item when Store Item is deleted"""
-		if getattr(frappe.flags, "in_store_item_delete", False):
-			return
+	# def on_trash(self):
+	# 	"""Delete linked Item when Store Item is deleted"""
+	# 	if getattr(frappe.flags, "in_store_item_delete", False):
+	# 		return
 
-		item_name = frappe.db.get_value("Item", {"custom_store_item": self.name}, "name")
-		if item_name:
-			frappe.flags.in_store_item_delete = True
-			try:
-				frappe.delete_doc("Item", item_name, ignore_permissions=True, force=1)
-			finally:
-				frappe.flags.in_store_item_delete = False
+	# 	item_name = frappe.db.get_value("Item", {"custom_store_item": self.name}, "name")
+	# 	if item_name:
+	# 		frappe.flags.in_store_item_delete = True
+	# 		try:
+	# 			frappe.delete_doc("Item", item_name, ignore_permissions=True, force=1)
+	# 		finally:
+	# 			frappe.flags.in_store_item_delete = False
 
 	def sync_item(self):
 		"""Create or update Item linked to Store Item"""

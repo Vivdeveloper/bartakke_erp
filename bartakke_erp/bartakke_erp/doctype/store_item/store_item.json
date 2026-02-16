@@ -130,9 +130,6 @@
    "read_only": 1
   },
   {
-   "default": "8",
-   "fetch_from": "stock_type.stock_type_code",
-   "fetch_if_empty": 1,
    "fieldname": "stock_type_code",
    "fieldtype": "Select",
    "label": "Stock Type Code",
@@ -212,8 +209,8 @@
    "link_fieldname": "custom_store_item"
   }
  ],
- "modified": "2026-02-05 23:36:33.842801",
- "modified_by": "hrishikesh.freelance@gmail.com",
+ "modified": "2026-02-13 08:00:45.128026",
+ "modified_by": "Administrator",
  "module": "Bartakke ERP",
  "name": "Store Item",
  "naming_rule": "By \"Naming Series\" field",
