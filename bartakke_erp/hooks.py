@@ -46,7 +46,8 @@ app_license = "mit"
 doctype_js = {
 	"Material Request": "public/js/material_request.js",
 	"Production Plan": "public/js/production_plan.js",
-    "Sales Order": "public/js/sales_order.js"
+    "Sales Order": "public/js/sales_order.js",
+    "Item": "public/js/item.js",
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -91,7 +92,7 @@ doctype_js = {
 
 # Uninstallation
 # ------------
-
+after_migrate = "bartakke_erp.migrate.after_migrate"
 # before_uninstall = "bartakke_erp.uninstall.before_uninstall"
 # after_uninstall = "bartakke_erp.uninstall.after_uninstall"
 
@@ -151,7 +152,7 @@ doc_events = {
 	},
 	"Item": {
 		"on_update": "bartakke_erp.bartakke_erp.api.item.sync_store_item_from_item",
-		"on_trash": "bartakke_erp.bartakke_erp.api.item.delete_store_item_on_item_trash"
+		"on_trash": "bartakke_erp.bartakke_erp.api.item.on_trash"
 	}
 }
 

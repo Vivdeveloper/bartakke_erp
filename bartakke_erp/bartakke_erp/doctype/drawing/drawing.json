@@ -1,0 +1,110 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:drawing_number",
+ "creation": "2025-11-06 18:51:11.542890",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "item_name",
+  "drawing_number",
+  "column_break_xkfp",
+  "sf_code",
+  "short_form",
+  "item_group",
+  "parent_group",
+  "section_break_wdpc",
+  "drawing_revision"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Item Code",
+   "options": "Item"
+  },
+  {
+   "fieldname": "drawing_number",
+   "fieldtype": "Data",
+   "label": "Drawing Number",
+   "unique": 1
+  },
+  {
+   "fieldname": "drawing_revision",
+   "fieldtype": "Table",
+   "label": "Drawing Revision",
+   "options": "Drawing Revision"
+  },
+  {
+   "fetch_from": "item_code.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name"
+  },
+  {
+   "fieldname": "column_break_xkfp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sf_code",
+   "fieldtype": "Link",
+   "label": "SF Code",
+   "options": "Short Form"
+  },
+  {
+   "fetch_from": "sf_code.short_form",
+   "fieldname": "short_form",
+   "fieldtype": "Data",
+   "label": "Short Form"
+  },
+  {
+   "fieldname": "section_break_wdpc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "item_code.item_group",
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "label": "Item Group",
+   "options": "Item Group"
+  },
+  {
+   "fetch_from": "item_group.parent_item_group",
+   "fieldname": "parent_group",
+   "fieldtype": "Link",
+   "label": "Parent Group",
+   "link_filters": "[[\"Item Group\",\"parent_item_group\",\"is\",\"set\"]]",
+   "options": "Item Group"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-02-16 10:46:32.223141",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Drawing",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
