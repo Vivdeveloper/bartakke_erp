@@ -1,7 +1,7 @@
 frappe.ui.form.on('Item', {
     custom_add_drawing: function (frm) {
-        console.log('ass')
-        frappe.call({
+        if (!frm.doc.custom_drawing_no) {
+            frappe.call({
             method: "bartakke_erp.bartakke_erp.api.item.get_drawing",
             args: {
                 doc: frm.doc
@@ -13,6 +13,8 @@ frappe.ui.form.on('Item', {
             }
 
         })
+        }
+        
     },
     custom_add_revision: function (frm) {
         console.log('ass')
