@@ -52,66 +52,67 @@ def on_trash(self, method=None):
 @frappe.whitelist()
 def get_drawing(doc):
     doc = json.loads(doc)
-    assembly_groups = frappe.db.get_all(
-        "Item Group",
-        filters={"parent_item_group": "Assembly Item"},
-        pluck="name"
-    )
-
-
-    if doc.get("item_group") in assembly_groups:
-        drawings = frappe.db.get_all(
-            "Drawing",
-            filters={"item_group": doc.get("item_group")},
+    if doc.get('custom_sf_code'):
+        assembly_groups = frappe.db.get_all(
+            "Item Group",
+            filters={"parent_item_group": "Assembly Item"},
             pluck="name"
         )
 
-        if drawings:
-            drawing_numbers = [
-                int(d.split("-", 1)[1])
-                for d in drawings
-                if "-" in d
-            ]
-            next_number = max(drawing_numbers) + 1
-        else:
-            if frappe.db.exists("Drawing Configuration", doc.get("item_group")):
-                 next_number = frappe.db.get_value("Drawing Configuration", doc.get("item_group"), 'no_starts_from')
-            # else:
-            #     next_number = 1001
 
-        drawing = frappe.new_doc('Drawing')
-        drawing.item_code = doc.get('item_code')
-        drawing.sf_code = doc.get('custom_sf_code')
-        drawing.drawing_number = next_number
-        drawing.item_group = doc.get("item_group")
-        drawing.insert()
+        if doc.get("item_group") in assembly_groups:
+            drawings = frappe.db.get_all(
+                "Drawing",
+                filters={"item_group": doc.get("item_group")},
+                pluck="name"
+            )
 
-        return next_number
-    
-    if doc.get("custom_parent_item_group") == "Products":
-        drawings = frappe.db.get_all(
-            "Drawing",
-            filters={"parent_group": doc.get("custom_parent_item_group")},
-            pluck="name"
-        )
-        if drawings:
-            drawing_numbers = [
-                int(d.split("-", 1)[1])
-                for d in drawings
-                if "-" in d
-            ]
-            next_number = max(drawing_numbers) + 1
+            if drawings:
+                drawing_numbers = [
+                    int(d.split("-", 1)[1])
+                    for d in drawings
+                    if "-" in d
+                ]
+                next_number = max(drawing_numbers) + 1
+            else:
+                if frappe.db.exists("Drawing Configuration", doc.get("item_group")):
+                    next_number = frappe.db.get_value("Drawing Configuration", doc.get("item_group"), 'no_starts_from')
+                # else:
+                #     next_number = 1001
+
+            drawing = frappe.new_doc('Drawing')
+            drawing.item_code = doc.get('item_code')
+            drawing.sf_code = doc.get('custom_sf_code')
+            drawing.drawing_number = next_number
+            drawing.item_group = doc.get("item_group")
+            drawing.insert()
+
+            return next_number
         
-        else: 
-            next_number = 1001
+        if doc.get("custom_parent_item_group") == "Products":
+            drawings = frappe.db.get_all(
+                "Drawing",
+                filters={"parent_group": doc.get("custom_parent_item_group")},
+                pluck="name"
+            )
+            if drawings:
+                drawing_numbers = [
+                    int(d.split("-", 1)[1])
+                    for d in drawings
+                    if "-" in d
+                ]
+                next_number = max(drawing_numbers) + 1
+            
+            else: 
+                next_number = 1001
 
-        drawing = frappe.new_doc('Drawing')
-        drawing.item_code = doc.get('item_code')
-        drawing.sf_code = doc.get('custom_sf_code')
-        drawing.drawing_number = next_number
-        drawing.item_group = doc.get("item_group")
-        drawing.insert()
-        return next_number
+            drawing = frappe.new_doc('Drawing')
+            drawing.item_code = doc.get('item_code')
+            drawing.sf_code = doc.get('custom_sf_code')
+            drawing.drawing_number = next_number
+            drawing.item_group = doc.get("item_group")
+            drawing.insert()
+            return next_number
 
     return None
 
