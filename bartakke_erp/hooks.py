@@ -152,7 +152,8 @@ doc_events = {
 	},
 	"Item": {
 		"on_update": "bartakke_erp.bartakke_erp.api.item.sync_store_item_from_item",
-		"on_trash": "bartakke_erp.bartakke_erp.api.item.on_trash"
+		"on_trash": "bartakke_erp.bartakke_erp.api.item.on_trash",
+        "validate": "bartakke_erp.bartakke_erp.api.item.validate",
 	}
 }
 
