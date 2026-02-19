@@ -4,6 +4,25 @@
 import frappe
 import json
 
+def validate(doc, method=None):
+    item_drawing(doc)
+
+def item_drawing(doc):
+    if not doc.custom_drawing_no:
+        return
+
+    drawing_item = frappe.db.get_value(
+        "Drawing",
+        f"{doc.custom_sf_code}-{doc.custom_drawing_no}",
+        "item_name"
+    )
+    
+
+    if drawing_item and drawing_item != doc.item_name:
+        frappe.throw(
+            "There cannot be the same Drawing mapped to different Items"
+        )
+
 
 def sync_store_item_from_item(doc, method=None):
     """Sync disabled field from Item to Store Item (2-way sync)"""
@@ -126,15 +145,15 @@ def get_revision(doc):
             drawing_doc = frappe.get_doc("Drawing", name)
             revis = [i.drawing_revision for i in drawing_doc.drawing_revision]
             revision = revis[-1]
-            if len(revision) > 9:
+            if len(revision) > 1:
                 rev = int(revision[-1])
                 set_revision = rev + 1
             else:
                 set_revision = 1
-                drawing_doc.append("drawing_revision", {
-					'drawing_revision': f"{name}-{set_revision}",
-                    'revision_time': frappe.utils.now(),
-                    'created_by': frappe.session.user
-				})
-                drawing_doc.save()
-                return f"{doc.get('custom_drawing_no')}-{set_revision}"
+            drawing_doc.append("drawing_revision", {
+                'drawing_revision': f"{name}-{set_revision}",
+                'revision_time': frappe.utils.now(),
+                'created_by': frappe.session.user
+            })
+            drawing_doc.save()
+            return f"{doc.get('custom_drawing_no')}-{set_revision}"
