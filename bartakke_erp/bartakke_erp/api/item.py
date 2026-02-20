@@ -157,3 +157,20 @@ def get_revision(doc):
             })
             drawing_doc.save()
             return f"{doc.get('custom_drawing_no')}-{set_revision}"
+
+def autoname(doc, method=None):
+    if doc.custom_parent_item_group != "Products":
+        return
+
+    parts = [
+        doc.item_name,
+        doc.custom_w,
+        doc.custom_d,
+        doc.custom_h,
+        doc.custom_t,
+    ]
+
+    parts = [str(p).strip() for p in parts if p]
+
+    if parts:
+        doc.name = " x ".join(parts)
