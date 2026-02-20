@@ -163,7 +163,6 @@ def autoname(doc, method=None):
         return
 
     parts = [
-        doc.item_name,
         doc.custom_w,
         doc.custom_d,
         doc.custom_h,
@@ -173,4 +172,5 @@ def autoname(doc, method=None):
     parts = [str(p).strip() for p in parts if p]
 
     if parts:
-        doc.name = " x ".join(parts)
+        name = " x ".join(parts)
+        doc.name = f"{doc.item_name} {name}"
