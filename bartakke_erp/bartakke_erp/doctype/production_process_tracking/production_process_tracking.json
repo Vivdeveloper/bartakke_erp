@@ -1,0 +1,242 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2026-02-23 01:24:05.260511",
+ "default_view": "List",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "work_order_no",
+  "lot_no",
+  "indent_no",
+  "indent_date",
+  "indent_received_date",
+  "po_number",
+  "customer_po_date",
+  "weight_kg",
+  "column_break_hbki",
+  "customer",
+  "delivery_date",
+  "current_stage",
+  "overall_status",
+  "design",
+  "colour",
+  "panel_colour_inside",
+  "base_colour",
+  "item",
+  "qty",
+  "area_sq_mtr_paint",
+  "section_break_cvqu",
+  "production_stage_log"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming_Series"
+  },
+  {
+   "fetch_from": "order_acceptance.custom_work_order_no",
+   "fieldname": "work_order_no",
+   "fieldtype": "Link",
+   "label": "Work Order No.",
+   "options": "Production Plan"
+  },
+  {
+   "fieldname": "lot_no",
+   "fieldtype": "Data",
+   "label": "Lot No."
+  },
+  {
+   "fetch_from": "work_order_no.custom_indent",
+   "fieldname": "indent_no",
+   "fieldtype": "Link",
+   "label": "Indent No.",
+   "options": "Material Request"
+  },
+  {
+   "fieldname": "indent_date",
+   "fieldtype": "Date",
+   "label": "Indent Date"
+  },
+  {
+   "fieldname": "indent_received_date",
+   "fieldtype": "Date",
+   "label": "Indent Received Date"
+  },
+  {
+   "fetch_from": "order_acceptance.po_no",
+   "fieldname": "po_number",
+   "fieldtype": "Data",
+   "label": "PO Number"
+  },
+  {
+   "fetch_from": "order_acceptance.po_date",
+   "fieldname": "customer_po_date",
+   "fieldtype": "Date",
+   "label": "Customer PO Date"
+  },
+  {
+   "fieldname": "weight_kg",
+   "fieldtype": "Float",
+   "label": "Weight Kg"
+  },
+  {
+   "fieldname": "column_break_hbki",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "work_order_no.custom_customer_name",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer ",
+   "options": "Customer"
+  },
+  {
+   "fetch_from": "work_order_no.from_delivery_date",
+   "fieldname": "delivery_date",
+   "fieldtype": "Date",
+   "label": "Delivery Date"
+  },
+  {
+   "fieldname": "current_stage",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Current Stage",
+   "options": "\nDesign Issued\nDesign Received\nProgramming\nPunching\nBending\nWelding\nTransferred to Unit 1\nPowder Coating\nAssembly\nReady for Dispatch\nDispatched",
+   "read_only": 1
+  },
+  {
+   "default": "Open",
+   "fieldname": "overall_status",
+   "fieldtype": "Select",
+   "label": "Overall Status ",
+   "options": "Open\nIn Progress\nCompleted"
+  },
+  {
+   "fieldname": "design",
+   "fieldtype": "Data",
+   "label": "Design"
+  },
+  {
+   "fetch_from": "work_order_no.custom_panel_outside_color",
+   "fieldname": "colour",
+   "fieldtype": "Link",
+   "label": "Panel Colour Outside ",
+   "link_filters": "[[\"Store Item\",\"item_group\",\"in\",[\"Chemical  for Powder\",\"Other Chemical Liquid Paint\",\"Chemical for Gasketing\",\"Powder Paint\",\"\",\"Coating\",null]]]",
+   "options": "Store Item"
+  },
+  {
+   "fetch_from": "work_order_no.custom_panel_color",
+   "fieldname": "panel_colour_inside",
+   "fieldtype": "Link",
+   "label": "Panel Colour Inside",
+   "link_filters": "[[\"Store Item\",\"item_group\",\"in\",[\"Chemical  for Powder\",\"Other Chemical Liquid Paint\",\"Chemical for Gasketing\",\"Powder Paint\",\"\",\"Coating\",null]]]",
+   "options": "Store Item"
+  },
+  {
+   "fetch_from": "work_order_no.custom_base_color",
+   "fieldname": "base_colour",
+   "fieldtype": "Link",
+   "label": "Base Colour",
+   "link_filters": "[[\"Store Item\",\"item_group\",\"in\",[\"Chemical  for Powder\",\"Other Chemical Liquid Paint\",\"Chemical for Gasketing\",\"Powder Paint\",\"\",\"Coating\",null]]]",
+   "options": "Store Item"
+  },
+  {
+   "fetch_if_empty": 1,
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "label": "Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "label": "Qty"
+  },
+  {
+   "fieldname": "area_sq_mtr_paint",
+   "fieldtype": "Float",
+   "label": "Area Sq. Mtr Paint"
+  },
+  {
+   "fieldname": "section_break_cvqu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "production_stage_log",
+   "fieldtype": "Table",
+   "label": "Production Stage Log",
+   "options": "Production Stage Log"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-02-23 10:12:51.076969",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Production Process Tracking",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Gray",
+   "title": "Programming"
+  },
+  {
+   "color": "Light Blue",
+   "title": "Punching"
+  },
+  {
+   "color": "Orange",
+   "title": "Bending"
+  },
+  {
+   "color": "Green",
+   "title": "Welding"
+  },
+  {
+   "color": "Pink",
+   "title": "Transferred to Unit 1"
+  },
+  {
+   "color": "Purple",
+   "title": "Powder Coating"
+  },
+  {
+   "color": "Red",
+   "title": "Assembly"
+  },
+  {
+   "color": "Cyan",
+   "title": "Ready for Dispatch"
+  },
+  {
+   "color": "Yellow",
+   "title": "Dispatched"
+  }
+ ],
+ "track_changes": 1
+}
