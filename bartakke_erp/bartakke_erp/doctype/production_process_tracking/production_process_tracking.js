@@ -14,5 +14,10 @@ frappe.ui.form.on('Production Process Tracking', {
             frm.set_value("weight_kg", r.weight_per_unit * frm.doc.qty)
 		});
         }
+    },
+    item(frm) {
+        frappe.db.get_value("Item", { name: frm.doc.item }, "custom_design", (r) => {
+        frm.set_value("design", r.custom_design);
+        }); 
     }
 })

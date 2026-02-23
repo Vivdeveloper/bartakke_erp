@@ -65,6 +65,13 @@ def create_production_process_tracking(source_name, target_doc=None):
             "transaction_date"
         )
         target.customer = source.custom_customer_name
+        target.indent_received_date = frappe.db.get_value("Material Request", source.custom_indent, 'schedule_date')
+        target.po_number = source.custom_customer_po_no
+        target.customer_po_date = source.custom_customer_po_date
+        target.delivery_date = source.custom_customer_delivery
+        target.colour = source.custom_panel_outside_color
+        target.panel_colour_inside = source.custom_panel_color
+        target.base_colour = source.custom_base_color
 
         stages = [
             "Design Issued",
