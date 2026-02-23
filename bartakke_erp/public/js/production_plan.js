@@ -61,6 +61,15 @@ frappe.ui.form.on("Production Plan", {
 				__('Create')
 			);
 		}
+		if (frm.doc.docstatus === 1) {
+			frm.add_custom_button(
+				__('Production Process Tracking'),
+				() => {
+					frm.trigger('make_production_process_tracking');
+				},
+				__('Create')
+			);
+		}
 		frm.remove_custom_button(
     __('Work Order / Subcontract PO'),
 			__('Create')
@@ -82,7 +91,15 @@ frappe.ui.form.on("Production Plan", {
 	},
 	po_items(frm) {
 		set_custom_indent_from_rows(frm);
-	}
+	},
+	make_production_process_tracking(frm) {
+		frappe.model.open_mapped_doc({
+			method: "bartakke_erp.bartakke_erp.api.wo.create_production_process_tracking",
+			frm: frm,
+			freeze: true,
+			freeze_message: __("Creating Production Process Tracking...")
+		});
+	},
 });
 
 frappe.ui.form.on("Production Plan Material Request", {

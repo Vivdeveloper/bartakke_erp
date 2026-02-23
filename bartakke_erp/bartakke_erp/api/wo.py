@@ -1,4 +1,6 @@
 import frappe
+from frappe import _
+from frappe.model.mapper import get_mapped_doc
 
 @frappe.whitelist()
 def get_wo(customer):
@@ -50,3 +52,53 @@ def get_fg_item(customer, wo):
         row['delivery_date'] = frappe.utils.today()
 
     return {"items": items}
+
+@frappe.whitelist()
+def create_production_process_tracking(source_name, target_doc=None):
+
+    def set_header_values(source, target, source_parent=None):
+        target.work_order_no = source.name
+        target.indent_no = source.custom_indent
+        target.indent_date = frappe.db.get_value(
+            "Material Request",
+            source.custom_indent,
+            "transaction_date"
+        )
+        target.customer = source.custom_customer_name
+
+        stages = [
+            "Design Issued",
+            "Design Received",
+            "Programming",
+            "Punching",
+            "Bending",
+            "Welding",
+            "Transferred to Unit 1",
+            "Powder Coating",
+            "Assembly",
+            "Ready for Dispatch",
+            "Dispatched"
+        ]
+
+        target.set("production_stage_log", [])
+        for stage in stages:
+            target.append("production_stage_log", {
+                "stage": stage
+            })
+
+    doc = get_mapped_doc(
+        "Production Plan",
+        source_name,
+        {
+            "Production Plan": {
+                "doctype": "Production Process Tracking",
+                "validation": {
+                    "docstatus": ["=", 1]
+                },
+                "postprocess": set_header_values
+            }
+        },
+        target_doc
+    )
+
+    return doc

@@ -34,7 +34,6 @@ frappe.ui.form.on('Item', {
         
     },
     custom_add_revision: function (frm) {
-        console.log('ass')
         frappe.call({
             method: "bartakke_erp.bartakke_erp.api.item.get_revision",
             args: {
