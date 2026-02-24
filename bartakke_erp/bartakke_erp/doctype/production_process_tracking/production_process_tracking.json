@@ -26,6 +26,7 @@
   "panel_colour_inside",
   "base_colour",
   "item",
+  "work_order_qty",
   "qty",
   "area_sq_mtr_paint",
   "section_break_cvqu",
@@ -171,12 +172,17 @@
    "fieldtype": "Table",
    "label": "Production Stage Log",
    "options": "Production Stage Log"
+  },
+  {
+   "fieldname": "work_order_qty",
+   "fieldtype": "Float",
+   "label": "Work Order Qty"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-23 10:12:51.076969",
+ "modified": "2026-02-23 19:05:07.358594",
  "modified_by": "Administrator",
  "module": "Bartakke ERP",
  "name": "Production Process Tracking",
