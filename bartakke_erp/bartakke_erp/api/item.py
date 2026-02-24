@@ -7,6 +7,9 @@ import json
 def validate(doc, method=None):
     item_drawing(doc)
 
+def before_save(doc, method=None):
+    create_drawing(doc)
+
 def item_drawing(doc):
     if not doc.custom_drawing_no:
         return
@@ -22,6 +25,17 @@ def item_drawing(doc):
         frappe.throw(
             "There cannot be the same Drawing mapped to different Items"
         )
+
+def create_drawing(doc):
+    if not frappe.db.exists("Drawing", {'item_code': doc.get('name')}) and doc.get('custom_sf_code') and doc.get('custom_drawing_no'):
+        name = f"{doc.get('custom_drawing_no')}"
+        drawing = frappe.new_doc('Drawing')
+        drawing.item_code = doc.get('name')
+        drawing.item_name = doc.get('item_name')
+        drawing.sf_code = doc.get('custom_sf_code')
+        drawing.drawing_number = name
+        drawing.item_group = doc.get("item_group")
+        drawing.insert()
 
 
 def sync_store_item_from_item(doc, method=None):
@@ -99,12 +113,12 @@ def get_drawing(doc):
                 # else:
                 #     next_number = 1001
 
-            drawing = frappe.new_doc('Drawing')
-            drawing.item_code = doc.get('item_code')
-            drawing.sf_code = doc.get('custom_sf_code')
-            drawing.drawing_number = next_number
-            drawing.item_group = doc.get("item_group")
-            drawing.insert()
+            # drawing = frappe.new_doc('Drawing')
+            # drawing.item_code = doc.get('item_code')
+            # drawing.sf_code = doc.get('custom_sf_code')
+            # drawing.drawing_number = next_number
+            # drawing.item_group = doc.get("item_group")
+            # drawing.insert()
 
             return next_number
         
@@ -125,12 +139,12 @@ def get_drawing(doc):
             else: 
                 next_number = 1001
 
-            drawing = frappe.new_doc('Drawing')
-            drawing.item_code = doc.get('item_code')
-            drawing.sf_code = doc.get('custom_sf_code')
-            drawing.drawing_number = next_number
-            drawing.item_group = doc.get("item_group")
-            drawing.insert()
+            # drawing = frappe.new_doc('Drawing')
+            # drawing.item_code = doc.get('item_code')
+            # drawing.sf_code = doc.get('custom_sf_code')
+            # drawing.drawing_number = next_number
+            # drawing.item_group = doc.get("item_group")
+            # drawing.insert()
             return next_number
 
     return None
@@ -142,10 +156,10 @@ def get_revision(doc):
     if doc.get('custom_drawing_no') and doc.get('custom_sf_code'):
         name = f"{doc.get('custom_sf_code')}-{doc.get('custom_drawing_no')}"
         if frappe.db.exists("Drawing", name):
-            drawing_doc = frappe.get_doc("Drawing", name)
+            drawing_doc = frappe.get_doc("Drawing", {'name': name, 'item_code': doc.get('item_code')})
             revis = [i.drawing_revision for i in drawing_doc.drawing_revision]
             revision = revis[-1]
-            if len(revision) > 1:
+            if revision.count('-') == 2:
                 rev = int(revision[-1])
                 set_revision = rev + 1
             else:

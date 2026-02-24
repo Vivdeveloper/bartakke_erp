@@ -17,7 +17,26 @@ frappe.ui.form.on('Production Process Tracking', {
     },
     item(frm) {
         frappe.db.get_value("Item", { name: frm.doc.item }, "custom_design", (r) => {
-        frm.set_value("design", r.custom_design);
-        }); 
+            frm.set_value("design", r.custom_design);
+        });
+        // frappe.db.get_value("Production Plan Item", { parent: frm.doc.work_order_no }, "planned_qty", (r) => {
+        //     frm.set_value("work_order_qty", r.planned_qty);
+        // });
+        frappe.call({
+            method: "bartakke_erp.bartakke_erp.doctype.production_process_tracking.production_process_tracking.get_planned_qty",
+            args: {
+                work_order_no: frm.doc.work_order_no
+            },
+            callback: (r) => {
+                if (r.message) {
+                    frm.set_value("work_order_qty", r.message);
+                }
+            }
+        });
+    },
+    qty(frm) {
+        if (frm.doc.qty > frm.doc.work_order_qty) {
+            frappe.throw("Qty cannot be greater than Work Order Qty")
+        }
     }
 })
