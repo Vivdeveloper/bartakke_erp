@@ -3,6 +3,7 @@
 
 import frappe
 import json
+from frappe import _
 
 def validate(doc, method=None):
     item_drawing(doc)
@@ -188,3 +189,54 @@ def autoname(doc, method=None):
     if parts:
         name = " x ".join(parts)
         doc.name = f"{doc.item_name} {name}"
+
+@frappe.whitelist()
+def add_revision111(file_url):
+    if not file_url:
+        frappe.throw(_("File is required"))
+
+    file_name = frappe.db.get_value(
+        "File",
+        {"file_url": file_url},
+        "name"
+    )
+
+    if not file_name:
+        frappe.throw(_("Uploaded file not found. Please try again."))
+
+    file_doc = frappe.get_doc("File", file_name)
+
+    filename = file_doc.file_name.rsplit(".", 1)[0]
+
+    if filename.count("-") < 1:
+        frappe.throw(_("Invalid file name format"))
+
+    drawing_name = filename
+
+    if not frappe.db.exists("Drawing", drawing_name):
+        frappe.throw(_("Drawing {0} not found").format(drawing_name))
+
+    drawing_doc = frappe.get_doc("Drawing", drawing_name)
+
+    revisions = [r.drawing_revision for r in drawing_doc.drawing_revision if r.drawing_revision]
+
+    if len(revisions)>1:
+        last_revision = revisions[-1]
+        parts = last_revision.split("-")
+        last_rev_no = int(parts[-1]) if parts[-1].isdigit() else 0
+        next_rev = last_rev_no + 1
+    else:
+        next_rev = 1
+
+    new_revision = f"{drawing_name}-{next_rev}"
+
+    drawing_doc.append("drawing_revision", {
+        "drawing_revision": new_revision,
+        "revision_time": frappe.utils.now(),
+        "created_by": frappe.session.user,
+        "attach": file_url
+    })
+
+    drawing_doc.save(ignore_permissions=True)
+
+    return new_revision
