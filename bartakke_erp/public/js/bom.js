@@ -2,233 +2,113 @@ frappe.ui.form.on('BOM', {
 	refresh(frm) {
 		// your code here
         console.log('refresh')
-	}
+	},
 })
 
 frappe.ui.form.on('BOM Assembly Item', {
     item_code(frm, cdt, cdn) {
-
-        let row = locals[cdt][cdn];
-
-        // existing item codes
-        let existing_items = (frm.doc.items || []).map(i => i.item_code);
-
-        frm.call({
-            method: 'bartakke_erp.bartakke_erp.api.bom.update_assembly_items',
-            args: {
-                doc: frm.doc,
-            },
-            callback: (r) => {
-                if (!r.message) return;
-
-                Object.entries(r.message).forEach(([item_code, qty]) => {
-
-                    // only add if matches row item AND not already present
-                    if (item_code === row.item_code && !existing_items.includes(item_code)) {
-                        let child = frm.add_child('items');
-                        child.item_code = item_code;
-                        frappe.db.get_value("Item", { name: item_code }, "stock_uom", (r) => {
-                            console.log('itttt', r.stock_uom)
-                            child.uom = r.stock_uom;
-                        });
-                        child.qty = qty;
-                    }
-                });
-
-                frm.refresh_field('items');
-            }
-        });
+        rebuild_bom_items(frm);
+        duplicate_item_validation(
+            frm,
+            'custom_bom_assembly_items',
+            cdt,
+            cdn,
+            'BOM Assembly Item'
+        );
     },
-    qty(frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        let existing_items = (frm.doc.items || []).map(i => i.item_code);
-
-        frm.call({
-            method: 'bartakke_erp.bartakke_erp.api.bom.update_assembly_items',
-            args: {
-                doc: frm.doc,
-            },
-            callback: (r) => {
-                if (!r.message) return;
-
-                Object.entries(r.message).forEach(([item_code, qty]) => {
-
-                    // only add if matches row item AND not already present
-                    if (item_code === row.item_code && !existing_items.includes(item_code)) {
-                        let child = frm.add_child('items');
-                        child.item_code = item_code;
-                        child.qty = qty;
-                    }
-                    else {
-                        frm.doc.items.map((i)=>{
-                            if (item_code == i.item_code){
-                                i.qty = qty
-                            }
-                            frappe.db.get_value("Item", { name: item_code }, "stock_uom", (r) => {
-                            console.log('itttt', r.stock_uom)
-                            i.uom = r.stock_uom;
-                        });
-                            console.log('qqqty', qty, row)
-                            
-                        })
-                        
-                    }
-                });
-
-                frm.refresh_field('items');
-            }
-        });
+    qty(frm) {
+        rebuild_bom_items(frm);
+    },
+    custom_bom_assembly_items_remove(frm, cdt, cdn) {
+        rebuild_bom_items(frm);
     }
 });
 
 frappe.ui.form.on('BOM Sub Assembly Item', {
     item_code(frm, cdt, cdn) {
-
-        let row = locals[cdt][cdn];
-
-        // existing item codes
-        let existing_items = (frm.doc.items || []).map(i => i.item_code);
-
-        frm.call({
-            method: 'bartakke_erp.bartakke_erp.api.bom.update_sub_assembly_items',
-            args: {
-                doc: frm.doc,
-            },
-            callback: (r) => {
-                if (!r.message) return;
-
-                Object.entries(r.message).forEach(([item_code, qty]) => {
-
-                    // only add if matches row item AND not already present
-                    if (item_code === row.item_code && !existing_items.includes(item_code)) {
-                        let child = frm.add_child('items');
-                        child.item_code = item_code;
-                        frappe.db.get_value("Item", { name: item_code }, "stock_uom", (r) => {
-                            console.log('itttt', r.stock_uom)
-                            child.uom = r.stock_uom;
-                        });
-                        child.qty = qty;
-                    }
-                });
-
-                frm.refresh_field('items');
-            }
-        });
+        rebuild_bom_items(frm);
+        duplicate_item_validation(
+            frm,
+            'custom_bom_sub_assembly_items',
+            cdt,
+            cdn,
+            'BOM Sub Assembly Item'
+        );
     },
-    qty(frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        let existing_items = (frm.doc.items || []).map(i => i.item_code);
-
-        frm.call({
-            method: 'bartakke_erp.bartakke_erp.api.bom.update_sub_assembly_items',
-            args: {
-                doc: frm.doc,
-            },
-            callback: (r) => {
-                if (!r.message) return;
-
-                Object.entries(r.message).forEach(([item_code, qty]) => {
-
-                    // only add if matches row item AND not already present
-                    if (item_code === row.item_code && !existing_items.includes(item_code)) {
-                        let child = frm.add_child('items');
-                        child.item_code = item_code;
-                        child.qty = qty;
-                    }
-                    else {
-                        frm.doc.items.map((i)=>{
-                            if (item_code == i.item_code){
-                                i.qty = qty
-                            }
-                            frappe.db.get_value("Item", { name: item_code }, "stock_uom", (r) => {
-                            console.log('itttt', r.stock_uom)
-                            i.uom = r.stock_uom;
-                        });
-                            console.log('qqqty', qty, row)
-                            
-                        })
-                        
-                    }
-                });
-
-                frm.refresh_field('items');
-            }
-        });
+    qty(frm) {
+        rebuild_bom_items(frm);
+    },
+    custom_bom_sub_assembly_items_remove(frm, cdt, cdn) {
+        rebuild_bom_items(frm);
     }
-});
+})
 
 frappe.ui.form.on('BOM Hardware Item', {
     item_code(frm, cdt, cdn) {
-
-        let row = locals[cdt][cdn];
-
-        // existing item codes
-        let existing_items = (frm.doc.items || []).map(i => i.item_code);
-
-        frm.call({
-            method: 'bartakke_erp.bartakke_erp.api.bom.update_hardware_items',
-            args: {
-                doc: frm.doc,
-            },
-            callback: (r) => {
-                if (!r.message) return;
-
-                Object.entries(r.message).forEach(([item_code, qty]) => {
-
-                    // only add if matches row item AND not already present
-                    if (item_code === row.item_code && !existing_items.includes(item_code)) {
-                        let child = frm.add_child('items');
-                        child.item_code = item_code;
-                        frappe.db.get_value("Item", { name: item_code }, "stock_uom", (r) => {
-                            console.log('itttt', r.stock_uom)
-                            child.uom = r.stock_uom;
-                        });
-                        child.qty = qty;
-                    }
-                });
-
-                frm.refresh_field('items');
-            }
-        });
+        rebuild_bom_items(frm);
+        duplicate_item_validation(
+            frm,
+            'custom_bom_hardware_items',
+            cdt,
+            cdn,
+            'BOM Hardware Item'
+        );
     },
-    qty(frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        let existing_items = (frm.doc.items || []).map(i => i.item_code);
+    qty(frm) {
+        rebuild_bom_items(frm);
+    },
+    custom_bom_hardware_items_remove(frm, cdt, cdn) {
+        rebuild_bom_items(frm);
+    }
+})
 
-        frm.call({
-            method: 'bartakke_erp.bartakke_erp.api.bom.update_hardware_items',
-            args: {
-                doc: frm.doc,
-            },
-            callback: (r) => {
-                if (!r.message) return;
+function rebuild_bom_items(frm) {
+    frm.call({
+        method: 'bartakke_erp.bartakke_erp.api.bom.get_items',
+        args: {
+            doc: frm.doc,
+        },
+        callback(r) {
+            if (!r.message) return;
 
-                Object.entries(r.message).forEach(([item_code, qty]) => {
+            // clear once
+            frm.clear_table('items');
 
-                    // only add if matches row item AND not already present
-                    if (item_code === row.item_code && !existing_items.includes(item_code)) {
-                        let child = frm.add_child('items');
-                        child.item_code = item_code;
-                        child.qty = qty;
+            Object.entries(r.message).forEach(([item_code, qty]) => {
+                let row = frm.add_child('items');
+                row.item_code = item_code;
+                row.qty = qty;
+
+                frappe.db.get_value(
+                    'Item',
+                    item_code,
+                    'stock_uom',
+                    (res) => {
+                        row.uom = res.stock_uom;
+                        frm.refresh_field('items');
                     }
-                    else {
-                        frm.doc.items.map((i)=>{
-                            if (item_code == i.item_code){
-                                i.qty = qty
-                            }
-                            frappe.db.get_value("Item", { name: item_code }, "stock_uom", (r) => {
-                            console.log('itttt', r.stock_uom)
-                            i.uom = r.stock_uom;
-                        });
-                            console.log('qqqty', qty, row)
-                            
-                        })
-                        
-                    }
-                });
+                );
+            });
 
-                frm.refresh_field('items');
-            }
+            frm.refresh_field('items');
+        }
+    });
+}
+
+function duplicate_item_validation(frm, table_field, cdt, cdn, label) {
+    let row = locals[cdt][cdn];
+    if (!row || !row.item_code) return;
+
+    let duplicates = (frm.doc[table_field] || [])
+        .filter(d => d.item_code === row.item_code);
+
+    // >1 because current row is included
+    if (duplicates.length > 1) {
+        row.item_code = '';
+        frappe.msgprint({
+            title: __('Duplicate Item'),
+            message: __('This item is already added'),
+            indicator: 'red'
         });
     }
-});
+}
