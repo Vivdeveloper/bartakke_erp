@@ -73,19 +73,7 @@ def create_production_process_tracking(source_name, target_doc=None):
         target.panel_colour_inside = source.custom_panel_color
         target.base_colour = source.custom_base_color
 
-        stages = [
-            "Design Issued",
-            "Design Received",
-            "Programming",
-            "Punching",
-            "Bending",
-            "Welding",
-            "Transferred to Unit 1",
-            "Powder Coating",
-            "Assembly",
-            "Ready for Dispatch",
-            "Dispatched"
-        ]
+        stages = frappe.db.get_all("Production Stages", pluck='name')
 
         target.set("production_stage_log", [])
         for stage in stages:

@@ -68,29 +68,47 @@ function rebuild_bom_items(frm) {
         args: {
             doc: frm.doc,
         },
+        freeze: true,
+        freeze_message: __('Rebuilding BOM items...'),
         callback(r) {
             if (!r.message) return;
 
-            // clear once
             frm.clear_table('items');
 
-            Object.entries(r.message).forEach(([item_code, qty]) => {
-                let row = frm.add_child('items');
-                row.item_code = item_code;
-                row.qty = qty;
+            const items = r.message; 
+            const item_codes = Object.keys(items);
 
-                frappe.db.get_value(
-                    'Item',
-                    item_code,
+            frappe.db.get_list('Item', {
+                fields: [
+                    'name',
+                    'item_name',
+                    'item_group',
                     'stock_uom',
-                    (res) => {
-                        row.uom = res.stock_uom;
-                        frm.refresh_field('items');
-                    }
-                );
-            });
+                    'custom_drawing_no'
+                ],
+                filters: {
+                    name: ['in', item_codes]
+                },
+                limit: item_codes.length
+            }).then(res => {
+                const item_map = {};
+                res.forEach(d => {
+                    item_map[d.name] = d;
+                });
 
-            frm.refresh_field('items');
+                item_codes.forEach(item_code => {
+                    let row = frm.add_child('items');
+                    row.item_code  = item_code;
+                    row.item_name  = item_map[item_code]?.item_name || '';
+                    row.custom_item_group = item_map[item_code]?.item_group || '';
+                    row.uom        = item_map[item_code]?.stock_uom || '';
+                    row.custom_drawing_number    = item_map[item_code]?.drawing || '';
+                    row.qty        = items[item_code] || 1;
+                    row.rate       = 0;
+                });
+
+                frm.refresh_field('items');
+            });
         }
     });
 }
