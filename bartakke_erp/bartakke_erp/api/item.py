@@ -177,18 +177,24 @@ def autoname(doc, method=None):
     if doc.custom_parent_item_group != "Products":
         return
 
-    parts = [
-        doc.custom_w,
-        doc.custom_d,
-        doc.custom_h,
-        doc.custom_t,
-    ]
+    parts = []
 
-    parts = [str(p).strip() for p in parts if p]
+    if doc.custom_w:
+        parts.append(f"{doc.custom_w} W")
+    if doc.custom_d:
+        parts.append(f"{doc.custom_d} D")
+    if doc.custom_h:
+        parts.append(f"{doc.custom_h} H")
+    if doc.custom_t:
+        parts.append(f"{doc.custom_t} T")
 
-    if parts:
-        name = " x ".join(parts)
-        doc.name = f"{doc.item_name} {name}"
+    if not parts:
+        return
+
+    dimensions = " x ".join(parts)
+    base_name = f"{doc.item_name or 'Item'} {dimensions}"
+    
+    doc.name = base_name
 
 @frappe.whitelist()
 def add_revision111(file_url):
