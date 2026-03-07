@@ -10,6 +10,7 @@ def validate(doc, method=None):
 
 def before_save(doc, method=None):
     create_drawing(doc)
+    get_full_drawing_no(doc)
 
 def item_drawing(doc):
     if not doc.custom_drawing_no:
@@ -177,7 +178,7 @@ def get_revision(doc):
             return f"{doc.get('custom_drawing_no')}-{set_revision}"
 
 def autoname(doc, method=None):
-    if doc.custom_parent_item_group != "Products":
+    if doc.custom_parent_item_group not in ["Products", "Assembly Item"]:
         return
 
     parts = []
@@ -198,6 +199,7 @@ def autoname(doc, method=None):
     base_name = f"{doc.item_name or 'Item'} {dimensions}"
     
     doc.name = base_name
+    doc.item_name = base_name
 
 @frappe.whitelist()
 def add_revision111(file_url):
@@ -238,6 +240,9 @@ def add_revision111(file_url):
         next_rev = 1
 
     new_revision = f"{drawing_name}-{next_rev}"
+    item = frappe.get_doc("Item", drawing_doc.item_code)
+    item.custom_revision = f"{item.custom_drawing_no}-{next_rev}"
+    item.save()
 
     drawing_doc.append("drawing_revision", {
         "drawing_revision": new_revision,
@@ -249,3 +254,6 @@ def add_revision111(file_url):
     drawing_doc.save(ignore_permissions=True)
 
     return new_revision
+
+def get_full_drawing_no(doc):
+    doc.custom_full_drawing_number_ = f"{doc.custom_sf_code or ''}-{doc.custom_revision or doc.custom_drawing_no or ''}/{doc.custom_sheet or ''}"
