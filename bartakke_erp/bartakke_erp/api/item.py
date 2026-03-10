@@ -256,4 +256,8 @@ def add_revision111(file_url):
     return new_revision
 
 def get_full_drawing_no(doc):
-    doc.custom_full_drawing_number_ = f"{doc.custom_sf_code or ''}-{doc.custom_revision or doc.custom_drawing_no or ''}/{doc.custom_sheet or ''}"
+    if not (doc.custom_sf_code and doc.custom_drawing_no and doc.custom_sheet):
+        return
+
+    revision = doc.custom_revision or doc.custom_drawing_no
+    doc.custom_full_drawing_number_ = f"{doc.custom_sf_code}-{revision}/{doc.custom_sheet}"
