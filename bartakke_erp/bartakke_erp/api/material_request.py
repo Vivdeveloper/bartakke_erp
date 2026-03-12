@@ -5,7 +5,6 @@ import json
 
 @frappe.whitelist()
 def create_production_plan(material_request):
-	frappe.log_error('create ppp')
 	"""
 	Create a Production Plan from a Material Request
 	"""
@@ -51,9 +50,7 @@ def create_production_plan(material_request):
 		bom = frappe.get_doc("BOM", item_data["bom_no"])
 		if bom.exploded_items:
 			for exploded in bom.exploded_items:
-				frappe.log_error('assss')
 				if frappe.db.get_value("Item", exploded.item_code, 'custom_parent_item_group') == "Assembly Item":
-					frappe.log_error('assss11111111')
 					pp.append("custom_assembly_item", {
 						"item_code": exploded.item_code,
 						"item_name": exploded.item_name,
