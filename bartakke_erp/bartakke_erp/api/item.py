@@ -259,5 +259,4 @@ def get_full_drawing_no(doc):
     if not (doc.custom_sf_code and doc.custom_drawing_no and doc.custom_sheet):
         return
 
-    revision = doc.custom_revision or doc.custom_drawing_no
-    doc.custom_full_drawing_number_ = f"{doc.custom_sf_code}-{revision}/{doc.custom_sheet}"
+    doc.custom_full_drawing_number_ = f"{doc.custom_sf_code}-{doc.custom_drawing_no}-{doc.custom_revision}/{doc.custom_sheet}"
