@@ -189,9 +189,10 @@ doc_events = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "bartakke_erp.event.get_events"
-# }
+override_whitelisted_methods = {
+	# "frappe.desk.doctype.event.event.get_events": "bartakke_erp.event.get_events"
+    "erpnext.manufacturing.doctype.production_plan.production_plan.get_items_for_material_requests": "bartakke_erp.bartakke_erp.api.production_plan.custom_get_items_for_material_requests"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
