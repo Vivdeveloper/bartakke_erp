@@ -97,3 +97,26 @@ def create_production_process_tracking(source_name, target_doc=None):
     )
 
     return doc
+
+@frappe.whitelist()
+def get_assembly_item_details(work_order):
+
+    total_area = 0
+    total_weight = 0
+
+    wo = frappe.get_doc("Production Plan", work_order)
+
+    for item in wo.custom_assembly_item:
+        area, weight = frappe.db.get_value(
+            "Item",
+            item.item_code,
+            ["custom_area", "weight_per_unit"]
+        )
+
+        total_area += area or 0
+        total_weight += weight or 0
+
+    return {
+        "total_area": total_area,
+        "total_weight": total_weight
+    }
