@@ -7,6 +7,25 @@ frappe.ui.form.on('Production Process Tracking', {
 			};
 		});
     },
+    refresh(frm) {
+        if (frm.doc.work_order_no){
+            frappe.call({
+                method: "bartakke_erp.bartakke_erp.api.wo.get_assembly_item_details",
+                args: {
+                    work_order: frm.doc.work_order_no
+                },
+                callback: function(r) {
+                    if (r.message) {
+                        console.log("Total Area:", r.message.total_area);
+                        console.log("Total Weight:", r.message.total_weight);
+
+                        frm.set_value("area_sq_mtr_paint", r.message.total_area);
+                        frm.set_value("weight_kg", r.message.total_weight);
+                    }
+                }
+        });
+        }
+    },
     qty(frm) {
         if (!frm.doc.area_sq_mtr_paint && frm.doc.qty) {
             frappe.db.get_value("Item", { name: frm.doc.item }, ["custom_area", "weight_per_unit"], (r) => {

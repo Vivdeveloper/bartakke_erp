@@ -9,6 +9,7 @@
   "item_code",
   "item_name",
   "drawing_number",
+  "latest_revision",
   "column_break_xkfp",
   "sf_code",
   "short_form",
@@ -77,12 +78,17 @@
    "label": "Parent Group",
    "link_filters": "[[\"Item Group\",\"parent_item_group\",\"is\",\"set\"]]",
    "options": "Item Group"
+  },
+  {
+   "fieldname": "latest_revision",
+   "fieldtype": "Data",
+   "label": "Latest Revision"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-27 10:03:21.586294",
+ "modified": "2026-03-15 11:48:27.030585",
  "modified_by": "Administrator",
  "module": "Bartakke ERP",
  "name": "Drawing",

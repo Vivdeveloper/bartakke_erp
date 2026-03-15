@@ -169,6 +169,7 @@ def get_revision(doc):
                 set_revision = rev + 1
             else:
                 set_revision = 1
+            drawing_doc.latest_revision = f"{name}-{set_revision}"
             drawing_doc.append("drawing_revision", {
                 'drawing_revision': f"{name}-{set_revision}",
                 'revision_time': frappe.utils.now(),
@@ -243,6 +244,7 @@ def add_revision111(file_url):
     item = frappe.get_doc("Item", drawing_doc.item_code)
     item.custom_revision = f"{item.custom_drawing_no}-{next_rev}"
     item.save()
+    drawing_doc.latest_revision = new_revision
 
     drawing_doc.append("drawing_revision", {
         "drawing_revision": new_revision,
@@ -256,7 +258,11 @@ def add_revision111(file_url):
     return new_revision
 
 def get_full_drawing_no(doc):
-    if not (doc.custom_sf_code and doc.custom_drawing_no and doc.custom_sheet):
+    if not (doc.custom_sf_code and doc.custom_drawing_no):
         return
-
-    doc.custom_full_drawing_number_ = f"{doc.custom_sf_code}-{doc.custom_drawing_no}-{doc.custom_revision}/{doc.custom_sheet}"
+    
+    if doc.custom_sheet:
+        doc.custom_full_drawing_number_ = f"{doc.custom_sf_code}-{doc.custom_drawing_no}-{doc.custom_revision}/{doc.custom_sheet}"
+    else:
+        doc.custom_full_drawing_number_ = f"{doc.custom_sf_code}-{doc.custom_drawing_no}-{doc.custom_revision}"
+        
