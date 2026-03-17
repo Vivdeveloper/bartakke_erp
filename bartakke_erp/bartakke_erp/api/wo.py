@@ -105,6 +105,7 @@ def get_assembly_item_details(work_order):
     total_weight = 0
 
     wo = frappe.get_doc("Production Plan", work_order)
+    planned_qty = frappe.db.get_value("Production Plan Item", {'parent':work_order}, 'planned_qty')
 
     for item in wo.custom_assembly_item:
         area, weight = frappe.db.get_value(
@@ -118,5 +119,6 @@ def get_assembly_item_details(work_order):
 
     return {
         "total_area": total_area,
-        "total_weight": total_weight
+        "total_weight": total_weight,
+        "qty": planned_qty
     }
