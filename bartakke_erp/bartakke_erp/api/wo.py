@@ -112,10 +112,10 @@ def get_assembly_item_details(work_order):
             "Item",
             item.item_code,
             ["custom_area", "weight_per_unit"]
-        )
+        ) or (0, 0)
 
-        total_area += area or 0
-        total_weight += weight or 0
+        total_area += (area or 0) * (item.qty or 0)
+        total_weight += (weight or 0) * (item.qty or 0)
 
     return {
         "total_area": total_area,
