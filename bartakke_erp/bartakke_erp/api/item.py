@@ -204,14 +204,11 @@ def autoname(doc, method=None):
 
 @frappe.whitelist()
 def add_revision111(file_url):
+
     if not file_url:
         frappe.throw(_("File is required"))
 
-    file_name = frappe.db.get_value(
-        "File",
-        {"file_url": file_url},
-        "name"
-    )
+    file_name = frappe.db.get_value("File", {"file_url": file_url}, "name")
 
     if not file_name:
         frappe.throw(_("Uploaded file not found. Please try again."))
@@ -220,30 +217,61 @@ def add_revision111(file_url):
 
     filename = file_doc.file_name.rsplit(".", 1)[0]
 
-    if filename.count("-") < 1:
+    # filename itself is revision now
+    if "-" not in filename:
+        frappe.throw(_("Invalid revision file name format"))
+
+    if filename.count("-") < 2:
         frappe.throw(_("Invalid file name format"))
 
-    drawing_name = filename
+    parts = filename.split("-")
+    new_counter = parts[-1]
+
+    if not new_counter.isdigit():
+        frappe.throw(_("Revision counter must be numeric"))
+
+    new_counter = int(new_counter)
+
+    drawing_name = "-".join(parts[:-1])
 
     if not frappe.db.exists("Drawing", drawing_name):
         frappe.throw(_("Drawing {0} not found").format(drawing_name))
 
     drawing_doc = frappe.get_doc("Drawing", drawing_name)
 
-    revisions = [r.drawing_revision for r in drawing_doc.drawing_revision if r.drawing_revision]
+    revisions = [
+        r.drawing_revision
+        for r in drawing_doc.drawing_revision
+        if r.drawing_revision
+    ]
 
-    if len(revisions)>1:
+    # get latest counter
+    if revisions:
         last_revision = revisions[-1]
-        parts = last_revision.split("-")
-        last_rev_no = int(parts[-1]) if parts[-1].isdigit() else 0
-        next_rev = last_rev_no + 1
+        if last_revision.count("-") == 2:
+            last_counter = int(last_revision.split("-")[-1])
+        else:
+            last_counter = 0
     else:
-        next_rev = 1
+        last_counter = 0
 
-    new_revision = f"{drawing_name}-{next_rev}"
-    item = frappe.get_doc("Item", drawing_doc.item_code)
-    item.custom_revision = f"{item.custom_drawing_no}-{next_rev}"
-    item.save()
+    # main validation
+    if new_counter <= last_counter:
+        frappe.throw(
+            _("Revision counter must be greater than latest revision ({0})").format(last_counter)
+        )
+
+    new_revision = filename
+
+    # update item revision
+    frappe.db.set_value(
+        "Item",
+        drawing_doc.item_code,
+        "custom_revision",
+        new_revision
+    )
+
+    # update drawing
     drawing_doc.latest_revision = new_revision
 
     drawing_doc.append("drawing_revision", {
