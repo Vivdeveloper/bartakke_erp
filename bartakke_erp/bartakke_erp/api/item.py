@@ -4,6 +4,9 @@
 import frappe
 import json
 from frappe import _
+import re
+from frappe.utils.file_manager import save_file
+
 
 def validate(doc, method=None):
     item_drawing(doc)
@@ -294,3 +297,54 @@ def get_full_drawing_no(doc):
     else:
         doc.custom_full_drawing_number_ = f"{doc.custom_sf_code}-{doc.custom_drawing_no}-{doc.custom_revision}"
         
+
+@frappe.whitelist()
+def map_local_revisions(files):
+    files = frappe.parse_json(files)
+    filename = []
+
+    for f in files:
+        file_name = f.get("name")
+        file_url = f.get("url")
+
+        # Extract revision
+        match = re.search(r"(\d+-\d+-\d+)", file_name)
+        if not match:
+            continue
+
+        revision_name = match.group(1)
+        filename.append(revision_name)
+
+        # Extract drawing_no
+        drawing_no = "-".join(revision_name.split("-")[:2])
+
+        # Get Drawing
+        drawing = frappe.db.get_value(
+            "Drawing",
+            {"name": drawing_no},
+            "name"
+        )
+
+        if not drawing:
+            continue
+
+        # Prevent duplicate
+        if frappe.db.exists(
+            "Drawing Revision",
+            {"parent": drawing, "drawing_revision": revision_name}
+        ):
+            continue
+
+        # Append revision (store blob URL)
+        doc = frappe.get_doc("Drawing", drawing)
+        doc.append("drawing_revision", {
+            "drawing_revision": revision_name,
+            "file_url": file_url,
+            "created_by": frappe.session.user,
+        })
+
+        doc.save(ignore_permissions=True)
+    
+    frappe.rename_doc('Drawing', filename[0][0:len(filename[0])-2], filename[-1])
+
+    frappe.db.commit()
