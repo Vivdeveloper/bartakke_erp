@@ -134,3 +134,46 @@ def get_assembly_item_details(work_order):
         "total_weight": total_weight,
         "qty": planned_qty
     }
+
+@frappe.whitelist()
+def create_production_tracking(work_orders):
+    work_orders = frappe.parse_json(work_orders)
+
+    ppt = frappe.new_doc("Production Process Tracking")
+
+    for wo_name in work_orders:
+        wo = frappe.get_doc("Production Plan", wo_name)
+
+        for item in wo.po_items:
+            ppt.append("production_process_tracking_item", {
+                "item": item.item_code,
+                "work_order_qty": item.planned_qty,
+                "work_order_no": wo.name,
+                "indent_date": frappe.db.get_value(
+                    "Material Request",
+                    wo.custom_indent,
+                    "transaction_date"
+                ),
+                "indent_received_date": frappe.db.get_value("Material Request", wo.custom_indent, 'schedule_date'),
+                "po_number": wo.custom_customer_po_no,
+                "customer_po_date": wo.custom_customer_po_date,
+                "delivery_date" : wo.custom_customer_delivery,
+                "colour" : wo.custom_panel_outside_color,
+                "panel_colour_inside" : wo.custom_panel_color,
+                "base_colour" : wo.custom_base_color,
+                "weight_kg": frappe.db.get_value("Item", item.item_code, 'weight_per_unit'),
+                "area_sq_mtr_paint": frappe.db.get_value("Item", item.item_code, 'custom_area'),
+            })
+
+        if not ppt.work_order_no:
+            ppt.customer = wo.get("custom_customer_name")
+    stages = frappe.db.get_all("Production Stages", pluck='name')
+
+    ppt.set("production_stage_log", [])
+    for stage in stages:
+        ppt.append("production_stage_log", {
+            "stage": stage
+        })
+
+    ppt.insert(ignore_permissions=True)
+    return ppt.name

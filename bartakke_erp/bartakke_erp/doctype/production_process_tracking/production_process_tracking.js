@@ -16,8 +16,6 @@ frappe.ui.form.on('Production Process Tracking', {
                 },
                 callback: function(r) {
                     if (r.message) {
-                        console.log("Total Area:", r.message.total_area);
-                        console.log("Total Weight:", r.message.total_weight);
 
                         frm.set_value("area_sq_mtr_paint", r.message.total_area * r.message.qty);
                         frm.set_value("weight_kg", r.message.total_weight * r.message.qty);
