@@ -1,15 +1,12 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "naming_series:",
- "creation": "2026-02-23 01:24:05.260511",
+ "creation": "2026-03-20 20:36:38.230482",
  "default_view": "List",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "naming_series",
   "work_order_no",
-  "lot_no",
   "indent_no",
   "indent_date",
   "indent_received_date",
@@ -17,81 +14,61 @@
   "customer_po_date",
   "weight_kg",
   "column_break_hbki",
-  "customer",
-  "delivery_date",
-  "current_stage",
-  "overall_status",
-  "design",
   "colour",
   "panel_colour_inside",
   "base_colour",
   "item",
+  "delivery_date",
   "work_order_qty",
-  "qty",
-  "area_sq_mtr_paint",
-  "section_break_hwyn",
-  "production_process_tracking_item",
-  "section_break_cvqu",
-  "production_stage_log"
+  "area_sq_mtr_paint"
  ],
  "fields": [
-  {
-   "default": ".{customer}.-.###",
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "label": "Naming_Series",
-   "options": ".{customer}.-.###"
-  },
   {
    "fetch_from": "order_acceptance.custom_work_order_no",
    "fieldname": "work_order_no",
    "fieldtype": "Link",
-   "hidden": 1,
+   "in_list_view": 1,
    "label": "Work Order No.",
    "options": "Production Plan"
-  },
-  {
-   "fieldname": "lot_no",
-   "fieldtype": "Data",
-   "label": "Lot No."
   },
   {
    "fetch_from": "work_order_no.custom_indent",
    "fieldname": "indent_no",
    "fieldtype": "Link",
-   "hidden": 1,
+   "in_list_view": 1,
    "label": "Indent No.",
    "options": "Material Request"
   },
   {
    "fieldname": "indent_date",
    "fieldtype": "Date",
-   "hidden": 1,
+   "in_list_view": 1,
    "label": "Indent Date"
   },
   {
    "fieldname": "indent_received_date",
    "fieldtype": "Date",
-   "hidden": 1,
+   "in_list_view": 1,
    "label": "Indent Received Date"
   },
   {
    "fetch_from": "order_acceptance.po_no",
    "fieldname": "po_number",
    "fieldtype": "Data",
-   "hidden": 1,
+   "in_list_view": 1,
    "label": "PO Number"
   },
   {
    "fetch_from": "order_acceptance.po_date",
    "fieldname": "customer_po_date",
    "fieldtype": "Date",
-   "hidden": 1,
+   "in_list_view": 1,
    "label": "Customer PO Date"
   },
   {
    "fieldname": "weight_kg",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "Weight Kg"
   },
   {
@@ -99,44 +76,9 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "work_order_no.custom_customer_name",
-   "fieldname": "customer",
-   "fieldtype": "Link",
-   "label": "Customer ",
-   "options": "Customer"
-  },
-  {
-   "fetch_from": "work_order_no.from_delivery_date",
-   "fieldname": "delivery_date",
-   "fieldtype": "Date",
-   "hidden": 1,
-   "label": "Delivery Date"
-  },
-  {
-   "fieldname": "current_stage",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Current Stage",
-   "options": "\nDesign Issued\nDesign Received\nProgramming\nPunching\nBending\nWelding\nTransferred to Unit 1\nPowder Coating\nAssembly\nReady for Dispatch\nDispatched",
-   "read_only": 1
-  },
-  {
-   "default": "Open",
-   "fieldname": "overall_status",
-   "fieldtype": "Select",
-   "label": "Overall Status ",
-   "options": "Open\nIn Progress\nCompleted"
-  },
-  {
-   "fieldname": "design",
-   "fieldtype": "Data",
-   "label": "Design"
-  },
-  {
    "fetch_from": "work_order_no.custom_panel_outside_color",
    "fieldname": "colour",
    "fieldtype": "Link",
-   "hidden": 1,
    "label": "Panel Colour Outside ",
    "link_filters": "[[\"Store Item\",\"item_group\",\"in\",[\"Chemical  for Powder\",\"Other Chemical Liquid Paint\",\"Chemical for Gasketing\",\"Powder Paint\",\"\",\"Coating\",null]]]",
    "options": "Store Item"
@@ -145,7 +87,6 @@
    "fetch_from": "work_order_no.custom_panel_color",
    "fieldname": "panel_colour_inside",
    "fieldtype": "Link",
-   "hidden": 1,
    "label": "Panel Colour Inside",
    "link_filters": "[[\"Store Item\",\"item_group\",\"in\",[\"Chemical  for Powder\",\"Other Chemical Liquid Paint\",\"Chemical for Gasketing\",\"Powder Paint\",\"\",\"Coating\",null]]]",
    "options": "Store Item"
@@ -154,7 +95,7 @@
    "fetch_from": "work_order_no.custom_base_color",
    "fieldname": "base_colour",
    "fieldtype": "Link",
-   "hidden": 1,
+   "in_list_view": 1,
    "label": "Base Colour",
    "link_filters": "[[\"Store Item\",\"item_group\",\"in\",[\"Chemical  for Powder\",\"Other Chemical Liquid Paint\",\"Chemical for Gasketing\",\"Powder Paint\",\"\",\"Coating\",null]]]",
    "options": "Store Item"
@@ -163,71 +104,39 @@
    "fetch_if_empty": 1,
    "fieldname": "item",
    "fieldtype": "Link",
-   "hidden": 1,
+   "in_list_view": 1,
    "label": "Item",
-   "options": "Item"
-  },
-  {
-   "fieldname": "qty",
-   "fieldtype": "Float",
-   "hidden": 1,
-   "label": "Qty"
-  },
-  {
-   "fieldname": "area_sq_mtr_paint",
-   "fieldtype": "Float",
-   "label": "Area Sq. Mtr Paint"
-  },
-  {
-   "fieldname": "section_break_cvqu",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "production_stage_log",
-   "fieldtype": "Table",
-   "label": "Production Stage Log",
-   "options": "Production Stage Log"
+   "options": "Item",
+   "reqd": 1
   },
   {
    "fieldname": "work_order_qty",
    "fieldtype": "Float",
-   "hidden": 1,
+   "in_list_view": 1,
    "label": "Work Order Qty"
   },
   {
-   "fieldname": "section_break_hwyn",
-   "fieldtype": "Section Break"
+   "fieldname": "area_sq_mtr_paint",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Area Sq. Mtr Paint"
   },
   {
-   "fieldname": "production_process_tracking_item",
-   "fieldtype": "Table",
-   "label": "Production Process Tracking Item",
-   "options": "Production Process Tracking Item"
+   "fieldname": "delivery_date",
+   "fieldtype": "Data",
+   "label": "Delivery Date"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "istable": 1,
  "links": [],
- "modified": "2026-03-20 23:16:30.489760",
+ "modified": "2026-03-20 23:09:25.306729",
  "modified_by": "Administrator",
  "module": "Bartakke ERP",
- "name": "Production Process Tracking",
- "naming_rule": "By \"Naming Series\" field",
+ "name": "Production Process Tracking Item",
  "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
+ "permissions": [],
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
