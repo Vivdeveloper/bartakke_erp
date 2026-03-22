@@ -8,21 +8,10 @@ frappe.ui.form.on('Production Process Tracking', {
 		});
     },
     refresh(frm) {
-        if (frm.doc.work_order_no){
-            frappe.call({
-                method: "bartakke_erp.bartakke_erp.api.wo.get_assembly_item_details",
-                args: {
-                    work_order: frm.doc.work_order_no
-                },
-                callback: function(r) {
-                    if (r.message) {
-
-                        frm.set_value("area_sq_mtr_paint", r.message.total_area * r.message.qty);
-                        frm.set_value("weight_kg", r.message.total_weight * r.message.qty);
-                    }
-                }
-        });
-        }
+        calculate_totals(frm);
+    },
+    production_process_tracking_item_remove: function(frm) {
+        calculate_totals(frm);
     },
     qty(frm) {
         if (!frm.doc.area_sq_mtr_paint && frm.doc.qty) {
@@ -57,3 +46,16 @@ frappe.ui.form.on('Production Process Tracking', {
         }
     }
 })
+
+function calculate_totals(frm) {
+    let wt = 0;
+    let area = 0;
+
+    (frm.doc.production_process_tracking_item || []).forEach(i => {
+        wt += flt(i.weight_kg);
+        area += flt(i.area_sq_mtr_paint);
+    });
+
+    frm.set_value('weight_kg', wt);
+    frm.set_value('area_sq_mtr_paint', area);
+}
