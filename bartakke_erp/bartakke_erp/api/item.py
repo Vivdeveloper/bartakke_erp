@@ -301,50 +301,83 @@ def get_full_drawing_no(doc):
 @frappe.whitelist()
 def map_local_revisions(files):
     files = frappe.parse_json(files)
-    filename = []
+
+    # Store revisions grouped by base drawing
+    drawings_map = {}
 
     for f in files:
         file_name = f.get("name")
         file_url = f.get("url")
 
-        # Extract revision
-        match = re.search(r"(\d+-\d+-\d+)", file_name)
-        if not match:
+        if not file_name or not file_url:
             continue
 
-        revision_name = match.group(1)
-        filename.append(revision_name)
+        # Extract first revision (e.g., 11-10001-1 from "11-10001-1 (20-10001-3)")
+        matches = re.findall(r"\b\d+-\d+-\d+\b", file_name)
+        if not matches:
+            continue
 
-        # Extract drawing_no
-        drawing_no = "-".join(revision_name.split("-")[:2])
+        revision_name = matches[0]
 
-        # Get Drawing
+        # Extract base drawing (e.g., 11-10001)
+        parts = revision_name.split("-")
+        base_drawing = f"{parts[0]}-{parts[1]}"
+
+        # Detect file type
+        ext = file_name.split(".")[-1].lower().strip()
+
+        if ext == "pdf":
+            field = "file_url"
+        elif ext == "dxf":
+            field = "dxf_file_url"
+        else:
+            continue  # skip unsupported files
+
+        # Group data
+        drawings_map.setdefault(base_drawing, {})
+        drawings_map[base_drawing].setdefault(revision_name, {})
+        drawings_map[base_drawing][revision_name][field] = file_url
+
+    for base_drawing, revisions in drawings_map.items():
+
         drawing = frappe.db.get_value(
             "Drawing",
-            {"name": drawing_no},
+            {"name": ["like", f"{base_drawing}%"]},
             "name"
         )
 
         if not drawing:
             continue
 
-        # Prevent duplicate
-        if frappe.db.exists(
-            "Drawing Revision",
-            {"parent": drawing, "drawing_revision": revision_name}
-        ):
-            continue
-
-        # Append revision (store blob URL)
         doc = frappe.get_doc("Drawing", drawing)
-        doc.append("drawing_revision", {
-            "drawing_revision": revision_name,
-            "file_url": file_url,
-            "created_by": frappe.session.user,
-        })
+
+        for revision_name, files_data in revisions.items():
+
+            existing_row = None
+            for row in doc.drawing_revision:
+                if row.drawing_revision == revision_name:
+                    existing_row = row
+                    break
+
+            if existing_row:
+                for key, value in files_data.items():
+                    setattr(existing_row, key, value)
+            else:
+                doc.append("drawing_revision", {
+                    "drawing_revision": revision_name,
+                    "created_by": frappe.session.user,
+                    **files_data
+                })
 
         doc.save(ignore_permissions=True)
-    
-    frappe.rename_doc('Drawing', filename[0][0:len(filename[0])-2], filename[-1])
 
-    frappe.db.commit()
+        latest_revision = max(
+            revisions.keys(),
+            key=lambda x: int(x.split("-")[-1])
+        )
+
+        if doc.name != latest_revision:
+            if not frappe.db.exists("Drawing", latest_revision):
+                frappe.rename_doc("Drawing", doc.name, latest_revision)
+
+frappe.db.commit()
