@@ -11,8 +11,10 @@ from frappe.utils.file_manager import save_file
 def validate(doc, method=None):
     item_drawing(doc)
 
-def before_save(doc, method=None):
+def after_insert(doc, method=None):
     create_drawing(doc)
+
+def before_save(doc, method=None):
     get_full_drawing_no(doc)
 
 def item_drawing(doc):
@@ -38,8 +40,10 @@ def create_drawing(doc):
         drawing.item_code = doc.get('name')
         drawing.item_name = doc.get('item_name')
         drawing.sf_code = doc.get('custom_sf_code')
-        drawing.drawing_number = name
+        drawing.drawing_number = doc.get('custom_drawing_no')
         drawing.item_group = doc.get("item_group")
+        drawing.sheet = doc.get("custom_sheet")
+        drawing.revision = doc.get("custom_revision")
         drawing.insert()
 
 

@@ -1,7 +1,6 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:drawing_number",
  "creation": "2025-11-06 18:51:11.542890",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -10,11 +9,13 @@
   "item_name",
   "drawing_number",
   "latest_revision",
+  "sheet",
   "column_break_xkfp",
   "sf_code",
   "short_form",
   "item_group",
   "parent_group",
+  "revision",
   "section_break_wdpc",
   "drawing_revision"
  ],
@@ -83,16 +84,25 @@
    "fieldname": "latest_revision",
    "fieldtype": "Data",
    "label": "Latest Revision"
+  },
+  {
+   "fieldname": "sheet",
+   "fieldtype": "Data",
+   "label": "Sheet"
+  },
+  {
+   "fieldname": "revision",
+   "fieldtype": "Data",
+   "label": "Revision"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-15 11:48:27.030585",
+ "modified": "2026-03-25 09:40:25.282367",
  "modified_by": "Administrator",
  "module": "Bartakke ERP",
  "name": "Drawing",
- "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

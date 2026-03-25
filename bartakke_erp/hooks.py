@@ -156,7 +156,8 @@ doc_events = {
 		"on_trash": "bartakke_erp.bartakke_erp.api.item.on_trash",
         "validate": "bartakke_erp.bartakke_erp.api.item.validate",
         "autoname": "bartakke_erp.bartakke_erp.api.item.autoname",
-        "before_save": "bartakke_erp.bartakke_erp.api.item.before_save"
+        "before_save": "bartakke_erp.bartakke_erp.api.item.before_save",
+        "after_insert": "bartakke_erp.bartakke_erp.api.item.after_insert"
 	}
 }
 
