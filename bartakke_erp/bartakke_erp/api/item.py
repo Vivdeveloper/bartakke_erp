@@ -16,6 +16,7 @@ def after_insert(doc, method=None):
 
 def before_save(doc, method=None):
     get_full_drawing_no(doc)
+    rename_item(doc)
 
 def item_drawing(doc):
     if not doc.custom_drawing_no:
@@ -208,6 +209,40 @@ def autoname(doc, method=None):
     
     doc.name = base_name
     doc.item_name = base_name
+
+def rename_item(doc):
+
+    if doc.custom_parent_item_group not in ["Products", "Assembly Item"]:
+        return
+
+    parts = []
+
+    if doc.custom_w:
+        parts.append(f"{doc.custom_w} W")
+    if doc.custom_d:
+        parts.append(f"{doc.custom_d} D")
+    if doc.custom_h:
+        parts.append(f"{doc.custom_h} H")
+    if doc.custom_t:
+        parts.append(f"{doc.custom_t} T")
+
+    if not parts:
+        return
+
+    dimensions = " x ".join(parts)
+
+    # remove previous dimensions
+    base_name = doc.item_name.split(" W")[0].strip()
+
+    new_name = f"{base_name} {dimensions}"
+
+    if not doc.is_new() and doc.name != new_name:
+        frappe.rename_doc(
+            "Item",
+            doc.name,
+            new_name,
+            force=True
+        )
 
 @frappe.whitelist()
 def add_revision111(file_url):
