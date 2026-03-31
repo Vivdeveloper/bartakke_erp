@@ -223,6 +223,21 @@ def rename_item(doc):
     if doc.custom_parent_item_group not in ["Products", "Assembly Item"]:
         return
 
+    # Get previous document
+    old_doc = doc.get_doc_before_save()
+
+    # If document is new, skip
+    if not old_doc:
+        return
+
+    # Check if any dimension changed
+    fields = ["custom_w", "custom_d", "custom_h", "custom_t"]
+
+    changed = any(doc.get(f) != old_doc.get(f) for f in fields)
+
+    if not changed:
+        return
+
     parts = []
 
     if doc.custom_w:
@@ -239,12 +254,12 @@ def rename_item(doc):
 
     dimensions = " x ".join(parts)
 
-    # Remove old dimensions pattern
+    # Remove old dimensions
     base_name = re.sub(r"\s\d+(\.\d+)?\s[WDHT](\s*x\s*\d+(\.\d+)?\s[WDHT])*", "", doc.item_name).strip()
 
     new_name = f"{base_name} {dimensions}"
 
-    if not doc.is_new() and doc.name != new_name:
+    if doc.name != new_name:
         frappe.rename_doc(
             "Item",
             doc.name,
