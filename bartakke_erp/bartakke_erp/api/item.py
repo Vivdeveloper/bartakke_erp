@@ -90,6 +90,14 @@ def on_trash(self, method=None):
         finally:
             frappe.flags.in_item_delete = False
 
+    elif self.custom_full_drawing_number_:
+        frappe.delete_doc(
+                "Drawing",
+                self.custom_full_drawing_number_,
+                ignore_permissions=True,
+                force=1
+            )
+
 
 
 @frappe.whitelist()
@@ -231,8 +239,8 @@ def rename_item(doc):
 
     dimensions = " x ".join(parts)
 
-    # remove previous dimensions
-    base_name = doc.item_name.split(" W")[0].strip()
+    # Remove old dimensions pattern
+    base_name = re.sub(r"\s\d+(\.\d+)?\s[WDHT](\s*x\s*\d+(\.\d+)?\s[WDHT])*", "", doc.item_name).strip()
 
     new_name = f"{base_name} {dimensions}"
 
@@ -243,6 +251,8 @@ def rename_item(doc):
             new_name,
             force=True
         )
+
+    doc.item_name = new_name
 
 @frappe.whitelist()
 def add_revision111(file_url):
