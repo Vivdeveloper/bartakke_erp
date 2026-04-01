@@ -66,7 +66,12 @@ class StoreItem(Document):
 					"custom_material_type": self.material_type,
 					"custom_color": self.color,
 					"custom_process": self.process_type,
-					"standard_rate": self.price if self.price else None
+					"standard_rate": self.price if self.price else None,
+					"custom_development_size_a": self.custom_development_size_a if self.custom_development_size_a else 0,
+					"custom_development_size_b": self.custom_development_size_b if self.custom_development_size_b else 0,
+					"custom_area": self.custom_area if self.custom_area else 0,
+					"custom_density": self.custom_density if self.custom_density else 0,
+					"weight_per_unit": self.weight_per_unit if self.weight_per_unit else 0
 				})
 				item.insert(ignore_permissions=True, set_name=self.name)
 				frappe.msgprint(f"Item {item.name} created successfully", alert=True, indicator="green")
@@ -91,6 +96,11 @@ class StoreItem(Document):
 				item.custom_color = self.color
 				item.custom_process = self.process_type
 				item.standard_rate = self.price if self.price else None
+				item.custom_development_size_a = self.custom_development_size_a if self.custom_development_size_a else 0
+				item.custom_development_size_b = self.custom_development_size_b if self.custom_development_size_b else 0
+				item.custom_area = self.custom_area if self.custom_area else 0
+				item.custom_density = self.custom_density if self.custom_density else 0
+				item.weight_per_unit = self.weight_per_unit if self.weight_per_unit else 0
 
 				item.save(ignore_permissions=True)
 
