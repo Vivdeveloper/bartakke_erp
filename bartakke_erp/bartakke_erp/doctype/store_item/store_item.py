@@ -72,7 +72,7 @@ class StoreItem(Document):
 					"custom_area": self.custom_area if self.custom_area else 0,
 					"custom_density": self.custom_density if self.custom_density else 0,
 					"weight_per_unit": self.weight_per_unit if self.weight_per_unit else 0,
-					"custom_t": self.custom_t if self.custom_t elsse 0
+					"custom_t": self.custom_t if self.custom_t else 0
 				})
 				item.insert(ignore_permissions=True, set_name=self.name)
 				frappe.msgprint(f"Item {item.name} created successfully", alert=True, indicator="green")
