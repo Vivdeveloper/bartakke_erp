@@ -26,7 +26,8 @@ function set_custom_indent_from_rows(frm) {
 	}
 
 	if (indent) {
-		frm.set_value("custom_indent", indent);
+		frm.doc.custom_indent = indent;
+		frm.refresh_field('custom_indent')
 	}
 }
 
