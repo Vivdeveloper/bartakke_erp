@@ -70,7 +70,6 @@ frappe.ui.form.on('Material Request', {
 			callback: function (r) {
 				if (r.message) {
 					frappe.msgprint(__('Work Order {0} created', [r.message]));
-					frappe.set_route('Form', 'Production Plan', r.message);
 				}
 			}
 		});
