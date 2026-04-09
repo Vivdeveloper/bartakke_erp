@@ -11,6 +11,11 @@ class ProductionProcessTracking(Document):
         """)[0][0] or 1000
 
         doc.lot_no = last + 1
+        wo = [wo.work_order_no for wo in doc.production_process_tracking_item]
+        for i in wo:
+            wo_doc = frappe.get_doc("Production Plan", i)
+            wo_doc.custom_lot_generated = 1
+            wo_doc.save()
 
     # def validate_qty(doc, method=None):
     #     qty = frappe.db.get_all("Production Plan Item", {'parent': doc.work_order_no}, 'planned_qty')

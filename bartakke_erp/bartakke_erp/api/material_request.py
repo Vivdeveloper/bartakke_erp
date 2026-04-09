@@ -13,8 +13,8 @@ def create_production_plan(material_request):
 	if mr.material_request_type != "Manufacture":
 		frappe.throw(_("Material Request must be of type Manufacture"))
 
-	if mr.docstatus != 1:
-		frappe.throw(_("Material Request must be submitted"))
+	# if mr.docstatus != 1:
+		# frappe.throw(_("Material Request must be submitted"))
 
 	# Check if all items are already fully planned
 	pending_items = get_pending_items_for_production_plan(material_request)
@@ -127,8 +127,8 @@ def update_material_request_qty(material_request, items):
 	if mr.material_request_type != "Manufacture":
 		frappe.throw(_("Material Request must be of type Manufacture"))
 
-	if mr.docstatus != 1:
-		frappe.throw(_("Material Request must be submitted to update quantities"))
+	# if mr.docstatus != 1:
+	# 	frappe.throw(_("Material Request must be submitted to update quantities"))
 
 	# Get already planned quantities for all items
 	planned_qtys = {}

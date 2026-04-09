@@ -53,7 +53,29 @@ frappe.ui.form.on('Material Request', {
 				}
 			});
 		}
+	},
+
+	async before_workflow_action(frm) {
+		if (frm.doc.workflow_state === "Draft") {
+			await frm.trigger("raise_work_orders");
+		}
+	},
+
+	async raise_work_orders(frm) {
+		return frappe.call({
+			method: 'bartakke_erp.bartakke_erp.api.material_request.create_production_plan',
+			args: {
+				material_request: frm.doc.name
+			},
+			callback: function (r) {
+				if (r.message) {
+					frappe.msgprint(__('Work Order {0} created', [r.message]));
+					frappe.set_route('Form', 'Production Plan', r.message);
+				}
+			}
+		});
 	}
+
 });
 
 function show_update_items_dialog(frm) {
