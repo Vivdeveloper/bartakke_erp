@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 from frappe.query_builder import DocType
 from frappe.query_builder.functions import Sum
 from frappe.model.document import Document
@@ -14,8 +15,11 @@ class ProductionProcessTracking(Document):
         wo = [wo.work_order_no for wo in doc.production_process_tracking_item]
         for i in wo:
             wo_doc = frappe.get_doc("Production Plan", i)
-            wo_doc.custom_lot_generated = 1
-            wo_doc.save()
+            if wo_doc.docstatus != 1:
+                frappe.throw(_("Work Order linked must be submitted"))
+            else:
+                wo_doc.custom_lot_generated = 1
+                wo_doc.save()
 
     # def validate_qty(doc, method=None):
     #     qty = frappe.db.get_all("Production Plan Item", {'parent': doc.work_order_no}, 'planned_qty')
