@@ -26,6 +26,7 @@ def create_production_plan(material_request):
 	pp = frappe.new_doc("Production Plan")
 	pp.company = mr.company
 	pp.get_items_from = "Material Request"
+	pp.for_warehouse = "Unit-1 - BEPL"
 
 	# Add material request reference
 	pp.append("material_requests", {
