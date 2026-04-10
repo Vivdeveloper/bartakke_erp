@@ -111,14 +111,61 @@ frappe.ui.form.on("Production Plan", {
 			freeze_message: __("Creating Production Process Tracking...")
 		});
 	},
-	after_insert(frm) {
-		// frm.trigger('get_sub_assembly_items')
-		// frm.events.get_items_for_material_requests(frm, [
-		// 												{
-		// 													warehouse: 'Unit-1 - BEPL',
-		// 												},
-		// 											]);
+	after_save(frm) {
+
+		if (frm._assembly_loaded) return;
+
+		let items = frm.doc.sub_assembly_items.filter(row => row.bom_no);
+
+		if (!items.length) return;
+
+		frm._assembly_loaded = true;
+
+		frappe.call({
+			method: "bartakke_erp.bartakke_erp.api.production_plan.add_assembly_items",
+			args: {
+				pp_name: frm.doc.name,
+				items: items
+			},
+			freeze: true,
+			freeze_message: __("Fetching Assembly Items...")
+		}).then(r => {
+
+			if (!r.message) return;
+
+			frm.clear_table("custom_assembly_item");
+
+			r.message.forEach(item => {
+
+				let child = frm.add_child("custom_assembly_item");
+
+				child.item_code = item.item_code;
+				child.item_name = item.item_name;
+				child.item_description = item.item_description;
+				child.uom = item.uom;
+				child.qty = item.qty;
+				frappe.db.get_value("Item", item.item_code,
+					["custom_full_drawing_number_", "custom_development_size_a", "custom_development_size_b", "custom_area", "weight_per_unit", "custom_t", "item_group"]
+				).then(r => {
+
+					child.full_drawing_no = r.message.custom_full_drawing_number_;
+					child.development_size_a = r.message.custom_development_size_a;
+					child.development_size_b = r.message.custom_development_size_b;
+					child.area = r.message.custom_area
+					child.weight_per_unit = r.message.weight_per_unit
+					child.thickness_in_mm = r.message.custom_t
+					child.item_group = r.message.item_group
+
+				});
+
+			});
+
+			frm.refresh_field("custom_assembly_item");
+
+		});
+
 	},
+
 	get_sub_assembly_items(frm) {
 		frm.dirty();
 

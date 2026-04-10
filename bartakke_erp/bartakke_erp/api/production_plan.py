@@ -419,3 +419,53 @@ def custom_get_items_for_material_requests(doc, warehouses=None, get_parent_ware
 		frappe.msgprint(message, title=_("Note"))
 
 	return mr_items
+
+@frappe.whitelist()
+def add_assembly_items(pp_name, items):
+
+    if isinstance(items, str):
+        items = json.loads(items)
+
+    assembly_map = {}
+
+    for item_data in items:
+
+        bom_no = item_data.get("bom_no")
+        if not bom_no:
+            continue
+
+        bom = frappe.get_doc("BOM", bom_no)
+
+        if not bom.exploded_items:
+            continue
+
+        required_qty = item_data.get("qty", 1)
+
+        item_codes = [d.item_code for d in bom.exploded_items]
+
+        item_groups = frappe.get_all(
+            "Item",
+            filters={"name": ["in", item_codes]},
+            fields=["name", "custom_parent_item_group"]
+        )
+
+        group_map = {d.name: d.custom_parent_item_group for d in item_groups}
+
+        for exploded in bom.exploded_items:
+
+            if group_map.get(exploded.item_code) == "Assembly Item":
+
+                qty = exploded.stock_qty * required_qty
+
+                if exploded.item_code in assembly_map:
+                    assembly_map[exploded.item_code]["qty"] += qty
+                else:
+                    assembly_map[exploded.item_code] = {
+                        "item_code": exploded.item_code,
+                        "item_name": exploded.item_name,
+                        "item_description": exploded.description,
+                        "uom": exploded.stock_uom,
+                        "qty": qty
+                    }
+
+    return list(assembly_map.values())
