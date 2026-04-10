@@ -37,7 +37,7 @@ def create_production_plan(material_request):
 	for item_data in pending_items:
 		pp.append("po_items", {
 			"item_code": item_data["item_code"],
-			"bom_no": item_data["bom_no"],
+			"bom_no": item_data["bom_no"] or frappe.db.get_value("Item", item_data["item_code"], 'default_bom'),
 			"planned_qty": item_data["pending_qty"],
 			"stock_uom": item_data["stock_uom"],
 			"warehouse": item_data["warehouse"],
