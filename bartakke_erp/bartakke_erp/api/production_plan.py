@@ -9,6 +9,70 @@ from collections import defaultdict
 from erpnext.manufacturing.doctype.production_plan.production_plan import (
 	get_warehouse_list, get_raw_materials_of_sub_assembly_items, get_exploded_items, get_subitems, get_uom_conversion_factor, get_bin_details, get_materials_from_other_locations
 )
+from erpnext.manufacturing.doctype.production_plan.production_plan import ProductionPlan, get_sub_assembly_items
+
+set_sub_assembly_items_based_on_level = ProductionPlan.set_sub_assembly_items_based_on_level
+set_default_supplier_for_subcontracting_order = ProductionPlan.set_default_supplier_for_subcontracting_order
+combine_subassembly_items = ProductionPlan.combine_subassembly_items
+
+def get_sub_assembly_items2(doc, method=None):
+	if len(doc.sub_assembly_items) == 0:
+		get_sub_assembly_items1(doc)
+
+def get_sub_assembly_items1(self, manufacturing_type=None):
+	"Fetch sub assembly items and optionally combine them."
+	self.sub_assembly_items = []
+	sub_assembly_items_store = []  # temporary store to process all subassembly items
+	bin_details = frappe._dict()
+
+	for row in self.po_items:
+		if self.skip_available_sub_assembly_item and not self.sub_assembly_warehouse:
+			frappe.throw(_("Row #{0}: Please select the Sub Assembly Warehouse").format(row.idx))
+
+		if not row.item_code:
+			frappe.throw(_("Row #{0}: Please select Item Code in Assembly Items").format(row.idx))
+
+		if not row.bom_no:
+			frappe.throw(_("Row #{0}: Please select the BOM No in Assembly Items").format(row.idx))
+
+		bom_data = []
+
+		get_sub_assembly_items(
+			[item.production_item for item in sub_assembly_items_store],
+			bin_details,
+			row.bom_no,
+			bom_data,
+			row.planned_qty,
+			self.company,
+			warehouse=self.sub_assembly_warehouse,
+			skip_available_sub_assembly_item=self.skip_available_sub_assembly_item,
+		)
+		self.set_sub_assembly_items_based_on_level(row, bom_data, manufacturing_type)
+		sub_assembly_items_store.extend(bom_data)
+
+	if not sub_assembly_items_store and self.skip_available_sub_assembly_item:
+		message = (
+			_(
+				"As there are sufficient Sub Assembly Items, Work Order is not required for Warehouse {0}."
+			).format(self.sub_assembly_warehouse)
+			+ "<br><br>"
+		)
+		message += _(
+			"If you still want to proceed, please disable 'Skip Available Sub Assembly Items' checkbox."
+		)
+
+		frappe.msgprint(message, title=_("Note"))
+
+	if self.combine_sub_items:
+		# Combine subassembly items
+		sub_assembly_items_store = self.combine_subassembly_items(sub_assembly_items_store)
+
+	for idx, row in enumerate(sub_assembly_items_store):
+		row.idx = idx + 1
+		self.append("sub_assembly_items", row)
+
+	self.set_default_supplier_for_subcontracting_order()
+
 
 def validate_production_plan_qty(doc, method=None):
 	"""

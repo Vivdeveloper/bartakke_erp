@@ -75,13 +75,13 @@ frappe.ui.form.on("Production Plan", {
     __('Work Order / Subcontract PO'),
 			__('Create')
 		);
-		if (frm.doc.mr_items.length === 0){
-			frm.events.get_items_for_material_requests(frm, [
-							{
-								warehouse: 'Unit-1 - BEPL',
-							},
-						]);
-		}
+		// if (frm.doc.mr_items.length === 0 && !frm.is_new()){
+		// 	frm.events.get_items_for_material_requests(frm, [
+		// 					{
+		// 						warehouse: 'Unit-1 - BEPL',
+		// 					},
+		// 				]);
+		// }
 
 	},
 
@@ -108,18 +108,7 @@ frappe.ui.form.on("Production Plan", {
 			freeze_message: __("Creating Production Process Tracking...")
 		});
 	},
-	before_save(frm) {
-		if (frm.doc.sub_assembly_items.length === 0) {
-			frappe.call({
-				method: "get_sub_assembly_items",
-				freeze: true,
-				doc: frm.doc,
-				callback: function () {
-					refresh_field("sub_assembly_items");
-				},
-			});
-		}
-	},
+	
 	after_save(frm) {
 
 		if (frm._assembly_loaded) return;
@@ -174,19 +163,6 @@ frappe.ui.form.on("Production Plan", {
 		});
 
 	},
-
-	// get_sub_assembly_items(frm) {
-	// 	// frm.dirty();
-
-	// 	frappe.call({
-	// 		method: "get_sub_assembly_items",
-	// 		freeze: true,
-	// 		doc: frm.doc,
-	// 		callback: function () {
-	// 			refresh_field("sub_assembly_items");
-	// 		},
-	// 	});
-	// },
 	get_items_for_material_requests(frm, warehouses) {
 		frappe.call({
 			method: "erpnext.manufacturing.doctype.production_plan.production_plan.get_items_for_material_requests",
