@@ -82,9 +82,6 @@ frappe.ui.form.on("Production Plan", {
 							},
 						]);
 		}
-		if (frm.doc.sub_assembly_items.length === 0){
-			frm.trigger('get_sub_assembly_items')
-		}
 
 	},
 
@@ -110,6 +107,18 @@ frappe.ui.form.on("Production Plan", {
 			freeze: true,
 			freeze_message: __("Creating Production Process Tracking...")
 		});
+	},
+	before_save(frm) {
+		if (frm.doc.sub_assembly_items.length === 0) {
+			frappe.call({
+				method: "get_sub_assembly_items",
+				freeze: true,
+				doc: frm.doc,
+				callback: function () {
+					refresh_field("sub_assembly_items");
+				},
+			});
+		}
 	},
 	after_save(frm) {
 
@@ -166,18 +175,18 @@ frappe.ui.form.on("Production Plan", {
 
 	},
 
-	get_sub_assembly_items(frm) {
-		frm.dirty();
+	// get_sub_assembly_items(frm) {
+	// 	// frm.dirty();
 
-		frappe.call({
-			method: "get_sub_assembly_items",
-			freeze: true,
-			doc: frm.doc,
-			callback: function () {
-				refresh_field("sub_assembly_items");
-			},
-		});
-	},
+	// 	frappe.call({
+	// 		method: "get_sub_assembly_items",
+	// 		freeze: true,
+	// 		doc: frm.doc,
+	// 		callback: function () {
+	// 			refresh_field("sub_assembly_items");
+	// 		},
+	// 	});
+	// },
 	get_items_for_material_requests(frm, warehouses) {
 		frappe.call({
 			method: "erpnext.manufacturing.doctype.production_plan.production_plan.get_items_for_material_requests",
