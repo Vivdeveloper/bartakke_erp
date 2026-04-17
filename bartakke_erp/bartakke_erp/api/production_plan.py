@@ -554,3 +554,31 @@ def add_assembly_items(pp_name, items):
                     }
 
     return list(assembly_map.values())
+
+@frappe.whitelist()
+def get_production_plans(customer):
+    plans = frappe.get_all(
+        "Production Plan",
+        filters={
+            "custom_customer_name": customer,
+            "docstatus": 1
+        },
+        fields=["name"]
+    )
+
+    data = []
+
+    for p in plans:
+        doc = frappe.get_doc("Production Plan", p.name)
+
+        for item in doc.po_items:  # FG Items table
+            row = {
+                "production_plan": doc.name,
+                "item_code": item.item_code,
+                "qty": item.planned_qty,
+				"indent": doc.custom_indent
+            }
+
+            data.append(row)
+
+    return data
