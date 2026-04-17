@@ -499,7 +499,6 @@ def add_assembly_items(pp_name, items):
             continue
 
         bom = frappe.get_doc("BOM", bom_no)
-
         if not bom.exploded_items:
             continue
 
@@ -510,14 +509,29 @@ def add_assembly_items(pp_name, items):
         item_groups = frappe.get_all(
             "Item",
             filters={"name": ["in", item_codes]},
-            fields=["name", "custom_parent_item_group"]
+            fields=[
+                "name",
+                "custom_parent_item_group",
+                "custom_full_drawing_number_",
+                "custom_development_size_a",
+                "custom_development_size_b",
+                "custom_area",
+                "weight_per_unit",
+                "custom_t",
+                "item_group"
+            ]
         )
 
-        group_map = {d.name: d.custom_parent_item_group for d in item_groups}
+        group_map = {d.name: d for d in item_groups}
 
         for exploded in bom.exploded_items:
 
-            if group_map.get(exploded.item_code) == "Assembly Item":
+            item_info = group_map.get(exploded.item_code)
+
+            if not item_info:
+                continue
+
+            if item_info.custom_parent_item_group == "Assembly Item":
 
                 qty = exploded.stock_qty * required_qty
 
@@ -529,7 +543,14 @@ def add_assembly_items(pp_name, items):
                         "item_name": exploded.item_name,
                         "item_description": exploded.description,
                         "uom": exploded.stock_uom,
-                        "qty": qty
+                        "qty": qty,
+                        "full_drawing_no": item_info.custom_full_drawing_number_,
+                        "development_size_a": item_info.custom_development_size_a,
+                        "development_size_b": item_info.custom_development_size_b,
+                        "area": item_info.custom_area,
+                        "weight_per_unit": item_info.weight_per_unit,
+                        "thickness_in_mm": item_info.custom_t,
+                        "item_group": item_info.item_group
                     }
 
     return list(assembly_map.values())
