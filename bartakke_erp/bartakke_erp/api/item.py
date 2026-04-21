@@ -173,26 +173,53 @@ def get_drawing(doc):
 
 @frappe.whitelist()
 def get_revision(doc):
+    new_rev = ''
     doc = json.loads(doc)
-    if doc.get('custom_drawing_no') and doc.get('custom_sf_code'):
-        name = f"{doc.get('custom_sf_code')}-{doc.get('custom_drawing_no')}"
-        if frappe.db.exists("Drawing", name):
-            drawing_doc = frappe.get_doc("Drawing", {'name': name, 'item_code': doc.get('item_code')})
-            revis = [i.drawing_revision for i in drawing_doc.drawing_revision]
-            revision = revis[-1]
-            if revision.count('-') == 2:
-                rev = int(revision[-1])
-                set_revision = rev + 1
-            else:
-                set_revision = 1
-            drawing_doc.latest_revision = f"{name}-{set_revision}"
-            drawing_doc.append("drawing_revision", {
-                'drawing_revision': f"{name}-{set_revision}",
-                'revision_time': frappe.utils.now(),
-                'created_by': frappe.session.user
-            })
-            drawing_doc.save()
-            return f"{doc.get('custom_drawing_no')}-{set_revision}"
+
+    if not frappe.db.exists("Drawing", {'item_code': doc.get('item_code')}):
+        return
+
+    drawing_doc = frappe.get_doc("Drawing", {'item_code': doc.get('item_code')})
+
+    old_revision = drawing_doc.revision
+    new_revision = doc.get("custom_revision")
+
+    def is_greater(new, old):
+        try:
+            return int(new) > int(old)
+        except:
+            return str(new) > str(old)
+
+    if new_revision and (not old_revision or is_greater(new_revision, old_revision)):
+
+        drawing_doc.revision = new_revision
+
+        # Build new_rev from UPDATED doc
+        if drawing_doc.get('sf_code'):
+            new_rev += drawing_doc.get('sf_code')
+        if drawing_doc.get('drawing_number'):
+            new_rev += f"-{drawing_doc.get('drawing_number')}"
+        if drawing_doc.get('revision'):
+            new_rev += f"-{drawing_doc.get('revision')}"
+        if drawing_doc.get('sheet'):
+            new_rev += f"/{drawing_doc.get('sheet')}"
+
+        drawing_doc.append("drawing_revision", {
+            'drawing_revision': new_rev,
+            'revision_time': frappe.utils.now(),
+            'created_by': frappe.session.user
+        })
+
+        drawing_doc.latest_revision = new_rev
+        drawing_doc.save()
+
+        if drawing_doc.name != new_rev:
+            if frappe.db.exists("Drawing", new_rev):
+                frappe.throw(f"Drawing {new_rev} already exists")
+
+            frappe.rename_doc("Drawing", drawing_doc.name, new_rev, force=True)
+
+    return new_revision
 
 def autoname(doc, method=None):
     if doc.custom_parent_item_group not in ["Products", "Assembly Item"]:
@@ -266,8 +293,20 @@ def rename_item(doc):
             new_name,
             force=True
         )
+    
 
     doc.item_name = new_name
+    new_doc = frappe.get_doc("Item", new_name)
+
+    # update latest values
+    new_doc.custom_w = doc.custom_w
+    new_doc.custom_d = doc.custom_d
+    new_doc.custom_h = doc.custom_h
+    new_doc.custom_t = doc.custom_t
+    new_doc.item_name = new_name
+
+    new_doc.flags.ignore_validate = True
+    new_doc.save()
 
 @frappe.whitelist()
 def add_revision111(file_url):

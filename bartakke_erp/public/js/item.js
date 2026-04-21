@@ -33,7 +33,7 @@ frappe.ui.form.on('Item', {
         }
         
     },
-    custom_add_revision: function (frm) {
+    after_save: function (frm) {
         frappe.call({
             method: "bartakke_erp.bartakke_erp.api.item.get_revision",
             args: {
