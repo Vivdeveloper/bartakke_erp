@@ -177,6 +177,7 @@ def get_revision(doc):
     doc = json.loads(doc)
 
     if not frappe.db.exists("Drawing", {'item_code': doc.get('item_code')}):
+        create_drawing(doc)
         return
 
     drawing_doc = frappe.get_doc("Drawing", {'item_code': doc.get('item_code')})
