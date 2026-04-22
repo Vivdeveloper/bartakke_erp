@@ -582,3 +582,35 @@ def get_production_plans(customer):
             data.append(row)
 
     return data
+
+def get_total_weight(doc):
+    allowed_groups = ["Specialised Item", "Standard Item"]
+    total_wt = 0
+
+    def process_bom(bom_no, multiplier):
+        nonlocal total_wt
+
+        if not bom_no:
+            return
+
+        bom = frappe.get_doc("BOM", bom_no)
+
+        for item in bom.items:
+            if item.custom_item_group in allowed_groups:
+                itm = frappe.get_cached_doc("Item", item.item_code)
+
+                qty = item.qty * multiplier
+                total_wt += (itm.weight_per_unit or 0) * qty
+
+    for row in doc.po_items:
+        process_bom(row.bom_no, row.planned_qty)
+
+    for row in doc.sub_assembly_items:
+        process_bom(row.bom_no, row.qty)
+
+    return round(total_wt, 2)
+
+
+def validate(self, method=None):
+	if self.sub_assembly_items and self.po_items:
+		self.custom_wo_weight_ = get_total_weight(self)

@@ -148,7 +148,7 @@ override_doctype_class = {
 
 doc_events = {
 	"Production Plan": {
-		"validate": "bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty",
+		"validate": ["bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty","bartakke_erp.bartakke_erp.api.production_plan.validate"],
 		"on_submit": "bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty",
         "before_save": "bartakke_erp.bartakke_erp.api.production_plan.get_sub_assembly_items2"
 

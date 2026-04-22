@@ -307,6 +307,13 @@ def rename_item(doc):
 
     new_doc.flags.ignore_validate = True
     new_doc.save()
+    if doc.default_bom:
+        bom = f"BOM-{new_name}"
+        frappe.rename_doc("BOM", doc.default_bom, bom, force=True)
+        frappe.db.set_value("BOM", bom, 'item_name', new_name)
+        new_doc.default_bom = bom
+        new_doc.flags.ignore_validate = True
+        new_doc.save()
 
 @frappe.whitelist()
 def add_revision111(file_url):
