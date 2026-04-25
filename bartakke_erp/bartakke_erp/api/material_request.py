@@ -47,8 +47,9 @@ def create_production_plan(material_request):
 			"material_request_item": item_data["material_request_item"],
 			"planned_start_date": frappe.utils.now()
 		})
+		bom_d = item_data["bom_no"] or frappe.db.get_value("Item", item_data["item_code"], 'default_bom')
 
-		bom = frappe.get_doc("BOM", item_data["bom_no"])
+		bom = frappe.get_doc("BOM", bom_d)
 		if bom.exploded_items:
 			for exploded in bom.exploded_items:
 				if frappe.db.get_value("Item", exploded.item_code, 'custom_parent_item_group') == "Assembly Item":
