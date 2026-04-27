@@ -8,7 +8,6 @@ from frappe.model.document import Document
 
 
 class DrawingSyncTool(Document):
-
     def on_update(self):
 
         # prevent loop
