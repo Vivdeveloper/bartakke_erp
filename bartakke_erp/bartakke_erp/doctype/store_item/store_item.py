@@ -82,7 +82,7 @@ class StoreItem(Document):
 
 				# Rename Item code if Store Item name changed
 				if item.name != self.name:
-					frappe.rename_doc("Item", item.name, self.name, force=True, ignore_permissions=True)
+					frappe.rename_doc("Item", item.name, self.name, force=True)
 					item = frappe.get_doc("Item", self.name)
 
 				# Update remaining fields
