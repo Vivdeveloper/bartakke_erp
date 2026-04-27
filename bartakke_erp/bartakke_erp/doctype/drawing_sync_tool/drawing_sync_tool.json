@@ -1,0 +1,57 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-04-27 08:37:00.150576",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "url",
+  "search_options",
+  "drawing_sync_tool_attachment"
+ ],
+ "fields": [
+  {
+   "fieldname": "url",
+   "fieldtype": "Data",
+   "label": "URL"
+  },
+  {
+   "fieldname": "search_options",
+   "fieldtype": "Button",
+   "label": "Search Options"
+  },
+  {
+   "fieldname": "drawing_sync_tool_attachment",
+   "fieldtype": "Table",
+   "label": "Drawing Sync Tool Attachment",
+   "options": "Drawing Sync Tool Attachment"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-04-27 08:38:27.051226",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Drawing Sync Tool",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

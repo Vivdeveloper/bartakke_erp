@@ -1,0 +1,48 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-04-27 08:35:19.391893",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "file_name",
+  "pdf",
+  "dxf"
+ ],
+ "fields": [
+  {
+   "fieldname": "pdf",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "label": "PDF"
+  },
+  {
+   "fieldname": "dxf",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "label": "DXF"
+  },
+  {
+   "fieldname": "file_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "File Name"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-04-27 08:40:36.821291",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Drawing Sync Tool Attachment",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
