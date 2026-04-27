@@ -94,7 +94,7 @@ doctype_tree_js = {"BOM" : "public/js/bom_tree.js"}
 
 # Uninstallation
 # ------------
-after_migrate = "bartakke_erp.migrate.after_migrate"
+#after_migrate = "bartakke_erp.migrate.after_migrate"
 # before_uninstall = "bartakke_erp.uninstall.before_uninstall"
 # after_uninstall = "bartakke_erp.uninstall.after_uninstall"
 
