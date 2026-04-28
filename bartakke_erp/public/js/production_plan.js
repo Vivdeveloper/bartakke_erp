@@ -173,5 +173,65 @@ frappe.ui.form.on("Production Plan Material Request", {
 frappe.ui.form.on("Production Plan Item", {
 	material_request(frm) {
 		set_custom_indent_from_rows(frm);
-	}
+	},
+	planned_qty: frappe.utils.debounce(function (frm) {
+
+		if (!frm.doc.po_items || !frm.doc.po_items.length) return;
+
+		frappe.dom.freeze("Recalculating...");
+
+		// ---------- Sub Assembly ----------
+		frappe.call({
+			method: "bartakke_erp.bartakke_erp.api.production_plan.recalculate_sub_assembly",
+			args: {
+				doc: frm.doc
+			}
+		}).then(r => {
+
+			if (r.message) {
+				frm.clear_table("sub_assembly_items");
+
+				r.message.forEach(row => {
+					let d = frm.add_child("sub_assembly_items");
+					Object.assign(d, row);
+				});
+
+				frm.refresh_field("sub_assembly_items");
+			}
+
+			// ---------- Raw Materials ----------
+			return frappe.call({
+				method: "bartakke_erp.bartakke_erp.api.production_plan.custom_get_items_for_material_requests",
+				args: {
+					doc: frm.doc,
+					warehouses: frm.doc.for_warehouse
+						? [frm.doc.for_warehouse]
+						: []
+				}
+			});
+
+		}).then(r => {
+
+			if (r.message) {
+				frm.clear_table("mr_items");
+
+				r.message.forEach(row => {
+					let d = frm.add_child("mr_items");
+					Object.assign(d, row);
+				});
+
+				frm.refresh_field("mr_items");
+			}
+
+		}).always(() => {
+			frappe.dom.unfreeze();
+		});
+
+	}, 500)
 });
+
+frappe.ui.form.on('Production Plan', {
+	refresh(frm) {
+		// your code here
+	}
+})

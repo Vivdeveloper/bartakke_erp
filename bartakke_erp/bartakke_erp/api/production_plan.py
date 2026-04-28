@@ -297,6 +297,9 @@ def custom_get_items_for_material_requests(doc, warehouses=None, get_parent_ware
 		doc = frappe._dict(json.loads(doc))
 
 	if warehouses:
+		if warehouses and isinstance(warehouses[0], str):
+			warehouses = [{"warehouse": w} for w in warehouses]
+
 		warehouses = list(set(get_warehouse_list(warehouses)))
 
 		if (
@@ -614,3 +617,15 @@ def get_total_weight(doc):
 def validate(self, method=None):
 	if self.sub_assembly_items and self.po_items:
 		self.custom_wo_weight_ = get_total_weight(self)
+
+@frappe.whitelist()
+def recalculate_sub_assembly(doc):
+	if isinstance(doc, str):
+		doc = json.loads(doc)
+
+	pp = frappe.get_doc(doc)
+
+	# from bartakke_erp.bartakke_erp.api.production_plan import get_sub_assembly_items1
+	get_sub_assembly_items1(pp)
+
+	return pp.sub_assembly_items
