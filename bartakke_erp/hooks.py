@@ -149,8 +149,7 @@ override_doctype_class = {
 doc_events = {
 	"Production Plan": {
 		"validate": ["bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty","bartakke_erp.bartakke_erp.api.production_plan.validate"],
-		"on_submit": "bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty",
-        "before_save": "bartakke_erp.bartakke_erp.api.production_plan.get_sub_assembly_items2"
+		"on_submit": "bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty"
 
 	},
 	"Item": {
@@ -194,8 +193,6 @@ doc_events = {
 #
 override_whitelisted_methods = {
 	# "frappe.desk.doctype.event.event.get_events": "bartakke_erp.event.get_events"
-    "erpnext.manufacturing.doctype.production_plan.production_plan.get_items_for_material_requests": "bartakke_erp.bartakke_erp.api.production_plan.custom_get_items_for_material_requests",
-    "erpnext.manufacturing.doctype.bom.bom.get_children": "bartakke_erp.bartakke_erp.api.bom.get_children"
 }
 #
 # each overriding function accepts a `data` argument;
