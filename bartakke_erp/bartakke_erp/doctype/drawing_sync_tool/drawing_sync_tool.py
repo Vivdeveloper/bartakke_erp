@@ -2,6 +2,7 @@
 
 import frappe
 import os
+import platform
 import re
 from urllib.parse import urlparse
 from frappe.model.document import Document
@@ -48,14 +49,26 @@ class DrawingSyncTool(Document):
 def fetch_missing_drawings(docname):
     doc = frappe.get_doc("Drawing Sync Tool", docname)
 
-    if not doc.url:
-        frappe.throw("Please enter folder path")
+    base_path = (doc.url or "").strip()
 
-    parsed = urlparse(doc.url)
-    base_path = parsed.path
+    if not base_path:
+        frappe.throw("Path is empty")
 
+    # Normalize slashes (handles Windows/Linux mix)
+    base_path = os.path.normpath(base_path)
+
+    # Detect mismatch: Linux path on Windows or vice versa
+    is_windows = platform.system() == "Windows"
+
+    if is_windows and base_path.startswith("/"):
+        frappe.throw(f"Linux-style path not valid on Windows: {base_path}")
+
+    if not is_windows and ":" in base_path:
+        frappe.throw(f"Windows-style path not valid on Linux: {base_path}")
+
+    # Final existence check
     if not os.path.exists(base_path):
-        frappe.throw(f"Invalid path: {base_path}")
+        frappe.throw(f"Path does not exist: {base_path}")
 
     files = os.listdir(base_path)
 
