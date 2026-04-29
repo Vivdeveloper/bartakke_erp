@@ -58,13 +58,13 @@ def fetch_missing_drawings(docname):
     base_path = os.path.normpath(base_path)
 
     # Detect mismatch: Linux path on Windows or vice versa
-    is_windows = platform.system() == "Windows"
+    # is_linux = platform.system() == "Linux"
 
-    if is_windows and base_path.startswith("/"):
-        frappe.throw(f"Linux-style path not valid on Windows: {base_path}")
+    # if not is_linux and base_path.startswith("/"):
+    #     frappe.throw(f"Linux-style path not valid on Windows: {base_path}")
 
-    if not is_windows and ":" in base_path:
-        frappe.throw(f"Windows-style path not valid on Linux: {base_path}")
+    # if is_linux and ":" in base_path:
+    #     frappe.throw(f"Windows-style path not valid on Linux: {base_path}")
 
     # Final existence check
     if not os.path.exists(base_path):
