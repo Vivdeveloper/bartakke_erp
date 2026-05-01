@@ -2,10 +2,12 @@
 
 import frappe
 import os
-import platform
 import re
 from urllib.parse import urlparse
 from frappe.model.document import Document
+import requests
+from urllib.parse import urljoin
+from bs4 import BeautifulSoup
 
 
 class DrawingSyncTool(Document):
@@ -49,29 +51,15 @@ class DrawingSyncTool(Document):
 def fetch_missing_drawings(docname):
     doc = frappe.get_doc("Drawing Sync Tool", docname)
 
-    base_path = (doc.url or "").strip()
+    if not doc.url:
+        frappe.throw("Please enter folder path or URL")
 
-    if not base_path:
-        frappe.throw("Path is empty")
+    source = doc.url.strip()
 
-    # Normalize slashes (handles Windows/Linux mix)
-    base_path = os.path.normpath(base_path)
+    # Detect URL properly
+    is_url = source.startswith(("http://", "https://"))
 
-    # Detect mismatch: Linux path on Windows or vice versa
-    # is_linux = platform.system() == "Linux"
-
-    # if not is_linux and base_path.startswith("/"):
-    #     frappe.throw(f"Linux-style path not valid on Windows: {base_path}")
-
-    # if is_linux and ":" in base_path:
-    #     frappe.throw(f"Windows-style path not valid on Linux: {base_path}")
-
-    # Final existence check
-    if not os.path.exists(base_path):
-        frappe.throw(f"Path does not exist: {base_path}")
-
-    files = os.listdir(base_path)
-
+    # Get existing revisions
     existing_revisions = set(
         r.lower().strip()
         for r in frappe.db.get_all("Drawing Revision", pluck="drawing_revision")
@@ -79,44 +67,96 @@ def fetch_missing_drawings(docname):
 
     doc.drawing_sync_tool_attachment = []
 
-    for f in files:
-        clean_name = f.strip()
-        ext = clean_name.lower().split(".")[-1]
+    file_map = {}
 
-        if ext not in ["pdf", "dxf"]:
-            continue
 
-        matches = re.findall(r"\b\d+-\d+-\d+\b", clean_name)
-        if not matches:
-            continue
+    if not is_url:
 
-        revision = matches[0].lower().strip()
+        if not os.path.exists(source):
+            frappe.throw(f"Path does not exist on server: {source}")
 
-        if revision in existing_revisions:
-            continue
+        try:
+            files = os.listdir(source)
+        except Exception as e:
+            frappe.throw(f"Unable to read directory: {str(e)}")
 
-        row = next(
-            (r for r in doc.drawing_sync_tool_attachment
-             if r.file_name and r.file_name.lower().strip() == revision),
-            None
-        )
+        for f in files:
+            clean_name = f.strip()
+            ext = clean_name.lower().split(".")[-1]
 
-        if not row:
-            row = doc.append("drawing_sync_tool_attachment", {
-                "file_name": revision
-            })
+            if ext not in ["pdf", "dxf"]:
+                continue
 
-        # ✅ STORE ONLY FILE NAME
-        if ext == "pdf":
-            row.pdf = clean_name
-        else:
-            row.dxf = clean_name
+            matches = re.findall(r"\b\d+-\d+-\d+\b", clean_name)
+            if not matches:
+                continue
+
+            revision = matches[0].lower().strip()
+
+            if revision in existing_revisions:
+                continue
+
+            if revision not in file_map:
+                file_map[revision] = {"pdf": None, "dxf": None}
+
+            if ext == "pdf":
+                file_map[revision]["pdf"] = clean_name
+            else:
+                file_map[revision]["dxf"] = clean_name
+
+    else:
+        try:
+            response = requests.get(source, timeout=10)
+        except Exception as e:
+            frappe.throw(f"Failed to connect: {str(e)}")
+
+        if response.status_code != 200:
+            frappe.throw(f"Invalid URL or access denied ({response.status_code})")
+
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        for link in soup.find_all("a"):
+            href = link.get("href")
+
+            if not href:
+                continue
+
+            file_name = href.split("/")[-1].strip()
+            ext = file_name.lower().split(".")[-1]
+
+            if ext not in ["pdf", "dxf"]:
+                continue
+
+            matches = re.findall(r"\b\d+-\d+-\d+\b", file_name)
+            if not matches:
+                continue
+
+            revision = matches[0].lower().strip()
+
+            if revision in existing_revisions:
+                continue
+
+            full_url = urljoin(source, href)
+
+            if revision not in file_map:
+                file_map[revision] = {"pdf": None, "dxf": None}
+
+            if ext == "pdf":
+                file_map[revision]["pdf"] = full_url
+            else:
+                file_map[revision]["dxf"] = full_url
+
+    for revision, files in file_map.items():
+        doc.append("drawing_sync_tool_attachment", {
+            "file_name": revision,
+            "pdf": files["pdf"],
+            "dxf": files["dxf"]
+        })
 
     doc.flags.ignore_on_update = True
     doc.save()
 
-    return "Done"
-
+    return f"{len(file_map)} drawings synced"
 
 
 from werkzeug.wrappers import Response
