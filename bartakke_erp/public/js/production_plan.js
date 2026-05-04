@@ -39,7 +39,7 @@ frappe.ui.form.on("Production Plan", {
 				frm.trigger('make_so');
 			}, __('Create'));
 
-			frm.add_custom_button(__('Production Process Tracking'), () => {
+			frm.add_custom_button(__('Lot Generation'), () => {
 				frm.trigger('make_production_process_tracking');
 			}, __('Create'));
 		}
