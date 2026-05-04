@@ -1,6 +1,6 @@
 frappe.listview_settings['Production Plan'] = {
     onload: function(listview) {
-        listview.page.add_action_item(__('Create Production Tracking'), async function() {
+        listview.page.add_action_item(__('Lot Generation'), async function() {
 
             let selected = listview.get_checked_items();
 
