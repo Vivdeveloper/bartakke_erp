@@ -27,6 +27,7 @@ def create_production_plan(material_request):
 	pp.company = mr.company
 	pp.get_items_from = "Material Request"
 	pp.for_warehouse = "Unit-1 - BEPL"
+	pp.custom_indent = mr.name
 
 	# Add material request reference
 	pp.append("material_requests", {
