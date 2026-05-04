@@ -3,10 +3,9 @@
 import frappe
 import os
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 from frappe.model.document import Document
 import requests
-from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
 
@@ -30,7 +29,7 @@ class DrawingSyncTool(Document):
                 if name not in seen:
                     files.append({
                         "name": name,
-                        "url": name   # store only filename
+                        "url": row.pdf   # FIXED (was filename earlier)
                     })
                     seen.add(name)
 
@@ -39,7 +38,7 @@ class DrawingSyncTool(Document):
                 if name not in seen:
                     files.append({
                         "name": name,
-                        "url": name
+                        "url": row.dxf   # FIXED
                     })
                     seen.add(name)
 
@@ -56,8 +55,9 @@ def fetch_missing_drawings(docname):
 
     source = doc.url.strip()
 
-    # Detect URL properly
-    is_url = source.startswith(("http://", "https://"))
+    # FIXED: Better URL detection
+    parsed = urlparse(source)
+    is_url = parsed.scheme in ("http", "https")
 
     # Get existing revisions
     existing_revisions = set(
@@ -65,20 +65,25 @@ def fetch_missing_drawings(docname):
         for r in frappe.db.get_all("Drawing Revision", pluck="drawing_revision")
     )
 
-    doc.drawing_sync_tool_attachment = []
+    doc.set("drawing_sync_tool_attachment", [])  # safer reset
 
     file_map = {}
-
 
     if not is_url:
 
         if not os.path.exists(source):
-            frappe.throw(f"Path does not exist on server: {source}")
+            frappe.throw(
+                f"Path does not exist on server: {source}\n"
+                "If this is a shared folder, please provide a valid HTTP URL."
+            )
 
         try:
             files = os.listdir(source)
         except Exception as e:
             frappe.throw(f"Unable to read directory: {str(e)}")
+
+        # NEW: base URL from source (must be accessible)
+        base_url = source.rstrip("/") + "/"
 
         for f in files:
             clean_name = f.strip()
@@ -99,10 +104,13 @@ def fetch_missing_drawings(docname):
             if revision not in file_map:
                 file_map[revision] = {"pdf": None, "dxf": None}
 
+            # FIXED: store full URL instead of filename
+            full_url = urljoin(base_url, clean_name)
+
             if ext == "pdf":
-                file_map[revision]["pdf"] = clean_name
+                file_map[revision]["pdf"] = full_url
             else:
-                file_map[revision]["dxf"] = clean_name
+                file_map[revision]["dxf"] = full_url
 
     else:
         try:
@@ -163,14 +171,16 @@ from werkzeug.wrappers import Response
 
 @frappe.whitelist(allow_guest=True)
 def open_local_file(file_name):
+    # kept as-is (optional, now mostly unused)
     base_path = "/home/hrishikesh/Downloads"
 
-    full_path = os.path.join(base_path, file_name)
+    safe_name = os.path.basename(file_name)
+    full_path = os.path.join(base_path, safe_name)
 
     if not os.path.exists(full_path):
-        frappe.throw(f"File not found: {file_name}")
+        frappe.throw(f"File not found: {safe_name}")
 
-    ext = file_name.split(".")[-1].lower()
+    ext = safe_name.split(".")[-1].lower()
 
     content_type_map = {
         "pdf": "application/pdf",
@@ -183,10 +193,9 @@ def open_local_file(file_name):
         data = f.read()
 
     response = Response(data, content_type=content_type)
-    response.headers["Content-Disposition"] = f'inline; filename="{file_name}"'
+    response.headers["Content-Disposition"] = f'inline; filename="{safe_name}"'
 
     return response
-
 
 
 def map_local_revisions(files):
@@ -198,7 +207,7 @@ def map_local_revisions(files):
 
     for f in files:
         file_name = f.get("name")
-        file_url = f.get("url")   # this is just filename now
+        file_url = f.get("url")
 
         if not file_name:
             continue
