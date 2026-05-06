@@ -148,6 +148,7 @@ override_doctype_class = {
 
 doc_events = {
 	"Production Plan": {
+		"autoname": "bartakke_erp.bartakke_erp.api.production_plan.autoname",
 		"validate": ["bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty","bartakke_erp.bartakke_erp.api.production_plan.validate"],
 		"on_submit": "bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty"
 

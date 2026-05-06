@@ -2,7 +2,9 @@ import frappe
 from frappe import _
 import json
 from frappe.model.mapper import get_mapped_doc
-from frappe.utils import flt
+from frappe.utils import flt, getdate, nowdate
+from frappe.utils.data import cstr
+import re
 
 
 def validate_production_plan_qty(doc, method=None):
@@ -309,3 +311,75 @@ def validate(self, method=None):
 		total_wt += row_total
 
 	self.custom_wo_weight_ = total_wt
+
+
+def autoname(doc, method=None):
+	"""Name format: WO26-001/1, WO26-001/2 (same indent => same base)."""
+	base_id = _get_or_make_work_order_base(doc, cstr(doc.get("custom_work_order_id")).strip())
+	if not re.search(r"[A-Za-z0-9]", base_id):
+		frappe.throw(_("Custom Work Order ID must contain letters or numbers for naming."))
+
+	# Keep custom_work_order_id field value untouched; use base_id only for naming.
+	doc.name = f"{base_id}/{_get_next_suffix(doc, base_id)}"
+
+
+def _get_or_make_work_order_base(doc, custom_work_order_id):
+	"""Return base work order id in WOYY-NNN format."""
+	if custom_work_order_id:
+		# Accept either base `WO26-001` or full `WO26-001/1` as input.
+		parsed = re.match(r"^(.*?)(?:/(\d+))?$", custom_work_order_id.rstrip("/"))
+		return (parsed.group(1) if parsed else custom_work_order_id).strip()
+
+	date_value = doc.get("posting_date") or nowdate()
+	yy = f"{getdate(date_value).year % 100:02d}"
+	prefix = f"WO{yy}-"
+	indent = cstr(doc.get("custom_indent")).strip()
+
+	# For the same indent, reuse the same base id and only increase `/N`.
+	if indent:
+		existing_for_indent = frappe.get_all(
+			"Production Plan",
+			filters={
+				"custom_indent": indent,
+				"custom_work_order_id": ["like", f"{prefix}%"],
+			},
+			fields=["custom_work_order_id"],
+			order_by="creation desc",
+			limit=1,
+		)
+		if existing_for_indent:
+			return cstr(existing_for_indent[0].custom_work_order_id).strip()
+
+	existing = frappe.get_all(
+		"Production Plan",
+		filters={"custom_work_order_id": ["like", f"{prefix}%"]},
+		fields=["custom_work_order_id"],
+		limit_page_length=0,
+	)
+	max_seq = _max_trailing_number(existing, "custom_work_order_id", rf"^{re.escape(prefix)}(\d+)$")
+	return f"{prefix}{max_seq + 1:03d}"
+
+
+def _get_next_suffix(doc, base_id):
+	indent = cstr(doc.get("custom_indent")).strip()
+	filters = {"name": ["like", f"{base_id}/%"]}
+	if indent:
+		filters["custom_indent"] = indent
+
+	existing = frappe.get_all("Production Plan", filters=filters, fields=["name"], limit_page_length=0)
+	max_suffix = _max_trailing_number(existing, "name", rf"^{re.escape(base_id)}/(\d+)$")
+
+	next_suffix = max_suffix + 1
+	while frappe.db.exists("Production Plan", f"{base_id}/{next_suffix}"):
+		next_suffix += 1
+	return next_suffix
+
+
+def _max_trailing_number(rows, fieldname, pattern):
+	regex = re.compile(pattern)
+	max_value = 0
+	for row in rows:
+		match = regex.match(cstr(row.get(fieldname)).strip())
+		if match:
+			max_value = max(max_value, int(match.group(1)))
+	return max_value
