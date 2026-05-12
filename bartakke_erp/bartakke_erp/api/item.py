@@ -258,12 +258,12 @@ def rename_item(doc):
     if not old_doc:
         return
 
-    # Check if any dimension changed
+    # Rebuild name when dimensions OR item_name (description) changed
     fields = ["custom_w", "custom_d", "custom_h", "custom_t"]
+    dimension_changed = any(doc.get(f) != old_doc.get(f) for f in fields)
+    item_name_changed = str(doc.item_name or "") != str(old_doc.item_name or "")
 
-    changed = any(doc.get(f) != old_doc.get(f) for f in fields)
-
-    if not changed:
+    if not dimension_changed and not item_name_changed:
         return
 
     parts = []
@@ -283,18 +283,22 @@ def rename_item(doc):
     dimensions = " x ".join(parts)
 
     # Remove old dimensions
-    base_name = re.sub(r"\s\d+(\.\d+)?\s[WDHT](\s*x\s*\d+(\.\d+)?\s[WDHT])*", "", doc.item_name).strip()
+    base_name = re.sub(r"\s\d+(\.\d+)?\s[WDHT](\s*x\s*\d+(\.\d+)?\s[WDHT])*", "", doc.item_name or "").strip()
 
     new_name = f"{base_name} {dimensions}"
 
     if doc.name != new_name:
+        old_name = doc.name
         frappe.rename_doc(
             "Item",
-            doc.name,
+            old_name,
             new_name,
-            force=True
+            force=True,
         )
-    
+        doc.name = new_name
+        # Desk expects `localname` (old id) + `name` (new id) on the saved doc so
+        # frappe.model.sync → rename_after_save → "rename" → Form.rename_notify → set_route.
+        doc.localname = old_name
 
     doc.item_name = new_name
     new_doc = frappe.get_doc("Item", new_name)
@@ -317,6 +321,10 @@ def rename_item(doc):
         new_doc.default_bom = bom
         new_doc.flags.ignore_validate = True
         new_doc.save()
+        # Same in-memory doc is validated and written after before_save; without this,
+        # doc.default_bom still points at the pre-rename BOM id → LinkValidationError
+        # ("Could not find Default BOM: BOM-(old)…") after the BOM row was renamed.
+        doc.default_bom = bom
 
 @frappe.whitelist()
 def add_revision111(file_url):
