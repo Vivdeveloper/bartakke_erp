@@ -314,49 +314,52 @@ def validate(self, method=None):
 
 
 def autoname(doc, method=None):
-	"""Name format: WO26-001/1, WO26-001/2 (same indent => same base)."""
-	base_id = _get_or_make_work_order_base(doc, cstr(doc.get("custom_work_order_id")).strip())
+	"""IND-26-0033 → WO26-001/1, WO26-001/2; IND-26-0034 → WO26-002/1. Ignores custom_work_order_id."""
+	base_id = _get_or_make_work_order_base(doc)
 	if not re.search(r"[A-Za-z0-9]", base_id):
-		frappe.throw(_("Custom Work Order ID must contain letters or numbers for naming."))
+		frappe.throw(_("Work order name base must contain letters or numbers."))
 
-	# Keep custom_work_order_id field value untouched; use base_id only for naming.
 	doc.name = f"{base_id}/{_get_next_suffix(doc, base_id)}"
 
 
-def _get_or_make_work_order_base(doc, custom_work_order_id):
-	"""Return base work order id in WOYY-NNN format."""
-	if custom_work_order_id:
-		# Accept either base `WO26-001` or full `WO26-001/1` as input.
-		parsed = re.match(r"^(.*?)(?:/(\d+))?$", custom_work_order_id.rstrip("/"))
-		return (parsed.group(1) if parsed else custom_work_order_id).strip()
+def _wo_base_regex(prefix):
+	"""Match document name like WO26-001/1 → group 1 = 001."""
+	return re.compile(rf"^{re.escape(prefix)}(\d{{3}})/\d+$")
 
+
+def _get_or_make_work_order_base(doc):
+	"""WOYY-NNN from posting_date; one base per custom_indent; driven only by name + indent."""
 	date_value = doc.get("posting_date") or nowdate()
 	yy = f"{getdate(date_value).year % 100:02d}"
 	prefix = f"WO{yy}-"
+	name_rx = _wo_base_regex(prefix)
 	indent = cstr(doc.get("custom_indent")).strip()
 
-	# For the same indent, reuse the same base id and only increase `/N`.
+	# Same indent → reuse base already used on any Production Plan name for this indent.
 	if indent:
-		existing_for_indent = frappe.get_all(
+		for row in frappe.get_all(
 			"Production Plan",
-			filters={
-				"custom_indent": indent,
-				"custom_work_order_id": ["like", f"{prefix}%"],
-			},
-			fields=["custom_work_order_id"],
-			order_by="creation desc",
-			limit=1,
-		)
-		if existing_for_indent:
-			return cstr(existing_for_indent[0].custom_work_order_id).strip()
+			filters={"custom_indent": indent, "name": ["like", f"{prefix}%"]},
+			fields=["name"],
+			order_by="creation asc",
+			limit_page_length=0,
+		):
+			match = name_rx.match(cstr(row.name).strip())
+			if match:
+				return f"{prefix}{match.group(1)}"
 
-	existing = frappe.get_all(
+	# New indent: next global sequence for this year (from existing names).
+	max_seq = 0
+	for row in frappe.get_all(
 		"Production Plan",
-		filters={"custom_work_order_id": ["like", f"{prefix}%"]},
-		fields=["custom_work_order_id"],
+		filters={"name": ["like", f"{prefix}%/%"]},
+		fields=["name"],
 		limit_page_length=0,
-	)
-	max_seq = _max_trailing_number(existing, "custom_work_order_id", rf"^{re.escape(prefix)}(\d+)$")
+	):
+		match = name_rx.match(cstr(row.name).strip())
+		if match:
+			max_seq = max(max_seq, int(match.group(1)))
+
 	return f"{prefix}{max_seq + 1:03d}"
 
 
