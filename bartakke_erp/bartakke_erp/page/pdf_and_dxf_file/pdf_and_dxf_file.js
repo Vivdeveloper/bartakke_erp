@@ -126,16 +126,24 @@ bartakke_erp.pages.PdfAndDxfFilePage = class PdfAndDxfFilePage {
 		this._rows(data.pdf_and_dxf_file_items || []);
 	}
 
+	/** Group by sf-drawing-rev (e.g. 11-17384-1); names like '11-17384-1 copy' share one row. */
+	_tripleKey(stem) {
+		const s = String(stem || "").trim();
+		const m = s.match(/^(\d+-\d+-\d+)/);
+		return m ? m[1] : s;
+	}
+
 	_group(rows) {
 		const m = new Map();
 		for (const row of rows) {
 			const fn = (row.file_name || "").trim();
 			const ext = (row.extension || "").toLowerCase();
-			const stem = fn.replace(/\.(pdf|dxf)$/i, "") || fn;
-			if (!m.has(stem)) m.set(stem, { stem, pdf: null, dxf: null });
-			const g = m.get(stem);
-			if (ext === "pdf") g.pdf = row;
-			else if (ext === "dxf") g.dxf = row;
+			const raw = fn.replace(/\.(pdf|dxf)$/i, "") || fn;
+			const key = this._tripleKey(raw);
+			if (!m.has(key)) m.set(key, { stem: key, pdf: null, dxf: null });
+			const g = m.get(key);
+			if (ext === "pdf") g.pdf = g.pdf || row;
+			else if (ext === "dxf") g.dxf = g.dxf || row;
 		}
 		return Array.from(m.values()).sort((a, b) => String(a.stem).localeCompare(String(b.stem)));
 	}

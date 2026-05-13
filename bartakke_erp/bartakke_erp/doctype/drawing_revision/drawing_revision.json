@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-11-06 18:53:36.475559",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "drawing_revision",
+  "revision",
+  "revision_time",
+  "created_by",
+  "column_break_ulqn",
+  "file_url",
+  "dxf_file_url"
+ ],
+ "fields": [
+  {
+   "fieldname": "drawing_revision",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Drawing Revision"
+  },
+  {
+   "fieldname": "revision_time",
+   "fieldtype": "Datetime",
+   "label": "Revision Time"
+  },
+  {
+   "fieldname": "created_by",
+   "fieldtype": "Link",
+   "label": "Created By",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_ulqn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "columns": 2,
+   "fieldname": "file_url",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "URL PDF"
+  },
+  {
+   "columns": 2,
+   "fieldname": "dxf_file_url",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "URL DXF"
+  },
+  {
+   "columns": 1,
+   "fieldname": "revision",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Revision"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-05-14 00:46:28.999000",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Drawing Revision",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

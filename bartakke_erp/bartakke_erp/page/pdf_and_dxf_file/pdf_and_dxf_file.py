@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 from urllib.parse import unquote, urlparse, urljoin
 
@@ -69,6 +70,11 @@ def _stem(name: str) -> str:
 	return n.rsplit(".", 1)[0] if "." in n else n
 
 
+def _triple_key(stem: str) -> str:
+	"""Leading sf-drawing-rev (digits only per segment) so '11-17384-1 copy' matches '11-17384-1'."""
+	s = (stem or "").strip()
+	m = re.match(r"^(\d+-\d+-\d+)", s)
+	return m.group(1) if m else s
 def _item_code_for_stem(stem: str) -> str:
 	parts = [p.strip() for p in (stem or "").split("-") if p.strip()]
 	if len(parts) < 2:
@@ -101,9 +107,10 @@ def _with_item_codes(rows: list[dict]) -> list[dict]:
 	for row in rows:
 		r = dict(row)
 		st = _stem(r.get("file_name") or "")
-		if st not in cache:
-			cache[st] = _item_code_for_stem(st)
-		r["item_code"] = cache[st]
+		key = _triple_key(st)
+		if key not in cache:
+			cache[key] = _item_code_for_stem(key)
+		r["item_code"] = cache[key]
 		out.append(r)
 	return out
 

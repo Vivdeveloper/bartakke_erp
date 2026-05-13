@@ -1,14 +1,352 @@
 # Copyright (c) 2026, Viv Choudhary and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
+from frappe import _
 from frappe.model.document import Document
+from frappe.model.rename_doc import rename_doc
+from frappe.utils import cint, cstr, now_datetime
+
+DRAWING_REVISION_CHILD = "Drawing Revision"
+DRAWING_REVISION_FIELD = "drawing_revision"
+SORT_KEY_MISSING_REVISION = 1 << 30
+
+
+def _replace_drawing_name_in_text(text, old, new):
+    if not old or old == new:
+        return text
+    s = cstr(text)
+    variants = [old, old.replace("/", "%2F")]
+    if "/" in old:
+        hy = old.replace("/", "-")
+        if hy not in variants:
+            variants.append(hy)
+    for variant in variants:
+        if variant in s:
+            s = s.replace(variant, new)
+    return s
 
 
 class Drawing(Document):
     def autoname(self):
-        if self.sheet:
-            self.name = f"{self.sf_code}-{self.drawing_number}-{self.revision}/{self.sheet}"
+        computed = self._drawing_revision_id()
+        if not cstr(self.sf_code).strip() or self.drawing_number in (None, ""):
+            frappe.throw(
+                _("SF Code and Drawing Number are required before naming the Drawing."),
+                title=_("Drawing"),
+            )
+        self.name = computed
+
+    def _drawing_revision_id(self):
+        """Canonical id: {sf}-{drawing_number}-{revision} or .../{sheet} when sheet is set."""
+        base = f"{self.sf_code}-{self.drawing_number}-{self.revision}"
+        sheet = cstr(self.sheet).strip() if self.sheet else ""
+        return f"{base}/{sheet}" if sheet else base
+
+    @staticmethod
+    def _revision_as_int(value):
+        s = cstr(value).strip()
+        return int(s) if s and s.isdigit() else None
+
+    @staticmethod
+    def _parse_revision_from_row_key(key, sf_code, drawing_number, sheet):
+        key = cstr(key).strip()
+        if not sf_code or drawing_number is None or drawing_number == "":
+            return None
+        prefix = f"{sf_code}-{drawing_number}-"
+        if not key.startswith(prefix):
+            return None
+        if sheet:
+            sheet = cstr(sheet).strip()
+            slash_suffix, hyphen_suffix = f"/{sheet}", f"-{sheet}"
+            if key.endswith(slash_suffix):
+                mid = key[len(prefix) : -len(slash_suffix)]
+            elif key.endswith(hyphen_suffix):
+                mid = key[len(prefix) : -len(hyphen_suffix)]
+            else:
+                return None
         else:
-            self.name = f"{self.sf_code}-{self.drawing_number}-{self.revision}"
-	# pass
+            mid = key[len(prefix) :]
+        return int(mid) if mid.isdigit() else None
+
+    def _row_key_revision(self, key):
+        return self._parse_revision_from_row_key(key, self.sf_code, self.drawing_number, self.sheet)
+
+    def _max_row_revision_int(self):
+        nums = [
+            cint(r.get("revision"))
+            for r in self.get(DRAWING_REVISION_FIELD) or []
+            if r.get("revision") is not None
+        ]
+        return max(nums) if nums else None
+
+    def _integration_hooks_skipped(self):
+        return bool(frappe.flags.in_import or frappe.flags.in_migrate or frappe.flags.in_patch)
+
+    def _coerce_revision_int_for_row(self, row_key_str):
+        n = self._revision_as_int(self.revision)
+        return self._row_key_revision(row_key_str) if n is None else n
+
+    def _append_drawing_revision_row(self, drawing_revision_key, revision_int):
+        self.append(
+            DRAWING_REVISION_FIELD,
+            {
+                "drawing_revision": drawing_revision_key,
+                "revision": revision_int,
+                "revision_time": now_datetime(),
+                "created_by": frappe.session.user,
+            },
+        )
+
+    def _fill_child_revision_from_key_if_missing(self):
+        for row in self.get(DRAWING_REVISION_FIELD) or []:
+            if row.get("revision") is None:
+                n = self._row_key_revision(row.get("drawing_revision"))
+                if n is not None:
+                    row.revision = n
+
+    def _sync_parent_revision_from_children(self):
+        m = self._max_row_revision_int()
+        if m is not None:
+            self.revision = cstr(m)
+
+    def _validate_contiguous_row_revisions(self):
+        if self._integration_hooks_skipped():
+            return
+
+        rows = self.get(DRAWING_REVISION_FIELD) or []
+        if not rows:
+            return
+
+        values = []
+        for row in rows:
+            if row.get("revision") is None:
+                frappe.throw(
+                    _("Set Revision on each row (or set Drawing Revision id so it can be filled)."),
+                    title=_("Drawing Revision"),
+                )
+            n = cint(row.get("revision"))
+            if n < 0:
+                frappe.throw(_("Revision must be zero or positive."), title=_("Drawing Revision"))
+            values.append(n)
+
+        if len(values) != len(set(values)):
+            frappe.throw(
+                _(
+                    "Duplicate revision number in the table. "
+                    "Each row needs a unique number (for example you cannot have two rows with revision 2)."
+                ),
+                title=_("Drawing Revision"),
+            )
+
+        mx = max(values)
+        expected, actual = set(range(0, mx + 1)), set(values)
+        if actual != expected:
+            missing = ", ".join(str(x) for x in sorted(expected - actual))
+            frappe.throw(
+                _(
+                    "Revision numbers must run in order from 0 with no skips. "
+                    "Add the missing revision(s) before higher numbers: {0}."
+                ).format(missing),
+                title=_("Drawing Revision"),
+            )
+
+    def _validate_parent_revision_digits(self):
+        s = cstr(self.revision).strip()
+        if s and not s.isdigit():
+            frappe.throw(
+                _("Revision must be a non-negative whole number (0, 1, 2, …)."),
+                title=_("Revision"),
+            )
+
+    def _drawing_revision_sort_key(self, row):
+        if row.get("revision") is not None:
+            primary = cint(row.get("revision"))
+        else:
+            primary = self._row_key_revision(row.get("drawing_revision"))
+            if primary is None:
+                primary = SORT_KEY_MISSING_REVISION
+        return (primary, cstr(row.get("drawing_revision") or ""))
+
+    def _sort_drawing_revision_rows(self):
+        rows = self.get(DRAWING_REVISION_FIELD)
+        if not rows:
+            return
+        rows.sort(key=self._drawing_revision_sort_key)
+        for i, row in enumerate(rows, start=1):
+            row.idx = i
+
+    def _normalize_child_drawing_revision_slash_keys(self):
+        sheet = cstr(self.sheet).strip() if self.sheet else ""
+        if not sheet:
+            return
+        hyphen_suffix, slash_suffix = f"-{sheet}", f"/{sheet}"
+        for row in self.get(DRAWING_REVISION_FIELD) or []:
+            k = (row.get("drawing_revision") or "").strip()
+            if k.endswith(hyphen_suffix):
+                row.drawing_revision = k[: -len(hyphen_suffix)] + slash_suffix
+
+    def _append_row_if_parent_revision_changed(self, prev):
+        if prev is None or cstr(prev.revision) == cstr(self.revision):
+            return
+        new_id = self._drawing_revision_id()
+        rows = self.get(DRAWING_REVISION_FIELD) or []
+        if any((r.get("drawing_revision") or "").strip() == new_id for r in rows):
+            return
+        self._append_drawing_revision_row(new_id, self._coerce_revision_int_for_row(new_id))
+
+    def _ensure_default_revision_rows(self):
+        rows = self.get(DRAWING_REVISION_FIELD) or []
+        if not rows:
+            rid = self._drawing_revision_id()
+            self._append_drawing_revision_row(rid, self._coerce_revision_int_for_row(rid))
+            return
+        if len(rows) == 1 and not (rows[0].get("drawing_revision") or "").strip():
+            row, rid = rows[0], self._drawing_revision_id()
+            row.drawing_revision = rid
+            row.revision = self._coerce_revision_int_for_row(rid)
+            row.revision_time = now_datetime()
+            row.created_by = frappe.session.user
+
+    def _stamp_canonical_revision_metadata(self):
+        canonical = {self.name, self._drawing_revision_id()}
+        for row in self.get(DRAWING_REVISION_FIELD) or []:
+            if (row.get("drawing_revision") or "").strip() not in canonical:
+                continue
+            if not row.revision_time:
+                row.revision_time = now_datetime()
+            if not row.created_by:
+                row.created_by = frappe.session.user
+
+    def before_validate(self):
+        if not self.name:
+            return
+
+        self._normalize_child_drawing_revision_slash_keys()
+        self._append_row_if_parent_revision_changed(self.get_doc_before_save())
+        self._ensure_default_revision_rows()
+        self._fill_child_revision_from_key_if_missing()
+        self._sort_drawing_revision_rows()
+        self._validate_contiguous_row_revisions()
+        self._sync_parent_revision_from_children()
+        self._validate_parent_revision_digits()
+        self._stamp_canonical_revision_metadata()
+
+    def _validate_duplicate_sf_drawing_number(self):
+        if self._integration_hooks_skipped():
+            return
+        sf = cstr(self.sf_code).strip()
+        dn = cstr(self.drawing_number).strip()
+        if not sf or not dn:
+            return
+        filters = {"sf_code": sf, "drawing_number": dn}
+        if not self.is_new():
+            filters["name"] = ["!=", self.name]
+        existing = frappe.db.get_value(
+            "Drawing",
+            filters,
+            ["name", "item_code"],
+            as_dict=True,
+        )
+        if not existing:
+            return
+        cur_item = cstr(self.item_code or "").strip() or _("(not set)")
+        ex_item = cstr(existing.item_code or "").strip() or _("(not set)")
+        frappe.throw(
+            _(
+                "Duplicate: a Drawing already exists with SF Code {0}, Drawing Number {1}, and Item Code {2}. "
+                "Existing: {3} (Item Code {4})."
+            ).format(
+                frappe.bold(sf),
+                frappe.bold(dn),
+                frappe.bold(cur_item),
+                frappe.bold(existing.name),
+                frappe.bold(ex_item),
+            ),
+            title=_("Duplicate Drawing"),
+        )
+
+    def validate(self):
+        self._validate_duplicate_sf_drawing_number()
+        rows = self.get(DRAWING_REVISION_FIELD) or []
+        if not rows:
+            return
+        seen = set()
+        for row in rows:
+            value = (row.get("drawing_revision") or "").strip()
+            if not value:
+                continue
+            if value in seen:
+                frappe.throw(
+                    _("Duplicate Drawing Revision: {0}").format(frappe.bold(value)),
+                    title=_("Drawing Revision"),
+                )
+            seen.add(value)
+
+    def _push_revision_to_item(self):
+        if not self.item_code:
+            return
+        rev = cstr(self.revision or "")
+        if frappe.db.get_value("Item", self.item_code, "custom_revision") == rev:
+            return
+        frappe.db.set_value("Item", self.item_code, "custom_revision", rev)
+
+    def before_save(self):
+        if self._integration_hooks_skipped():
+            return
+
+        if not self.is_new():
+            new_name = self._drawing_revision_id()
+            if new_name and new_name != self.name:
+                if frappe.db.exists(self.doctype, new_name):
+                    frappe.throw(
+                        _("Cannot rename to {0}: another Drawing already has this name.").format(
+                            frappe.bold(new_name)
+                        ),
+                        title=_("Drawing"),
+                    )
+
+                self.name = rename_doc(
+                    doc=self,
+                    new=new_name,
+                    merge=False,
+                    force=False,
+                    validate=True,
+                    show_alert=False,
+                    rebuild_search=False,
+                )
+                for row in self.get(DRAWING_REVISION_FIELD) or []:
+                    row.parent = self.name
+
+        self._push_revision_to_item()
+
+    def after_rename(self, old, new, merge):
+        if merge or self._integration_hooks_skipped():
+            return
+
+        rows = frappe.get_all(
+            DRAWING_REVISION_CHILD,
+            filters={
+                "parent": new,
+                "parenttype": self.doctype,
+                "parentfield": DRAWING_REVISION_FIELD,
+            },
+            fields=["name", "drawing_revision", "file_url", "dxf_file_url"],
+        )
+        old_variants = (old, old.replace("/", "%2F"))
+        if "/" in old:
+            old_variants = old_variants + (old.replace("/", "-"),)
+        for row in rows:
+            updates = {}
+            dr = (row.get("drawing_revision") or "").strip()
+            if dr in old_variants:
+                updates["drawing_revision"] = new
+            for fname in ("file_url", "dxf_file_url"):
+                val = row.get(fname)
+                if not val:
+                    continue
+                replaced = _replace_drawing_name_in_text(val, old, new)
+                if replaced != cstr(val):
+                    updates[fname] = replaced
+            if updates:
+                frappe.db.set_value(DRAWING_REVISION_CHILD, row.name, updates, update_modified=False)
