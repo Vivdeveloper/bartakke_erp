@@ -5,7 +5,20 @@ import frappe
 import json
 from frappe import _
 import re
+from frappe.utils import cstr
 from frappe.utils.file_manager import save_file
+
+
+def _item_full_drawing_number(doc):
+    """Same pattern as Drawing name: {sf}-{drawing_no}-{revision} or .../{sheet}."""
+    sf = cstr(doc.get("custom_sf_code") or "").strip()
+    dn = cstr(doc.get("custom_drawing_no") or "").strip()
+    rev = cstr(doc.get("custom_revision") or "").strip()
+    sheet = cstr(doc.get("custom_sheet") or "").strip()
+    if not sf or not dn:
+        return ""
+    base = f"{sf}-{dn}-{rev}"
+    return f"{base}/{sheet}" if sheet else base
 
 
 def validate(doc, method=None):
@@ -13,30 +26,71 @@ def validate(doc, method=None):
 
 def after_insert(doc, method=None):
     create_drawing(doc)
+    get_full_drawing_no(doc)
+
 
 def before_save(doc, method=None):
     get_full_drawing_no(doc)
+    if not doc.is_new():
+        ensure_drawing_for_item(doc)
+        get_full_drawing_no(doc)
     rename_item(doc)
 
 def item_drawing(doc):
-    if not doc.custom_drawing_no:
+    """If custom_sf_code + custom_drawing_no are set: check Drawing by pair and other Item by pair; report all conflicts."""
+    sf = cstr(doc.get("custom_sf_code") or "").strip()
+    dn = cstr(doc.get("custom_drawing_no") or "").strip()
+    if not sf or not dn:
         return
 
-    drawing_item = frappe.db.get_value(
-        "Drawing",
-        f"{doc.custom_sf_code}-{doc.custom_drawing_no}",
-        "item_name"
-    )
-    
+    item_code = doc.get("name")
+    if not item_code:
+        return
 
-    if drawing_item and drawing_item != doc.item_name:
+    errors = []
+
+    row = frappe.db.get_value(
+        "Drawing",
+        {"sf_code": sf, "drawing_number": dn},
+        ["name", "item_code"],
+        as_dict=True,
+    )
+    if row and row.get("item_code") and row.get("item_code") != item_code:
+        errors.append(
+            _(
+                "A Drawing ({0}) already exists for SF Code {1} and Drawing Number {2}, linked to Item {3}."
+            ).format(
+                frappe.bold(row.get("name")),
+                frappe.bold(sf),
+                frappe.bold(dn),
+                frappe.bold(row.get("item_code")),
+            )
+        )
+
+    other_item = frappe.db.get_value(
+        "Item",
+        {
+            "name": ["!=", item_code],
+            "custom_sf_code": sf,
+            "custom_drawing_no": dn,
+        },
+        "name",
+    )
+    if other_item and not (row and row.get("item_code") == other_item):
+        errors.append(
+            _("Another Item ({0}) already uses SF Code {1} and Drawing Number {2}.").format(
+                frappe.bold(other_item), frappe.bold(sf), frappe.bold(dn)
+            )
+        )
+
+    if errors:
         frappe.throw(
-            "There cannot be the same Drawing mapped to different Items"
+            "\n\n".join(errors),
+            title=_("Duplicate SF Code / Drawing Number"),
         )
 
 def create_drawing(doc):
     if not frappe.db.exists("Drawing", {'item_code': doc.get('name')}) and doc.get('custom_sf_code') and doc.get('custom_drawing_no'):
-        name = f"{doc.get('custom_drawing_no')}"
         drawing = frappe.new_doc('Drawing')
         drawing.item_code = doc.get('name')
         drawing.item_name = doc.get('item_name')
@@ -46,6 +100,15 @@ def create_drawing(doc):
         drawing.sheet = doc.get("custom_sheet")
         drawing.revision = doc.get("custom_revision")
         drawing.insert()
+        frappe.db.set_value(
+            "Item",
+            doc.get("name"),
+            "custom_full_drawing_number_",
+            drawing.name,
+            update_modified=False,
+        )
+        if hasattr(doc, "custom_full_drawing_number_"):
+            doc.custom_full_drawing_number_ = drawing.name
 
 
 def sync_store_item_from_item(doc, method=None):
@@ -219,6 +282,16 @@ def get_revision(doc):
                 frappe.throw(f"Drawing {new_rev} already exists")
 
             frappe.rename_doc("Drawing", drawing_doc.name, new_rev, force=True)
+
+        dname = frappe.db.get_value("Drawing", {"item_code": doc.get("item_code")}, "name")
+        if dname:
+            frappe.db.set_value(
+                "Item",
+                doc.get("item_code"),
+                "custom_full_drawing_number_",
+                dname,
+                update_modified=False,
+            )
 
     return new_revision
 
@@ -410,14 +483,50 @@ def add_revision111(file_url):
     return new_revision
 
 def get_full_drawing_no(doc):
-    if not (doc.custom_sf_code and doc.custom_drawing_no):
+    """Set Item.custom_full_drawing_number_ from Item fields. If a Drawing is linked, do not overwrite from Drawing.name when values disagree — throw instead."""
+    if frappe.flags.in_import or frappe.flags.in_migrate or frappe.flags.in_patch:
         return
-    
-    if doc.custom_sheet:
-        doc.custom_full_drawing_number_ = f"{doc.custom_sf_code}-{doc.custom_drawing_no}-{doc.custom_revision}/{doc.custom_sheet}"
-    else:
-        doc.custom_full_drawing_number_ = f"{doc.custom_sf_code}-{doc.custom_drawing_no}-{doc.custom_revision}"
-        
+
+    item_code = doc.get("name")
+    full = _item_full_drawing_number(doc)
+
+    if item_code:
+        linked = frappe.db.get_value("Drawing", {"item_code": item_code}, "name")
+        if linked:
+            if not full:
+                frappe.throw(
+                    _(
+                        "This Item is linked to Drawing {0}. Set Custom SF Code and Custom Drawing No. "
+                        "(and revision/sheet if used) so they match that Drawing."
+                    ).format(frappe.bold(linked)),
+                    title=_("Drawing / Item mismatch"),
+                )
+            if full != linked:
+                frappe.throw(
+                    _(
+                        "This Item is linked to Drawing {0}, but the Item fields build {1}. "
+                        "Correct Custom SF Code, Drawing No., Revision, and Sheet to match the Drawing "
+                        "(do not rely on auto-updating Full Drawing No.)."
+                    ).format(frappe.bold(linked), frappe.bold(full)),
+                    title=_("Drawing / Item mismatch"),
+                )
+            doc.custom_full_drawing_number_ = full
+            return
+
+    if full:
+        doc.custom_full_drawing_number_ = full
+
+
+def ensure_drawing_for_item(doc):
+    """Create Drawing on Item update when SF + drawing no. are set but no Drawing yet (after_insert only runs on new Items)."""
+    if frappe.flags.in_import or frappe.flags.in_migrate or frappe.flags.in_patch:
+        return
+    if not doc.get("custom_sf_code") or not doc.get("custom_drawing_no"):
+        return
+    if frappe.db.exists("Drawing", {"item_code": doc.get("name")}):
+        return
+    create_drawing(doc)
+
 
 @frappe.whitelist()
 def map_local_revisions(files):
