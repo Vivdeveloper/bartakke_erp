@@ -30,8 +30,7 @@
   {
    "fieldname": "drawing_number",
    "fieldtype": "Data",
-   "label": "Drawing Number",
-   "unique": 1
+   "label": "Drawing Number"
   },
   {
    "fieldname": "drawing_revision",

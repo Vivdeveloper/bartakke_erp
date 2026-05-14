@@ -7,9 +7,8 @@ from frappe.model.document import Document
 from frappe.model.rename_doc import rename_doc
 from frappe.utils import cint, cstr, now_datetime
 
-DRAWING_REVISION_CHILD = "Drawing Revision"
-DRAWING_REVISION_FIELD = "drawing_revision"
-SORT_KEY_MISSING_REVISION = 1 << 30
+def _norm_sheet_drawing(value):
+    return cstr(value or "").strip()
 
 
 def _replace_drawing_name_in_text(text, old, new):
@@ -25,6 +24,11 @@ def _replace_drawing_name_in_text(text, old, new):
         if variant in s:
             s = s.replace(variant, new)
     return s
+
+
+DRAWING_REVISION_CHILD = "Drawing Revision"
+DRAWING_REVISION_FIELD = "drawing_revision"
+SORT_KEY_MISSING_REVISION = 1 << 30
 
 
 class Drawing(Document):
@@ -232,42 +236,43 @@ class Drawing(Document):
         self._validate_parent_revision_digits()
         self._stamp_canonical_revision_metadata()
 
-    def _validate_duplicate_sf_drawing_number(self):
+    def _validate_duplicate_sf_drawing_number_sheet(self):
+        """One Drawing per (sf_code, drawing_number, sheet); sheet blank matches blank only."""
         if self._integration_hooks_skipped():
             return
-        sf = cstr(self.sf_code).strip()
-        dn = cstr(self.drawing_number).strip()
+        sf = cstr(self.sf_code or "").strip()
+        dn = cstr(self.drawing_number or "").strip()
         if not sf or not dn:
             return
+        sh = _norm_sheet_drawing(self.sheet)
+
         filters = {"sf_code": sf, "drawing_number": dn}
-        if not self.is_new():
+        if self.name:
             filters["name"] = ["!=", self.name]
-        existing = frappe.db.get_value(
+
+        for row in frappe.get_all(
             "Drawing",
-            filters,
-            ["name", "item_code"],
-            as_dict=True,
-        )
-        if not existing:
-            return
-        cur_item = cstr(self.item_code or "").strip() or _("(not set)")
-        ex_item = cstr(existing.item_code or "").strip() or _("(not set)")
-        frappe.throw(
-            _(
-                "Duplicate: a Drawing already exists with SF Code {0}, Drawing Number {1}, and Item Code {2}. "
-                "Existing: {3} (Item Code {4})."
-            ).format(
-                frappe.bold(sf),
-                frappe.bold(dn),
-                frappe.bold(cur_item),
-                frappe.bold(existing.name),
-                frappe.bold(ex_item),
-            ),
-            title=_("Duplicate Drawing"),
-        )
+            filters=filters,
+            fields=["name", "item_code", "sheet"],
+        ):
+            if _norm_sheet_drawing(row.get("sheet")) != sh:
+                continue
+            frappe.throw(
+                _(
+                    "Duplicate Drawing: SF Code {0}, Drawing Number {1}, and Sheet {2} already exist on {3} "
+                    "(Item Code {4})."
+                ).format(
+                    frappe.bold(sf),
+                    frappe.bold(dn),
+                    frappe.bold(sh or _("(blank)")),
+                    frappe.bold(row.name),
+                    frappe.bold(cstr(row.get("item_code") or "").strip() or _("(not set)")),
+                ),
+                title=_("Duplicate Drawing"),
+            )
 
     def validate(self):
-        self._validate_duplicate_sf_drawing_number()
+        self._validate_duplicate_sf_drawing_number_sheet()
         rows = self.get(DRAWING_REVISION_FIELD) or []
         if not rows:
             return
@@ -284,12 +289,29 @@ class Drawing(Document):
             seen.add(value)
 
     def _push_revision_to_item(self):
+        """Keep Item.custom_revision and Item.custom_sheet in sync with this Drawing."""
         if not self.item_code:
             return
         rev = cstr(self.revision or "")
-        if frappe.db.get_value("Item", self.item_code, "custom_revision") == rev:
+        sheet = _norm_sheet_drawing(self.sheet)
+
+        row = frappe.db.get_value(
+            "Item",
+            self.item_code,
+            ["custom_revision", "custom_sheet"],
+            as_dict=True,
+        )
+        if not row:
             return
-        frappe.db.set_value("Item", self.item_code, "custom_revision", rev)
+
+        updates = {}
+        if cstr(row.get("custom_revision") or "") != rev:
+            updates["custom_revision"] = rev
+        if _norm_sheet_drawing(row.get("custom_sheet")) != sheet:
+            updates["custom_sheet"] = sheet
+
+        if updates:
+            frappe.db.set_value("Item", self.item_code, updates)
 
     def before_save(self):
         if self._integration_hooks_skipped():

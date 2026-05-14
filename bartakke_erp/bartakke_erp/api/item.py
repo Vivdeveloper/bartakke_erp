@@ -37,7 +37,7 @@ def before_save(doc, method=None):
     rename_item(doc)
 
 def item_drawing(doc):
-    """If custom_sf_code + custom_drawing_no are set: check Drawing by pair and other Item by pair; report all conflicts."""
+    """If custom_sf_code + custom_drawing_no are set: check Drawing and other Item for same SF, drawing number, and sheet."""
     sf = cstr(doc.get("custom_sf_code") or "").strip()
     dn = cstr(doc.get("custom_drawing_no") or "").strip()
     if not sf or not dn:
@@ -47,46 +47,61 @@ def item_drawing(doc):
     if not item_code:
         return
 
-    errors = []
+    sh = cstr(doc.get("custom_sheet") or "").strip()
 
-    row = frappe.db.get_value(
+    errors = []
+    drawing_owner = None
+
+    for dr in frappe.get_all(
         "Drawing",
-        {"sf_code": sf, "drawing_number": dn},
-        ["name", "item_code"],
-        as_dict=True,
-    )
-    if row and row.get("item_code") and row.get("item_code") != item_code:
+        filters={"sf_code": sf, "drawing_number": dn},
+        fields=["name", "item_code", "sheet"],
+    ):
+        if cstr(dr.get("sheet") or "").strip() != sh:
+            continue
+        owner = dr.get("item_code")
+        if owner and owner != item_code:
+            drawing_owner = owner
+            errors.append(
+                _(
+                    "A Drawing ({0}) already exists for SF Code {1}, Drawing Number {2}, and Sheet {3}, linked to Item {4}."
+                ).format(
+                    frappe.bold(dr.get("name")),
+                    frappe.bold(sf),
+                    frappe.bold(dn),
+                    frappe.bold(sh or _("(blank)")),
+                    frappe.bold(owner),
+                )
+            )
+            break
+
+    other_item = None
+    for it in frappe.get_all(
+        "Item",
+        filters={"name": ["!=", item_code], "custom_sf_code": sf, "custom_drawing_no": dn},
+        fields=["name", "custom_sheet"],
+    ):
+        if cstr(it.get("custom_sheet") or "").strip() != sh:
+            continue
+        other_item = it.get("name")
+        break
+
+    if other_item and not (drawing_owner and other_item == drawing_owner):
         errors.append(
             _(
-                "A Drawing ({0}) already exists for SF Code {1} and Drawing Number {2}, linked to Item {3}."
+                "Another Item ({0}) already uses SF Code {1}, Drawing Number {2}, and Sheet {3}."
             ).format(
-                frappe.bold(row.get("name")),
+                frappe.bold(other_item),
                 frappe.bold(sf),
                 frappe.bold(dn),
-                frappe.bold(row.get("item_code")),
-            )
-        )
-
-    other_item = frappe.db.get_value(
-        "Item",
-        {
-            "name": ["!=", item_code],
-            "custom_sf_code": sf,
-            "custom_drawing_no": dn,
-        },
-        "name",
-    )
-    if other_item and not (row and row.get("item_code") == other_item):
-        errors.append(
-            _("Another Item ({0}) already uses SF Code {1} and Drawing Number {2}.").format(
-                frappe.bold(other_item), frappe.bold(sf), frappe.bold(dn)
+                frappe.bold(sh or _("(blank)")),
             )
         )
 
     if errors:
         frappe.throw(
             "\n\n".join(errors),
-            title=_("Duplicate SF Code / Drawing Number"),
+            title=_("Duplicate SF Code / Drawing Number / Sheet"),
         )
 
 def create_drawing(doc):
@@ -165,71 +180,62 @@ def on_trash(self, method=None):
 
 @frappe.whitelist()
 def get_drawing(doc):
-    doc = json.loads(doc)
+    """Suggest custom_drawing_no only when Drawing Configuration exists for item_group:
+    max among other Items in that group, else no_starts_from. No config => no suggestion."""
+    doc = frappe.parse_json(doc)
 
-    if doc.get("custom_sf_code"):
+    item_group = doc.get("item_group")
+    if not item_group:
+        return None
 
-        assembly_groups = frappe.db.get_all(
-            "Item Group",
-            filters={"parent_item_group": "Assembly Item"},
-            pluck="name"
+    if not frappe.db.exists("Drawing Configuration", item_group):
+        return None
+
+    def next_from_counter_values(pluck_values, default_when_empty):
+        nums = []
+        for v in pluck_values or []:
+            if v is None or v == "":
+                continue
+            s = cstr(v).strip()
+            if not s:
+                continue
+            try:
+                nums.append(int(float(s)))
+            except (ValueError, TypeError):
+                continue
+        return max(nums) + 1 if nums else default_when_empty
+
+    def drawing_config_no_starts_from():
+        val = frappe.db.get_value("Drawing Configuration", item_group, "no_starts_from")
+        if val is None:
+            return None
+        return int(val)
+
+    def item_counter_filters(extra):
+        """Other Items in same scope (exclude current row if named)."""
+        filters = dict(extra)
+        name = doc.get("name")
+        if name:
+            filters["name"] = ["!=", name]
+        return filters
+
+    def next_from_items(extra_filters, default_when_empty):
+        raw = frappe.db.get_all(
+            "Item",
+            filters=item_counter_filters(extra_filters),
+            pluck="custom_drawing_no",
         )
+        return next_from_counter_values(raw, default_when_empty)
 
-        if doc.get("item_group") in assembly_groups:
+    filters = {"item_group": item_group}
 
-            drawings = frappe.db.get_all(
-                "Drawing",
-                filters={"item_group": doc.get("item_group")},
-                pluck="name"
-            )
+    nxt = next_from_items(filters, None)
+    if nxt is not None:
+        return nxt
 
-            if drawings:
-                drawing_numbers = []
-                for d in drawings:
-                    if "-" in d:
-                        try:
-                            drawing_numbers.append(int(float(d.split("-", 1)[1])))
-                        except ValueError:
-                            continue
-
-                next_number = max(drawing_numbers) + 1 if drawing_numbers else 1
-
-            else:
-                if frappe.db.exists("Drawing Configuration", doc.get("item_group")):
-                    next_number = frappe.db.get_value(
-                        "Drawing Configuration",
-                        doc.get("item_group"),
-                        "no_starts_from"
-                    )
-                else:
-                    next_number = 1001
-
-            return next_number
-
-
-        if doc.get("custom_parent_item_group") == "Products":
-
-            drawings = frappe.db.get_all(
-                "Drawing",
-                filters={"parent_group": doc.get("custom_parent_item_group")},
-                pluck="name"
-            )
-
-            if drawings:
-                drawing_numbers = []
-                for d in drawings:
-                    if "-" in d:
-                        try:
-                            drawing_numbers.append(int(float(d.split("-", 1)[1])))
-                        except ValueError:
-                            continue
-
-                next_number = max(drawing_numbers) + 1 if drawing_numbers else 1001
-
-            else:
-                next_number = 1001
-
-            return next_number
+    start = drawing_config_no_starts_from()
+    if start is not None:
+        return start
 
     return None
 
