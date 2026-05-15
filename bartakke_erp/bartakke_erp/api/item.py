@@ -33,7 +33,6 @@ def before_save(doc, method=None):
     get_full_drawing_no(doc)
     if not doc.is_new():
         ensure_drawing_for_item(doc)
-        get_full_drawing_no(doc)
     rename_item(doc)
 
 def item_drawing(doc):
@@ -115,15 +114,7 @@ def create_drawing(doc):
         drawing.sheet = doc.get("custom_sheet")
         drawing.revision = doc.get("custom_revision")
         drawing.insert()
-        frappe.db.set_value(
-            "Item",
-            doc.get("name"),
-            "custom_full_drawing_number_",
-            drawing.name,
-            update_modified=False,
-        )
-        if hasattr(doc, "custom_full_drawing_number_"):
-            doc.custom_full_drawing_number_ = drawing.name
+        get_full_drawing_no(doc)
 
 
 def sync_store_item_from_item(doc, method=None):
@@ -289,15 +280,10 @@ def get_revision(doc):
 
             frappe.rename_doc("Drawing", drawing_doc.name, new_rev, force=True)
 
-        dname = frappe.db.get_value("Drawing", {"item_code": doc.get("item_code")}, "name")
-        if dname:
-            frappe.db.set_value(
-                "Item",
-                doc.get("item_code"),
-                "custom_full_drawing_number_",
-                dname,
-                update_modified=False,
-            )
+        item_doc = frappe.get_doc("Item", doc.get("item_code"))
+        get_full_drawing_no(item_doc)
+        item_doc.flags.ignore_validate = True
+        item_doc.save(ignore_permissions=True)
 
     return new_revision
 
@@ -489,38 +475,14 @@ def add_revision111(file_url):
     return new_revision
 
 def get_full_drawing_no(doc):
-    """Set Item.custom_full_drawing_number_ from Item fields. If a Drawing is linked, do not overwrite from Drawing.name when values disagree — throw instead."""
+    """Link custom_full_drawing_number_ only when a Drawing exists with the id built from Item fields."""
     if frappe.flags.in_import or frappe.flags.in_migrate or frappe.flags.in_patch:
         return
 
-    item_code = doc.get("name")
     full = _item_full_drawing_number(doc)
-
-    if item_code:
-        linked = frappe.db.get_value("Drawing", {"item_code": item_code}, "name")
-        if linked:
-            if not full:
-                frappe.throw(
-                    _(
-                        "This Item is linked to Drawing {0}. Set Custom SF Code and Custom Drawing No. "
-                        "(and revision/sheet if used) so they match that Drawing."
-                    ).format(frappe.bold(linked)),
-                    title=_("Drawing / Item mismatch"),
-                )
-            if full != linked:
-                frappe.throw(
-                    _(
-                        "This Item is linked to Drawing {0}, but the Item fields build {1}. "
-                        "Correct Custom SF Code, Drawing No., Revision, and Sheet to match the Drawing "
-                        "(do not rely on auto-updating Full Drawing No.)."
-                    ).format(frappe.bold(linked), frappe.bold(full)),
-                    title=_("Drawing / Item mismatch"),
-                )
-            doc.custom_full_drawing_number_ = full
-            return
-
-    if full:
-        doc.custom_full_drawing_number_ = full
+    doc.custom_full_drawing_number_ = (
+        full if full and frappe.db.exists("Drawing", full) else None
+    )
 
 
 def ensure_drawing_for_item(doc):

@@ -91,7 +91,58 @@ class Drawing(Document):
         n = self._revision_as_int(self.revision)
         return self._row_key_revision(row_key_str) if n is None else n
 
+    def _has_drawing_revision_row(self, drawing_revision_key):
+        key = cstr(drawing_revision_key).strip()
+        if not key:
+            return False
+        return any(
+            cstr(r.get("drawing_revision") or "").strip() == key
+            for r in self.get(DRAWING_REVISION_FIELD) or []
+        )
+
+    @staticmethod
+    def _drawing_revision_row_score(row):
+        score = 0
+        if row.get("file_url"):
+            score += 2
+        if row.get("dxf_file_url"):
+            score += 2
+        if row.get("revision_time"):
+            score += 1
+        if row.get("revision") is not None:
+            score += 1
+        return score
+
+    def _dedupe_drawing_revision_rows(self):
+        by_key = {}
+        for row in list(self.get(DRAWING_REVISION_FIELD) or []):
+            key = cstr(row.get("drawing_revision") or "").strip()
+            if not key:
+                continue
+            existing = by_key.get(key)
+            if existing is None:
+                by_key[key] = row
+                continue
+            if self._drawing_revision_row_score(row) > self._drawing_revision_row_score(existing):
+                self.remove(existing)
+                by_key[key] = row
+            else:
+                self.remove(row)
+
+    def _prune_blank_drawing_revision_rows_when_canonical_exists(self):
+        canonical = cstr(self._drawing_revision_id()).strip()
+        if not canonical or not self._has_drawing_revision_row(canonical):
+            return
+        for row in list(self.get(DRAWING_REVISION_FIELD) or []):
+            if cstr(row.get("drawing_revision") or "").strip():
+                continue
+            if row.get("file_url") or row.get("dxf_file_url"):
+                continue
+            self.remove(row)
+
     def _append_drawing_revision_row(self, drawing_revision_key, revision_int):
+        if self._has_drawing_revision_row(drawing_revision_key):
+            return
         self.append(
             DRAWING_REVISION_FIELD,
             {
@@ -188,21 +239,27 @@ class Drawing(Document):
         if prev is None or cstr(prev.revision) == cstr(self.revision):
             return
         new_id = self._drawing_revision_id()
-        rows = self.get(DRAWING_REVISION_FIELD) or []
-        if any((r.get("drawing_revision") or "").strip() == new_id for r in rows):
+        if self._has_drawing_revision_row(new_id):
             return
         self._append_drawing_revision_row(new_id, self._coerce_revision_int_for_row(new_id))
 
     def _ensure_default_revision_rows(self):
         rows = self.get(DRAWING_REVISION_FIELD) or []
-        if not rows:
-            rid = self._drawing_revision_id()
-            self._append_drawing_revision_row(rid, self._coerce_revision_int_for_row(rid))
+        rid = self._drawing_revision_id()
+        rev_int = self._coerce_revision_int_for_row(rid)
+
+        if self._has_drawing_revision_row(rid):
             return
-        if len(rows) == 1 and not (rows[0].get("drawing_revision") or "").strip():
-            row, rid = rows[0], self._drawing_revision_id()
+
+        if not rows:
+            self._append_drawing_revision_row(rid, rev_int)
+            return
+
+        blank_rows = [r for r in rows if not cstr(r.get("drawing_revision") or "").strip()]
+        if len(blank_rows) == 1:
+            row = blank_rows[0]
             row.drawing_revision = rid
-            row.revision = self._coerce_revision_int_for_row(rid)
+            row.revision = rev_int
             row.revision_time = now_datetime()
             row.created_by = frappe.session.user
 
@@ -223,6 +280,8 @@ class Drawing(Document):
         self._normalize_child_drawing_revision_slash_keys()
         self._append_row_if_parent_revision_changed(self.get_doc_before_save())
         self._ensure_default_revision_rows()
+        self._dedupe_drawing_revision_rows()
+        self._prune_blank_drawing_revision_rows_when_canonical_exists()
         self._fill_child_revision_from_key_if_missing()
         self._sort_drawing_revision_rows()
         self._validate_contiguous_row_revisions()
