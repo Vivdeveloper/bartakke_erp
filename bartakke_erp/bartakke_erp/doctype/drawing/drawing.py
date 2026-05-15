@@ -264,20 +264,6 @@ class Drawing(Document):
 
     def validate(self):
         self._validate_duplicate_sf_drawing_number_sheet()
-        rows = self.get(DRAWING_REVISION_FIELD) or []
-        if not rows:
-            return
-        seen = set()
-        for row in rows:
-            value = (row.get("drawing_revision") or "").strip()
-            if not value:
-                continue
-            if value in seen:
-                frappe.throw(
-                    _("Duplicate Drawing Revision: {0}").format(frappe.bold(value)),
-                    title=_("Drawing Revision"),
-                )
-            seen.add(value)
 
     def _push_revision_to_item(self):
         """Keep Item.custom_revision and Item.custom_sheet in sync with this Drawing."""
