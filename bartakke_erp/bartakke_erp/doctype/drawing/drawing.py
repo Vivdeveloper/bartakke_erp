@@ -134,15 +134,6 @@ class Drawing(Document):
                 frappe.throw(_("Revision must be zero or positive."), title=_("Drawing Revision"))
             values.append(n)
 
-        if len(values) != len(set(values)):
-            frappe.throw(
-                _(
-                    "Duplicate revision number in the table. "
-                    "Each row needs a unique number (for example you cannot have two rows with revision 2)."
-                ),
-                title=_("Drawing Revision"),
-            )
-
         mx = max(values)
         expected, actual = set(range(0, mx + 1)), set(values)
         if actual != expected:
