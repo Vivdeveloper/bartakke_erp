@@ -16,6 +16,7 @@
   "item_group",
   "parent_group",
   "revision",
+  "manual_revision",
   "section_break_wdpc",
   "drawing_revision"
  ],
@@ -93,12 +94,18 @@
    "fieldname": "revision",
    "fieldtype": "Data",
    "label": "Revision"
+  },
+  {
+   "default": "0",
+   "fieldname": "manual_revision",
+   "fieldtype": "Check",
+   "label": "Manual Revision"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-05-14 18:00:00.000000",
+ "modified": "2026-05-15 14:06:31.428694",
  "modified_by": "Administrator",
  "module": "Bartakke ERP",
  "name": "Drawing",

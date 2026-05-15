@@ -134,6 +134,9 @@ class Drawing(Document):
                 frappe.throw(_("Revision must be zero or positive."), title=_("Drawing Revision"))
             values.append(n)
 
+        if cint(self.manual_revision):
+            return
+
         mx = max(values)
         expected, actual = set(range(0, mx + 1)), set(values)
         if actual != expected:
