@@ -26,13 +26,13 @@ def validate(doc, method=None):
 
 def after_insert(doc, method=None):
     create_drawing(doc)
-    get_full_drawing_no(doc)
+    sync_full_drawing_number(doc)
 
 
 def before_save(doc, method=None):
-    get_full_drawing_no(doc)
     if not doc.is_new():
         ensure_drawing_for_item(doc)
+        sync_full_drawing_number(doc)
     rename_item(doc)
 
 def item_drawing(doc):
@@ -114,7 +114,7 @@ def create_drawing(doc):
         drawing.sheet = doc.get("custom_sheet")
         drawing.revision = doc.get("custom_revision")
         drawing.insert()
-        get_full_drawing_no(doc)
+        sync_full_drawing_number(doc)
 
 
 def sync_store_item_from_item(doc, method=None):
@@ -281,7 +281,7 @@ def get_revision(doc):
             frappe.rename_doc("Drawing", drawing_doc.name, new_rev, force=True)
 
         item_doc = frappe.get_doc("Item", doc.get("item_code"))
-        get_full_drawing_no(item_doc)
+        sync_full_drawing_number(item_doc)
         item_doc.flags.ignore_validate = True
         item_doc.save(ignore_permissions=True)
 
@@ -474,15 +474,45 @@ def add_revision111(file_url):
 
     return new_revision
 
-def get_full_drawing_no(doc):
-    """Link custom_full_drawing_number_ only when a Drawing exists with the id built from Item fields."""
+def _resolve_full_drawing_link(doc):
+    """Drawing name from Item fields, else Drawing linked by item_code."""
+    full = _item_full_drawing_number(doc)
+    if full and frappe.db.exists("Drawing", full):
+        return full
+
+    item_code = doc.get("name")
+    if item_code:
+        return frappe.db.get_value("Drawing", {"item_code": item_code}, "name")
+
+    return None
+
+
+def sync_full_drawing_number(doc):
+    """Set and persist Item.custom_full_drawing_number_ after Drawing exists."""
     if frappe.flags.in_import or frappe.flags.in_migrate or frappe.flags.in_patch:
         return
 
-    full = _item_full_drawing_number(doc)
-    doc.custom_full_drawing_number_ = (
-        full if full and frappe.db.exists("Drawing", full) else None
-    )
+    link = _resolve_full_drawing_link(doc)
+    doc.custom_full_drawing_number_ = link
+
+    item_code = doc.get("name")
+    if not item_code:
+        return
+
+    db_val = frappe.db.get_value("Item", item_code, "custom_full_drawing_number_")
+    if db_val != link:
+        frappe.db.set_value(
+            "Item",
+            item_code,
+            "custom_full_drawing_number_",
+            link,
+            update_modified=False,
+        )
+
+
+def get_full_drawing_no(doc):
+    """Backward-compatible alias."""
+    sync_full_drawing_number(doc)
 
 
 def ensure_drawing_for_item(doc):
