@@ -52,11 +52,9 @@ doctype_js = {
 	"Production Plan": "public/js/production_plan.js",
     "Sales Order": "public/js/sales_order.js",
     "Item": "public/js/item.js",
-    "BOM": "public/js/bom.js",
     "Sales Order": "public/js/so.js"
 }
 doctype_list_js = {"Production Plan" : "public/js/production_plan_list.js"}
-doctype_tree_js = {"BOM" : "public/js/bom_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
 # Svg Icons
