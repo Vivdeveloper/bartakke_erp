@@ -138,11 +138,11 @@ doctype_list_js = {"Production Plan" : "public/js/production_plan_list.js"}
 # ---------------
 # Override standard doctype classes
 
-override_doctype_class = {
-	"Purchase Order": "bartakke_erp.bartakke_erp.overrides.purchase_order.OverridePurchaseOrder",
-    "Subcontracting Order": "bartakke_erp.bartakke_erp.overrides.subcontracting_order.OverrideSubcontractingOrder",
-    "Subcontracting Receipt": "bartakke_erp.bartakke_erp.overrides.subcontracting_receipt.OverrideSubcontractingReceipt",
-}
+# override_doctype_class = {
+# 	"Purchase Order": "bartakke_erp.bartakke_erp.overrides.purchase_order.OverridePurchaseOrder",
+#     "Subcontracting Order": "bartakke_erp.bartakke_erp.overrides.subcontracting_order.OverrideSubcontractingOrder",
+#     "Subcontracting Receipt": "bartakke_erp.bartakke_erp.overrides.subcontracting_receipt.OverrideSubcontractingReceipt",
+# }
 
 # Document Events
 # ---------------
@@ -198,9 +198,9 @@ doc_events = {
 # Overriding Methods
 # ------------------------------
 #
-override_whitelisted_methods = {
-	# "frappe.desk.doctype.event.event.get_events": "bartakke_erp.event.get_events"
-}
+# override_whitelisted_methods = {
+# 	"frappe.desk.doctype.event.event.get_events": "bartakke_erp.event.get_events"
+# }
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
