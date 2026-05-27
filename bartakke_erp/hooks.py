@@ -44,7 +44,11 @@ app_license = "mit"
 
 # include js in doctype views
 doctype_js = {
-	"Material Request": "public/js/material_request.js",
+	"Material Request": [
+		"public/js/material_request.js",
+		"public/js/mr_update_items.js",
+		"public/js/mr_production_plan.js",
+	],
 	"Production Plan": "public/js/production_plan.js",
     "Sales Order": "public/js/sales_order.js",
     "Item": "public/js/item.js",
@@ -149,7 +153,11 @@ override_doctype_class = {
 doc_events = {
 	"Production Plan": {
 		"autoname": "bartakke_erp.bartakke_erp.api.production_plan.autoname",
-		"validate": ["bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty","bartakke_erp.bartakke_erp.api.production_plan.validate"],
+		"validate": [
+			"bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_mr_links",
+			"bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty",
+			"bartakke_erp.bartakke_erp.api.production_plan.validate",
+		],
 		"on_submit": "bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty"
 
 	},
