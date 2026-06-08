@@ -69,9 +69,6 @@ def create_production_process_tracking(source_name, target_doc=None):
         target.po_number = source.custom_customer_po_no
         target.customer_po_date = source.custom_customer_po_date
         target.delivery_date = source.custom_customer_delivery
-        target.colour = source.custom_panel_outside_color
-        target.panel_colour_inside = source.custom_panel_color
-        target.base_colour = source.custom_base_color
 
         stages = frappe.db.get_all("Production Stages", pluck='name')
 
@@ -180,9 +177,6 @@ def create_production_tracking(work_orders):
                 "po_number": wo.custom_customer_po_no,
                 "customer_po_date": wo.custom_customer_po_date,
                 "delivery_date": wo.custom_customer_delivery,
-                "colour": wo.custom_panel_outside_color,
-                "panel_colour_inside": wo.custom_panel_color,
-                "base_colour": wo.custom_base_color,
                 "weight_kg": total_weight,
                 "area_sq_mtr_paint": total_area,
             })

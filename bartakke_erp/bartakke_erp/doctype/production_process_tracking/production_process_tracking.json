@@ -32,6 +32,7 @@
   "section_break_hwyn",
   "production_process_tracking_item",
   "section_break_cvqu",
+  "production_process_tracking_work_order_html",
   "production_stage_log"
  ],
  "fields": [
@@ -43,7 +44,6 @@
    "options": ".{customer}.-.###"
   },
   {
-   "fetch_from": "order_acceptance.custom_work_order_no",
    "fieldname": "work_order_no",
    "fieldtype": "Link",
    "hidden": 1,
@@ -76,14 +76,12 @@
    "label": "Indent Received Date"
   },
   {
-   "fetch_from": "order_acceptance.po_no",
    "fieldname": "po_number",
    "fieldtype": "Data",
    "hidden": 1,
    "label": "PO Number"
   },
   {
-   "fetch_from": "order_acceptance.po_date",
    "fieldname": "customer_po_date",
    "fieldtype": "Date",
    "hidden": 1,
@@ -116,9 +114,7 @@
    "fieldname": "current_stage",
    "fieldtype": "Select",
    "in_list_view": 1,
-   "label": "Current Stage",
-   "options": "\nDesign Issued\nDesign Received\nProgramming\nPunching\nBending\nWelding\nTransferred to Unit 1\nPowder Coating\nAssembly\nReady for Dispatch\nDispatched",
-   "read_only": 1
+   "label": "Current Stage"
   },
   {
    "default": "Open",
@@ -133,31 +129,22 @@
    "label": "Design"
   },
   {
-   "fetch_from": "work_order_no.custom_panel_outside_color",
    "fieldname": "colour",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "hidden": 1,
-   "label": "Panel Colour Outside ",
-   "link_filters": "[[\"Store Item\",\"item_group\",\"in\",[\"Chemical  for Powder\",\"Other Chemical Liquid Paint\",\"Chemical for Gasketing\",\"Powder Paint\",\"\",\"Coating\",null]]]",
-   "options": "Store Item"
+   "label": "Panel Colour Outside "
   },
   {
-   "fetch_from": "work_order_no.custom_panel_color",
    "fieldname": "panel_colour_inside",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "hidden": 1,
-   "label": "Panel Colour Inside",
-   "link_filters": "[[\"Store Item\",\"item_group\",\"in\",[\"Chemical  for Powder\",\"Other Chemical Liquid Paint\",\"Chemical for Gasketing\",\"Powder Paint\",\"\",\"Coating\",null]]]",
-   "options": "Store Item"
+   "label": "Panel Colour Inside"
   },
   {
-   "fetch_from": "work_order_no.custom_base_color",
    "fieldname": "base_colour",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "hidden": 1,
-   "label": "Base Colour",
-   "link_filters": "[[\"Store Item\",\"item_group\",\"in\",[\"Chemical  for Powder\",\"Other Chemical Liquid Paint\",\"Chemical for Gasketing\",\"Powder Paint\",\"\",\"Coating\",null]]]",
-   "options": "Store Item"
+   "label": "Base Colour"
   },
   {
    "fetch_if_empty": 1,
@@ -203,12 +190,17 @@
    "fieldtype": "Table",
    "label": "Production Process Tracking Item",
    "options": "Production Process Tracking Item"
+  },
+  {
+   "fieldname": "production_process_tracking_work_order_html",
+   "fieldtype": "HTML",
+   "label": "Production Process Tracking Work Order HTML"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-20 23:16:30.489760",
+ "modified": "2026-06-08 13:19:40.000500",
  "modified_by": "Administrator",
  "module": "Bartakke ERP",
  "name": "Production Process Tracking",
