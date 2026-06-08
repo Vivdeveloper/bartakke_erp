@@ -307,7 +307,7 @@ def autoname(doc, method=None):
     if not parts:
         return
 
-    dimensions = " x ".join(parts)
+    dimensions = " X ".join(parts)
     base_name = f"{doc.item_name or 'Item'} {dimensions}"
     
     doc.name = base_name
@@ -347,10 +347,10 @@ def rename_item(doc):
     if not parts:
         return
 
-    dimensions = " x ".join(parts)
+    dimensions = " X ".join(parts)
 
     # Remove old dimensions
-    base_name = re.sub(r"\s\d+(\.\d+)?\s[WDHT](\s*x\s*\d+(\.\d+)?\s[WDHT])*", "", doc.item_name or "").strip()
+    base_name = re.sub(r"\s\d+(\.\d+)?\s[WDHT](\s*[xX]\s*\d+(\.\d+)?\s[WDHT])*", "", doc.item_name or "").strip()
 
     new_name = f"{base_name} {dimensions}"
 
