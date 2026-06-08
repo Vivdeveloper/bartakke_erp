@@ -8,6 +8,8 @@ import re
 from frappe.utils import cstr
 from frappe.utils.file_manager import save_file
 
+DIMENSIONAL_ITEM_GROUPS = ("Products", "MFG", "Assembly Item")
+
 
 def _item_full_drawing_number(doc):
     """Same pattern as Drawing name: {sf}-{drawing_no}-{revision} or .../{sheet}."""
@@ -288,7 +290,7 @@ def get_revision(doc):
     return new_revision
 
 def autoname(doc, method=None):
-    if doc.custom_parent_item_group not in ["Products", "Assembly Item"]:
+    if doc.custom_parent_item_group not in DIMENSIONAL_ITEM_GROUPS:
         return
 
     parts = []
@@ -305,7 +307,7 @@ def autoname(doc, method=None):
     if not parts:
         return
 
-    dimensions = " x ".join(parts)
+    dimensions = " X ".join(parts)
     base_name = f"{doc.item_name or 'Item'} {dimensions}"
     
     doc.name = base_name
@@ -313,7 +315,7 @@ def autoname(doc, method=None):
 
 def rename_item(doc):
 
-    if doc.custom_parent_item_group not in ["Products", "Assembly Item"]:
+    if doc.custom_parent_item_group not in DIMENSIONAL_ITEM_GROUPS:
         return
 
     # Get previous document
@@ -345,10 +347,10 @@ def rename_item(doc):
     if not parts:
         return
 
-    dimensions = " x ".join(parts)
+    dimensions = " X ".join(parts)
 
     # Remove old dimensions
-    base_name = re.sub(r"\s\d+(\.\d+)?\s[WDHT](\s*x\s*\d+(\.\d+)?\s[WDHT])*", "", doc.item_name or "").strip()
+    base_name = re.sub(r"\s\d+(\.\d+)?\s[WDHT](\s*[xX]\s*\d+(\.\d+)?\s[WDHT])*", "", doc.item_name or "").strip()
 
     new_name = f"{base_name} {dimensions}"
 

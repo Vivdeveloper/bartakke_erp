@@ -24,7 +24,6 @@
  ],
  "fields": [
   {
-   "fetch_from": "order_acceptance.custom_work_order_no",
    "fieldname": "work_order_no",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -52,14 +51,12 @@
    "label": "Indent Received Date"
   },
   {
-   "fetch_from": "order_acceptance.po_no",
    "fieldname": "po_number",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "PO Number"
   },
   {
-   "fetch_from": "order_acceptance.po_date",
    "fieldname": "customer_po_date",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -76,29 +73,20 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "work_order_no.custom_panel_outside_color",
    "fieldname": "colour",
-   "fieldtype": "Link",
-   "label": "Panel Colour Outside ",
-   "link_filters": "[[\"Store Item\",\"item_group\",\"in\",[\"Chemical  for Powder\",\"Other Chemical Liquid Paint\",\"Chemical for Gasketing\",\"Powder Paint\",\"\",\"Coating\",null]]]",
-   "options": "Store Item"
+   "fieldtype": "Data",
+   "label": "Panel Colour Outside "
   },
   {
-   "fetch_from": "work_order_no.custom_panel_color",
    "fieldname": "panel_colour_inside",
-   "fieldtype": "Link",
-   "label": "Panel Colour Inside",
-   "link_filters": "[[\"Store Item\",\"item_group\",\"in\",[\"Chemical  for Powder\",\"Other Chemical Liquid Paint\",\"Chemical for Gasketing\",\"Powder Paint\",\"\",\"Coating\",null]]]",
-   "options": "Store Item"
+   "fieldtype": "Data",
+   "label": "Panel Colour Inside"
   },
   {
-   "fetch_from": "work_order_no.custom_base_color",
    "fieldname": "base_colour",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Base Colour",
-   "link_filters": "[[\"Store Item\",\"item_group\",\"in\",[\"Chemical  for Powder\",\"Other Chemical Liquid Paint\",\"Chemical for Gasketing\",\"Powder Paint\",\"\",\"Coating\",null]]]",
-   "options": "Store Item"
+   "label": "Base Colour"
   },
   {
    "fetch_if_empty": 1,
@@ -131,7 +119,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-20 23:09:25.306729",
+ "modified": "2026-06-08 12:57:24.911483",
  "modified_by": "Administrator",
  "module": "Bartakke ERP",
  "name": "Production Process Tracking Item",

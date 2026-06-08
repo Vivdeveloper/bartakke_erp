@@ -1,0 +1,62 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:production_plan",
+ "creation": "2026-06-08 12:09:04.419693",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "production_plan",
+  "production_process_tracking_template",
+  "production_process_tracking_work_order_stages"
+ ],
+ "fields": [
+  {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "label": "Production Plan",
+   "options": "Production Plan",
+   "unique": 1
+  },
+  {
+   "fieldname": "production_process_tracking_template",
+   "fieldtype": "Link",
+   "label": "Production Process Tracking Template",
+   "options": "Production Process Tracking Template"
+  },
+  {
+   "fieldname": "production_process_tracking_work_order_stages",
+   "fieldtype": "Table",
+   "label": "Production Process Tracking Work Order Stages",
+   "options": "Production Process Tracking Work Order Stage"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-06-08 13:16:28.802971",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Production Process Tracking Work Order",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

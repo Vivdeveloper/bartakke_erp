@@ -44,15 +44,17 @@ app_license = "mit"
 
 # include js in doctype views
 doctype_js = {
-	"Material Request": "public/js/material_request.js",
+	"Material Request": [
+		"public/js/material_request.js",
+		"public/js/mr_update_items.js",
+		"public/js/mr_production_plan.js",
+	],
 	"Production Plan": "public/js/production_plan.js",
     "Sales Order": "public/js/sales_order.js",
     "Item": "public/js/item.js",
-    "BOM": "public/js/bom.js",
     "Sales Order": "public/js/so.js"
 }
 doctype_list_js = {"Production Plan" : "public/js/production_plan_list.js"}
-doctype_tree_js = {"BOM" : "public/js/bom_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
 # Svg Icons
@@ -136,11 +138,11 @@ doctype_tree_js = {"BOM" : "public/js/bom_tree.js"}
 # ---------------
 # Override standard doctype classes
 
-override_doctype_class = {
-	"Purchase Order": "bartakke_erp.bartakke_erp.overrides.purchase_order.OverridePurchaseOrder",
-    "Subcontracting Order": "bartakke_erp.bartakke_erp.overrides.subcontracting_order.OverrideSubcontractingOrder",
-    "Subcontracting Receipt": "bartakke_erp.bartakke_erp.overrides.subcontracting_receipt.OverrideSubcontractingReceipt",
-}
+# override_doctype_class = {
+# 	"Purchase Order": "bartakke_erp.bartakke_erp.overrides.purchase_order.OverridePurchaseOrder",
+#     "Subcontracting Order": "bartakke_erp.bartakke_erp.overrides.subcontracting_order.OverrideSubcontractingOrder",
+#     "Subcontracting Receipt": "bartakke_erp.bartakke_erp.overrides.subcontracting_receipt.OverrideSubcontractingReceipt",
+# }
 
 # Document Events
 # ---------------
@@ -149,7 +151,11 @@ override_doctype_class = {
 doc_events = {
 	"Production Plan": {
 		"autoname": "bartakke_erp.bartakke_erp.api.production_plan.autoname",
-		"validate": ["bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty","bartakke_erp.bartakke_erp.api.production_plan.validate"],
+		"validate": [
+			"bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_mr_links",
+			"bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty",
+			"bartakke_erp.bartakke_erp.api.production_plan.validate",
+		],
 		"on_submit": "bartakke_erp.bartakke_erp.api.production_plan.validate_production_plan_qty"
 
 	},
@@ -192,9 +198,9 @@ doc_events = {
 # Overriding Methods
 # ------------------------------
 #
-override_whitelisted_methods = {
-	# "frappe.desk.doctype.event.event.get_events": "bartakke_erp.event.get_events"
-}
+# override_whitelisted_methods = {
+# 	"frappe.desk.doctype.event.event.get_events": "bartakke_erp.event.get_events"
+# }
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
