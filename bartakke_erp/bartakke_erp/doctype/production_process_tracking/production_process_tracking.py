@@ -5,6 +5,9 @@ from frappe.query_builder.functions import Sum
 from frappe.model.document import Document
 
 from bartakke_erp.bartakke_erp.doctype.production_process_tracking_work_order.production_process_tracking_work_order import (
+	_apply_work_order_header_status,
+	get_tracking_doc_for_lot,
+	get_tracking_doc_name,
 	set_work_order_stages_from_template,
 )
 
@@ -126,11 +129,13 @@ def create_production_process_tracking_work_orders(source_name, template):
 	existing = []
 
 	for wo_name in work_orders:
-		if frappe.db.exists("Production Process Tracking Work Order", wo_name):
-			existing.append(wo_name)
+		tracking_name = get_tracking_doc_name(source_name, wo_name)
+		if get_tracking_doc_for_lot(source_name, wo_name):
+			existing.append(tracking_name)
 			continue
 
 		wo_doc = frappe.new_doc("Production Process Tracking Work Order")
+		wo_doc.production_process_tracking = source_name
 		wo_doc.production_plan = wo_name
 		wo_doc.production_process_tracking_template = template
 		set_work_order_stages_from_template(wo_doc)
@@ -152,7 +157,7 @@ def get_work_order_tracking_map(source_name):
 	ppt = frappe.get_doc("Production Process Tracking", source_name)
 	result = {}
 	for wo_name in _work_orders_from_ppt(ppt):
-		result[wo_name] = frappe.db.exists("Production Process Tracking Work Order", wo_name)
+		result[wo_name] = get_tracking_doc_for_lot(source_name, wo_name) or ""
 	return result
 
 
@@ -169,9 +174,9 @@ def get_work_order_tracking_dashboard(source_name):
 		stage_map = {}
 		stage_order = []
 
-		if wo_name and frappe.db.exists("Production Process Tracking Work Order", wo_name):
-			wo_doc = frappe.get_doc("Production Process Tracking Work Order", wo_name)
-			tracking_name = wo_doc.name
+		tracking_name = get_tracking_doc_for_lot(source_name, wo_name)
+		if tracking_name:
+			wo_doc = frappe.get_doc("Production Process Tracking Work Order", tracking_name)
 			for stage in wo_doc.get("production_process_tracking_work_order_stages") or []:
 				if not stage.production_stage:
 					continue
@@ -205,6 +210,117 @@ def get_work_order_tracking_dashboard(source_name):
 					seen_stages.add(stage_name)
 
 	return {"stage_columns": stage_columns, "rows": rows}
+
+
+@frappe.whitelist()
+def lots_have_work_order_tracking(docs, work_orders=None):
+	docs = frappe.parse_json(docs) if isinstance(docs, str) else docs
+	work_orders = frappe.parse_json(work_orders) if work_orders else None
+
+	if not docs:
+		return {"ready": False, "lots": {}}
+
+	lot_status = {}
+
+	for lot_name in docs:
+		ppt = frappe.get_doc("Production Process Tracking", lot_name)
+		lot_work_orders = [
+			row.work_order_no
+			for row in ppt.get("production_process_tracking_item") or []
+			if row.work_order_no
+		]
+
+		if work_orders:
+			target_work_orders = [
+				wo_name for wo_name in work_orders if wo_name in lot_work_orders
+			]
+		else:
+			target_work_orders = lot_work_orders
+
+		if not target_work_orders:
+			lot_status[lot_name] = False
+			continue
+
+		lot_status[lot_name] = all(
+			get_tracking_doc_for_lot(lot_name, wo_name) for wo_name in target_work_orders
+		)
+
+	return {
+		"ready": bool(lot_status) and all(lot_status.values()),
+		"lots": lot_status,
+	}
+
+
+@frappe.whitelist()
+def complete_stage_for_lots(docs, stage, work_orders=None):
+	docs = frappe.parse_json(docs) if isinstance(docs, str) else docs
+	work_orders = frappe.parse_json(work_orders) if work_orders else None
+	stage = (stage or "").strip()
+
+	if not docs:
+		frappe.throw(_("Select at least one Lot Generation record"))
+	if not stage:
+		frappe.throw(_("Stage is required"))
+
+	updated = 0
+	skipped = 0
+	missing_tracking = []
+
+	for lot_name in docs:
+		ppt = frappe.get_doc("Production Process Tracking", lot_name)
+		lot_work_orders = [
+			row.work_order_no
+			for row in ppt.get("production_process_tracking_item") or []
+			if row.work_order_no
+		]
+
+		if work_orders:
+			target_work_orders = [
+				wo_name for wo_name in work_orders if wo_name in lot_work_orders
+			]
+		else:
+			target_work_orders = lot_work_orders
+
+		for wo_name in target_work_orders:
+			tracking_name = get_tracking_doc_for_lot(lot_name, wo_name)
+			if not tracking_name:
+				missing_tracking.append(wo_name)
+				continue
+
+			wo_doc = frappe.get_doc("Production Process Tracking Work Order", tracking_name)
+			stage_row = next(
+				(
+					row
+					for row in wo_doc.get("production_process_tracking_work_order_stages") or []
+					if row.production_stage == stage
+				),
+				None,
+			)
+
+			if not stage_row:
+				frappe.throw(
+					_("Stage {0} not found for Work Order {1}").format(
+						frappe.bold(stage), frappe.bold(wo_name)
+					)
+				)
+
+			if stage_row.completed:
+				skipped += 1
+				continue
+
+			stage_row.completed = 1
+			stage_row.completed_by = frappe.session.user
+			stage_row.completed_on = frappe.utils.now()
+			_apply_work_order_header_status(wo_doc)
+			wo_doc.save(ignore_permissions=True)
+			updated += 1
+
+	return {
+		"message": _("Updated {0} work order(s)").format(updated),
+		"updated": updated,
+		"skipped": skipped,
+		"missing_tracking": missing_tracking,
+	}
 
 
 @frappe.whitelist()

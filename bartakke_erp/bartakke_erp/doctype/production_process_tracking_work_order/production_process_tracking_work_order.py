@@ -104,23 +104,79 @@ def _build_stage_log_rows(work_order_doc):
 	return rows
 
 
+def _stage_sequence_map(stage_names):
+	if not stage_names:
+		return {}
+
+	rows = frappe.get_all(
+		"Production Process Tracking Template Item",
+		filters={"production_stages": ["in", stage_names]},
+		fields=["production_stages", "sequence"],
+		order_by="sequence asc",
+	)
+
+	order = {}
+	for row in rows:
+		name = row.production_stages
+		seq = row.sequence or 0
+		if name not in order or seq < order[name]:
+			order[name] = seq
+
+	for idx, name in enumerate(stage_names):
+		order.setdefault(name, 1000 + idx)
+
+	return order
+
+
+def _sort_stage_rows(stage_rows):
+	names = [row.get("stage") for row in stage_rows if row.get("stage")]
+	order = _stage_sequence_map(names)
+	return sorted(
+		stage_rows,
+		key=lambda row: (order.get(row.get("stage"), 9999), row.get("stage") or ""),
+	)
+
+
 def _derive_tracking_status(stage_rows):
 	if not stage_rows:
 		return None, "Open"
 
-	incomplete = [row for row in stage_rows if not row.get("completed")]
-	if not any(row.get("completed") for row in stage_rows):
-		return stage_rows[0].get("stage"), "Open"
+	ordered = _sort_stage_rows(stage_rows)
+	completed = [row for row in ordered if row.get("completed")]
+	incomplete = [row for row in ordered if not row.get("completed")]
+
+	if not completed:
+		return None, "Open"
 	if not incomplete:
-		return stage_rows[-1].get("stage"), "Completed"
-	return incomplete[0].get("stage"), "In Progress"
+		return completed[-1].get("stage"), "Completed"
+	# Furthest completed stage in process order (not first incomplete child-table row).
+	return completed[-1].get("stage"), "In Progress"
 
 
-def get_linked_production_process_tracking(production_plan):
+def get_tracking_doc_name(lot_name, production_plan):
+	return f"{lot_name}-{production_plan}"
+
+
+def get_tracking_doc_for_lot(lot_name, production_plan):
+	if not lot_name or not production_plan:
+		return None
+
+	doc_name = get_tracking_doc_name(lot_name, production_plan)
+	if frappe.db.exists("Production Process Tracking Work Order", doc_name):
+		return doc_name
+
+	return None
+
+
+def get_linked_production_process_tracking(production_plan, lot_name=None):
+	if lot_name:
+		return lot_name
+
 	return frappe.db.get_value(
 		"Production Process Tracking Item",
 		{"work_order_no": production_plan},
 		"parent",
+		order_by="creation asc",
 	)
 
 
@@ -158,13 +214,35 @@ def _recalculate_ppt_totals(ppt):
 	)
 
 
-def _apply_tracking_status(ppt):
-	stage_rows = [
-		{"stage": row.stage, "completed": row.completed}
-		for row in ppt.get("production_stage_log") or []
-		if row.stage
-	]
-	ppt.current_stage, ppt.overall_status = _derive_tracking_status(stage_rows)
+def _status_from_work_order(work_order_doc):
+	return _derive_tracking_status(_build_stage_log_rows(work_order_doc))
+
+
+def _apply_work_order_header_status(work_order_doc):
+	current_stage, overall_status = _status_from_work_order(work_order_doc)
+	work_order_doc.current_stage = current_stage
+	work_order_doc.overall_status = overall_status
+	return current_stage, overall_status
+
+
+def _apply_parent_status_from_items(ppt):
+	items = [row for row in ppt.get("production_process_tracking_item") or [] if row.work_order_no]
+	stages = [row.current_stage for row in items if row.current_stage]
+	statuses = [row.overall_status or "Open" for row in items]
+
+	if not stages:
+		ppt.current_stage = None
+		ppt.overall_status = "Open"
+		return
+
+	ppt.current_stage = stages[0] if len(set(stages)) == 1 else None
+
+	if statuses and all(status == "Completed" for status in statuses):
+		ppt.overall_status = "Completed"
+	elif any(status in ("In Progress", "Completed") for status in statuses):
+		ppt.overall_status = "In Progress"
+	else:
+		ppt.overall_status = "Open"
 
 
 def _save_production_process_tracking(ppt, insert=False):
@@ -179,6 +257,7 @@ def sync_production_process_tracking(work_order_doc):
 	if not work_order_doc.production_plan:
 		return None
 
+	lot_name = work_order_doc.production_process_tracking
 	wo = frappe.get_doc("Production Plan", work_order_doc.production_plan)
 	if wo.docstatus != 1:
 		frappe.throw(_("Production Plan {0} must be submitted").format(wo.name))
@@ -188,6 +267,9 @@ def sync_production_process_tracking(work_order_doc):
 		frappe.throw(_("Production Plan {0} has no items").format(wo.name))
 
 	item_row = item_rows[0]
+	current_stage, overall_status = _apply_work_order_header_status(work_order_doc)
+	item_row["current_stage"] = current_stage
+	item_row["overall_status"] = overall_status
 	stage_rows = _build_stage_log_rows(work_order_doc)
 	indent_date, indent_received_date = _mr_dates(wo.custom_indent)
 
@@ -204,32 +286,50 @@ def sync_production_process_tracking(work_order_doc):
 		"work_order_qty": item_row.get("work_order_qty"),
 	}
 
-	existing = get_linked_production_process_tracking(wo.name)
+	existing = get_linked_production_process_tracking(wo.name, lot_name)
 	if existing:
 		ppt = frappe.get_doc("Production Process Tracking", existing)
 		ppt.update(header)
 		_upsert_ppt_item_row(ppt, item_row)
 		_merge_stage_log_rows(ppt, stage_rows)
 		_recalculate_ppt_totals(ppt)
-		_apply_tracking_status(ppt)
+		_apply_parent_status_from_items(ppt)
 		_save_production_process_tracking(ppt)
 		return ppt.name
 
-	current_stage, overall_status = _derive_tracking_status(stage_rows)
 	ppt = frappe.new_doc("Production Process Tracking")
 	ppt.update(header)
-	ppt.current_stage = current_stage
-	ppt.overall_status = overall_status
 	ppt.weight_kg = total_weight
 	ppt.area_sq_mtr_paint = total_area
 	_upsert_ppt_item_row(ppt, item_row)
 	for row in stage_rows:
 		ppt.append("production_stage_log", row)
+	_apply_parent_status_from_items(ppt)
 	_save_production_process_tracking(ppt, insert=True)
 	return ppt.name
 
 
 class ProductionProcessTrackingWorkOrder(Document):
+	def validate(self):
+		if not self.production_process_tracking or not self.production_plan:
+			return
+
+		duplicate = frappe.db.exists(
+			"Production Process Tracking Work Order",
+			{
+				"production_process_tracking": self.production_process_tracking,
+				"production_plan": self.production_plan,
+				"name": ["!=", self.name],
+			},
+		)
+		if duplicate:
+			frappe.throw(
+				_("Work Order Tracking already exists for {0} in Lot {1}").format(
+					frappe.bold(self.production_plan),
+					frappe.bold(self.production_process_tracking),
+				)
+			)
+
 	def before_save(self):
 		if not self.production_process_tracking_template:
 			return
@@ -266,8 +366,10 @@ def get_stages_from_template(template):
 
 
 @frappe.whitelist()
-def get_linked_ppt(production_plan):
-	return get_linked_production_process_tracking(production_plan)
+def get_linked_ppt(production_plan, production_process_tracking=None):
+	return get_linked_production_process_tracking(
+		production_plan, production_process_tracking
+	)
 
 
 @frappe.whitelist()
@@ -294,5 +396,6 @@ def update_work_order_stage(work_order_name, stage_name, completed):
 		stage_row.completed_by = None
 		stage_row.completed_on = None
 
+	_apply_work_order_header_status(wo_doc)
 	wo_doc.save(ignore_permissions=True)
 	return {"success": True, "work_order_name": wo_doc.name}

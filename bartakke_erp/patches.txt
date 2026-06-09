@@ -4,3 +4,6 @@
 
 [post_model_sync]
 # Patches added in this section will be executed after doctypes are migrated
+bartakke_erp.patches.fix_production_process_tracking_client_scripts
+bartakke_erp.patches.sync_production_process_tracking_item_status
+bartakke_erp.patches.migrate_production_process_tracking_work_order_lot_scope

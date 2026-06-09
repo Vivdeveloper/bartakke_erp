@@ -20,7 +20,9 @@
   "item",
   "delivery_date",
   "work_order_qty",
-  "area_sq_mtr_paint"
+  "area_sq_mtr_paint",
+  "current_stage",
+  "overall_status"
  ],
  "fields": [
   {
@@ -113,6 +115,22 @@
    "fieldname": "delivery_date",
    "fieldtype": "Data",
    "label": "Delivery Date"
+  },
+  {
+   "fieldname": "current_stage",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Current Stage",
+   "read_only": 1
+  },
+  {
+   "default": "Open",
+   "fieldname": "overall_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Overall Status",
+   "options": "Open\nIn Progress\nCompleted",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,

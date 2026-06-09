@@ -9,7 +9,10 @@ frappe.ui.form.on("Production Process Tracking Work Order", {
 		frappe.call({
 			method:
 				"bartakke_erp.bartakke_erp.doctype.production_process_tracking_work_order.production_process_tracking_work_order.get_linked_ppt",
-			args: { production_plan: frm.doc.production_plan },
+			args: {
+				production_plan: frm.doc.production_plan,
+				production_process_tracking: frm.doc.production_process_tracking,
+			},
 			callback(r) {
 				if (!r.message) {
 					return;

@@ -63,14 +63,15 @@ function setup_work_order_tracking_buttons(frm) {
             const work_orders = Object.keys(map);
 
             work_orders.forEach((wo_name) => {
-                if (map[wo_name]) {
+                const tracking_name = map[wo_name];
+                if (tracking_name) {
                     frm.add_custom_button(
                         wo_name,
                         () => {
                             frappe.set_route(
                                 "Form",
                                 "Production Process Tracking Work Order",
-                                wo_name
+                                tracking_name
                             );
                         },
                         __("Work Order Tracking")

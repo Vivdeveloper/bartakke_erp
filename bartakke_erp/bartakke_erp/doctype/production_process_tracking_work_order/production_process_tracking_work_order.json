@@ -1,28 +1,53 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:production_plan",
+ "autoname": "format:{production_process_tracking}-{production_plan}",
  "creation": "2026-06-08 12:09:04.419693",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "production_process_tracking",
   "production_plan",
   "production_process_tracking_template",
+  "current_stage",
+  "overall_status",
   "production_process_tracking_work_order_stages"
  ],
  "fields": [
+  {
+   "fieldname": "production_process_tracking",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Lot Generation",
+   "options": "Production Process Tracking",
+   "reqd": 1
+  },
   {
    "fieldname": "production_plan",
    "fieldtype": "Link",
    "label": "Production Plan",
    "options": "Production Plan",
-   "unique": 1
+   "reqd": 1
   },
   {
    "fieldname": "production_process_tracking_template",
    "fieldtype": "Link",
    "label": "Production Process Tracking Template",
    "options": "Production Process Tracking Template"
+  },
+  {
+   "fieldname": "current_stage",
+   "fieldtype": "Data",
+   "label": "Current Stage",
+   "read_only": 1
+  },
+  {
+   "default": "Open",
+   "fieldname": "overall_status",
+   "fieldtype": "Select",
+   "label": "Overall Status",
+   "options": "Open\nIn Progress\nCompleted",
+   "read_only": 1
   },
   {
    "fieldname": "production_process_tracking_work_order_stages",
