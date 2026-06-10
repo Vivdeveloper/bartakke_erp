@@ -298,6 +298,36 @@ def get_total_weight(doc):
     return round(total_wt, 2)
 
 
+def get_total_area(doc):
+	"""Grand total area — same logic as Thickness List print format."""
+	allowed_groups = ["Specialised Item", "Standard Item"]
+	grand_area = 0
+
+	def process_bom(bom_no, multiplier):
+		nonlocal grand_area
+
+		if not bom_no:
+			return
+
+		bom = frappe.get_doc("BOM", bom_no)
+
+		for item in bom.items:
+			if item.custom_item_group not in allowed_groups:
+				continue
+
+			itm = frappe.get_cached_doc("Item", item.item_code)
+			qty = flt(item.qty) * flt(multiplier if multiplier is not None else 1)
+			grand_area += flt(itm.custom_area) * qty
+
+	for row in doc.get("po_items") or []:
+		process_bom(row.bom_no, row.planned_qty)
+
+	for row in doc.get("sub_assembly_items") or []:
+		process_bom(row.bom_no, row.qty)
+
+	return round(grand_area, 4)
+
+
 def validate_production_plan_mr_links(doc, method=None):
 	"""Require indent, po_items, and MR item link on every line (for correct naming & qty checks)."""
 	_validate_production_plan_mr_links(doc)
@@ -317,6 +347,7 @@ def validate(self, method=None):
 		total_wt += row_total
 
 	self.custom_wo_weight_ = total_wt
+	self.custom_area = get_total_area(self)
 
 
 def _validate_production_plan_mr_links(doc):
