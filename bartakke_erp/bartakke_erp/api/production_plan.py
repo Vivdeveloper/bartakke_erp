@@ -328,6 +328,56 @@ def get_total_area(doc):
 	return round(grand_area, 4)
 
 
+def get_work_order_group_key(work_order_name):
+	"""Split work orders (WO26-023/1, WO26-023/5) share the same base key."""
+	if not work_order_name:
+		return work_order_name
+	if "/" in work_order_name:
+		return work_order_name.rsplit("/", 1)[0]
+	return work_order_name
+
+
+def get_wo_weight_and_area(work_order):
+	if isinstance(work_order, str):
+		work_order = frappe.get_doc("Production Plan", work_order)
+
+	return flt(work_order.custom_wo_weight_), flt(work_order.custom_area)
+
+
+def apply_work_order_metrics_to_ppt(ppt):
+	"""Child rows use each WO's weight/area; parent totals each WO group once."""
+	total_weight = 0
+	total_area = 0
+	seen_groups = set()
+
+	for row in ppt.get("production_process_tracking_item") or []:
+		wo_name = row.work_order_no if hasattr(row, "work_order_no") else row.get("work_order_no")
+		if not wo_name:
+			continue
+
+		weight, area = get_wo_weight_and_area(wo_name)
+
+		if hasattr(row, "weight_kg"):
+			row.weight_kg = weight
+			row.area_sq_mtr_paint = area
+		else:
+			row["weight_kg"] = weight
+			row["area_sq_mtr_paint"] = area
+
+		group_key = get_work_order_group_key(wo_name)
+		if group_key in seen_groups:
+			continue
+
+		seen_groups.add(group_key)
+		total_weight += weight
+		total_area += area
+
+	ppt.weight_kg = total_weight
+	ppt.area_sq_mtr_paint = total_area
+
+	return {"weight_kg": total_weight, "area_sq_mtr_paint": total_area}
+
+
 def validate_production_plan_mr_links(doc, method=None):
 	"""Require indent, po_items, and MR item link on every line (for correct naming & qty checks)."""
 	_validate_production_plan_mr_links(doc)

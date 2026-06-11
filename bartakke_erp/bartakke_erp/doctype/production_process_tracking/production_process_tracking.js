@@ -15,13 +15,8 @@ frappe.ui.form.on('Production Process Tracking', {
     production_process_tracking_item_remove: function(frm) {
         calculate_totals(frm);
     },
-    qty(frm) {
-        if (!frm.doc.area_sq_mtr_paint && frm.doc.qty) {
-            frappe.db.get_value("Item", { name: frm.doc.item }, ["custom_area", "weight_per_unit"], (r) => {
-			frm.set_value("area_sq_mtr_paint", r.custom_area * frm.doc.qty);
-            frm.set_value("weight_kg", r.weight_per_unit * frm.doc.qty)
-		});
-        }
+    production_process_tracking_item_add: function(frm) {
+        calculate_totals(frm);
     },
     item(frm) {
         frappe.db.get_value("Item", { name: frm.doc.item }, "custom_design", (r) => {
@@ -294,14 +289,16 @@ function bind_work_order_tracking_events(frm, $wrapper) {
 }
 
 function calculate_totals(frm) {
-    let wt = 0;
-    let area = 0;
-
-    (frm.doc.production_process_tracking_item || []).forEach(i => {
-        wt += flt(i.weight_kg);
-        area += flt(i.area_sq_mtr_paint);
+    frappe.call({
+        method:
+            "bartakke_erp.bartakke_erp.doctype.production_process_tracking.production_process_tracking.get_lot_weight_and_area",
+        args: { doc: frm.doc },
+        callback(r) {
+            if (!r.message) {
+                return;
+            }
+            frm.set_value("weight_kg", r.message.weight_kg);
+            frm.set_value("area_sq_mtr_paint", r.message.area_sq_mtr_paint);
+        },
     });
-
-    frm.set_value('weight_kg', wt);
-    frm.set_value('area_sq_mtr_paint', area);
 }

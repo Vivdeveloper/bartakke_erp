@@ -4,6 +4,7 @@ from frappe.query_builder import DocType
 from frappe.query_builder.functions import Sum
 from frappe.model.document import Document
 
+from bartakke_erp.bartakke_erp.api.production_plan import apply_work_order_metrics_to_ppt
 from bartakke_erp.bartakke_erp.doctype.production_process_tracking_work_order.production_process_tracking_work_order import (
 	_apply_work_order_header_status,
 	get_tracking_doc_for_lot,
@@ -12,27 +13,31 @@ from bartakke_erp.bartakke_erp.doctype.production_process_tracking_work_order.pr
 )
 
 class ProductionProcessTracking(Document):
-    def before_insert(doc, method=None):
-        last = frappe.db.sql("""
-            SELECT MAX(CAST(lot_no AS UNSIGNED))
-            FROM `tabProduction Process Tracking`
-        """)[0][0] or 1000
+	def validate(self):
+		apply_work_order_metrics_to_ppt(self)
 
-        doc.lot_no = last + 1
-        wo = [wo.work_order_no for wo in doc.production_process_tracking_item]
-        for i in wo:
-            wo_doc = frappe.get_doc("Production Plan", i)
-            if wo_doc.docstatus != 1:
-                frappe.throw(_("Work Order linked must be submitted"))
-            else:
-                wo_doc.custom_lot_generated = 1
-                wo_doc.save()
+	def before_insert(self):
+		last = frappe.db.sql("""
+			SELECT MAX(CAST(lot_no AS UNSIGNED))
+			FROM `tabProduction Process Tracking`
+		""")[0][0] or 1000
 
-    # def validate_qty(doc, method=None):
-    #     qty = frappe.db.get_all("Production Plan Item", {'parent': doc.work_order_no}, 'planned_qty')
+		self.lot_no = last + 1
+		for wo_name in {row.work_order_no for row in self.production_process_tracking_item if row.work_order_no}:
+			wo_doc = frappe.get_doc("Production Plan", wo_name)
+			if wo_doc.docstatus != 1:
+				frappe.throw(_("Work Order linked must be submitted"))
+			wo_doc.custom_lot_generated = 1
+			wo_doc.save()
 
 
-        
+@frappe.whitelist()
+def get_lot_weight_and_area(doc):
+	if isinstance(doc, str):
+		doc = frappe.parse_json(doc)
+
+	return apply_work_order_metrics_to_ppt(frappe._dict(doc))
+
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs

@@ -134,30 +134,18 @@ def get_assembly_item_details(work_order):
 
 @frappe.whitelist()
 def create_production_tracking(work_orders):
+    from bartakke_erp.bartakke_erp.api.production_plan import (
+        apply_work_order_metrics_to_ppt,
+        get_wo_weight_and_area,
+    )
+
     work_orders = frappe.parse_json(work_orders)
 
     ppt = frappe.new_doc("Production Process Tracking")
 
     for wo_name in work_orders:
         wo = frappe.get_doc("Production Plan", wo_name)
-
-        total_area = 0
-        total_weight = 0
-
-        for row in wo.custom_assembly_item:
-            item_data = frappe.db.get_value(
-                "Item",
-                row.item_code,
-                ["custom_area", "weight_per_unit"],
-                as_dict=1
-            ) or {}
-
-            area = item_data.get("custom_area", 0)
-            weight = item_data.get("weight_per_unit", 0)
-            qty = row.qty or 0
-
-            total_area += area * qty
-            total_weight += weight * qty
+        total_weight, total_area = get_wo_weight_and_area(wo)
 
         for item in wo.po_items:
             ppt.append("production_process_tracking_item", {
@@ -183,6 +171,8 @@ def create_production_tracking(work_orders):
 
         if not ppt.get("customer"):
             ppt.customer = wo.get("custom_customer_name")
+
+    apply_work_order_metrics_to_ppt(ppt)
 
     stages = frappe.db.get_all("Production Stages", pluck='name')
 

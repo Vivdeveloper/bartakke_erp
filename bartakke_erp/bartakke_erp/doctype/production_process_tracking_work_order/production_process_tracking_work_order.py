@@ -32,25 +32,6 @@ def set_work_order_stages_from_template(doc, template=None):
 		)
 
 
-def _assembly_totals(wo):
-	total_area = 0
-	total_weight = 0
-
-	for row in wo.get("custom_assembly_item") or []:
-		item_data = frappe.db.get_value(
-			"Item",
-			row.item_code,
-			["custom_area", "weight_per_unit"],
-			as_dict=True,
-		) or {}
-
-		qty = flt(row.qty)
-		total_area += flt(item_data.get("custom_area")) * qty
-		total_weight += flt(item_data.get("weight_per_unit")) * qty
-
-	return total_area, total_weight
-
-
 def _mr_dates(indent_no):
 	if not indent_no:
 		return None, None
@@ -63,7 +44,9 @@ def _mr_dates(indent_no):
 
 
 def _build_tracking_item_rows(wo):
-	total_area, total_weight = _assembly_totals(wo)
+	from bartakke_erp.bartakke_erp.api.production_plan import get_wo_weight_and_area
+
+	total_weight, total_area = get_wo_weight_and_area(wo)
 	indent_date, indent_received_date = _mr_dates(wo.custom_indent)
 	rows = []
 
@@ -208,10 +191,9 @@ def _merge_stage_log_rows(ppt, work_order_stage_rows):
 
 
 def _recalculate_ppt_totals(ppt):
-	ppt.weight_kg = sum(flt(row.weight_kg) for row in ppt.get("production_process_tracking_item") or [])
-	ppt.area_sq_mtr_paint = sum(
-		flt(row.area_sq_mtr_paint) for row in ppt.get("production_process_tracking_item") or []
-	)
+	from bartakke_erp.bartakke_erp.api.production_plan import apply_work_order_metrics_to_ppt
+
+	apply_work_order_metrics_to_ppt(ppt)
 
 
 def _status_from_work_order(work_order_doc):
@@ -299,11 +281,10 @@ def sync_production_process_tracking(work_order_doc):
 
 	ppt = frappe.new_doc("Production Process Tracking")
 	ppt.update(header)
-	ppt.weight_kg = total_weight
-	ppt.area_sq_mtr_paint = total_area
 	_upsert_ppt_item_row(ppt, item_row)
 	for row in stage_rows:
 		ppt.append("production_stage_log", row)
+	_recalculate_ppt_totals(ppt)
 	_apply_parent_status_from_items(ppt)
 	_save_production_process_tracking(ppt, insert=True)
 	return ppt.name
