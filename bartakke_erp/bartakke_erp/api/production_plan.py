@@ -274,28 +274,33 @@ def populate_custom_assembly_items(doc, method=None):
 		doc.append("custom_assembly_item", row)
 
 def get_total_weight(doc):
-    allowed_groups = ["Specialised Item", "Standard Item"]
-    total_wt = 0
+	"""Grand total weight — same logic as Thickness List print format."""
+	allowed_groups = ["Specialised Item", "Standard Item"]
+	total_wt = 0
 
-    def process_bom(bom_no, multiplier):
-        nonlocal total_wt
+	def process_bom(bom_no, multiplier):
+		nonlocal total_wt
 
-        if not bom_no:
-            return
+		if not bom_no:
+			return
 
-        bom = frappe.get_doc("BOM", bom_no)
+		bom = frappe.get_doc("BOM", bom_no)
 
-        for item in bom.items:
-            if item.custom_item_group in allowed_groups:
-                itm = frappe.get_cached_doc("Item", item.item_code)
+		for item in bom.items:
+			if item.custom_item_group not in allowed_groups:
+				continue
 
-                qty = flt(item.qty) * flt(multiplier or 1)
-                total_wt += flt(itm.weight_per_unit) * qty
+			itm = frappe.get_cached_doc("Item", item.item_code)
+			qty = flt(item.qty) * flt(multiplier if multiplier is not None else 1)
+			total_wt += flt(itm.weight_per_unit) * qty
 
-    for row in doc.po_items:
-        process_bom(row.bom_no, row.planned_qty)
+	for row in doc.get("po_items") or []:
+		process_bom(row.bom_no, row.planned_qty)
 
-    return round(total_wt, 2)
+	for row in doc.get("sub_assembly_items") or []:
+		process_bom(row.bom_no, row.qty)
+
+	return round(total_wt, 3)
 
 
 def get_total_area(doc):
@@ -386,17 +391,7 @@ def validate_production_plan_mr_links(doc, method=None):
 def validate(self, method=None):
 	_validate_production_plan_mr_links(self)
 	populate_custom_assembly_items(self)
-	total_wt = 0
-	for row in self.get("custom_assembly_item") or []:
-		# Ensure row.total_weight is set even if schema/data changes.
-		row_total = flt(getattr(row, "total_weight", None))
-		if not row_total:
-			row_total = flt(row.get("qty")) * flt(row.get("weight_per_unit"))
-			if hasattr(row, "total_weight"):
-				row.total_weight = row_total
-		total_wt += row_total
-
-	self.custom_wo_weight_ = total_wt
+	self.custom_wo_weight_ = get_total_weight(self)
 	self.custom_area = get_total_area(self)
 
 
