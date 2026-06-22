@@ -30,6 +30,53 @@ frappe.ui.form.on("Production Plan", {
 		});
 	},
 
+	custom_selected_item_remove(frm) {
+		recalculate_wo_metrics(frm);
+	},
+
+});
+
+function recalculate_wo_metrics(frm) {
+	if (frm.doc.docstatus === 1) {
+		return;
+	}
+
+	clearTimeout(frm._wo_metrics_timer);
+	frm._wo_metrics_timer = setTimeout(() => {
+		frappe.call({
+			method: "bartakke_erp.bartakke_erp.api.production_plan.recalculate_work_order_metrics",
+			args: { doc: frm.doc },
+			freeze: false,
+		}).then((r) => {
+			if (!r.message) {
+				return;
+			}
+
+			frm.set_value("custom_wo_weight_", r.message.custom_wo_weight_);
+			frm.set_value("custom_area", r.message.custom_area);
+
+			frm.clear_table("custom_assembly_item");
+			(r.message.custom_assembly_item || []).forEach((row) => {
+				const child = frm.add_child("custom_assembly_item");
+				Object.assign(child, row);
+			});
+			frm.refresh_field("custom_assembly_item");
+		});
+	}, 300);
+}
+
+frappe.ui.form.on("Selected Items", {
+	item_code(frm) {
+		recalculate_wo_metrics(frm);
+	},
+
+	bom_no(frm) {
+		recalculate_wo_metrics(frm);
+	},
+
+	planned_qty(frm) {
+		recalculate_wo_metrics(frm);
+	},
 });
 
 frappe.ui.form.on("Production Plan Item", {

@@ -174,6 +174,42 @@ def get_custom_assembly_items(doc):
 	return _build_custom_assembly_items(doc)
 
 
+@frappe.whitelist()
+def recalculate_work_order_metrics(doc):
+	"""Recalculate WO weight, area, and assembly rows from the current form state."""
+	if isinstance(doc, str):
+		doc = json.loads(doc)
+
+	doc = frappe.get_doc(doc)
+	return {
+		"custom_wo_weight_": get_total_weight(doc),
+		"custom_area": get_total_area(doc),
+		"custom_assembly_item": _build_custom_assembly_items(doc),
+	}
+
+
+def _get_selected_item_bom(row):
+	bom_no = _row_val(row, "bom_no")
+	if not bom_no and _row_val(row, "item_code"):
+		bom_no = frappe.db.get_value(
+			"BOM",
+			{"item": _row_val(row, "item_code"), "is_active": 1, "is_default": 1},
+			"name",
+		)
+	return bom_no
+
+
+def _selected_item_multiplier(row):
+	multiplier = _row_val(row, "planned_qty")
+	return multiplier if multiplier is not None else 1
+
+
+def _row_val(row, fieldname, default=None):
+	if isinstance(row, dict):
+		return row.get(fieldname, default)
+	return getattr(row, fieldname, default)
+
+
 def _build_custom_assembly_items(doc):
 	if isinstance(doc, str):
 		# `doc` can be passed as either serialized json (from client)
@@ -185,7 +221,7 @@ def _build_custom_assembly_items(doc):
 
 	assembly_map = {}
 
-	def add_items_from_bom(bom_no, multiplier):
+	def add_items_from_bom(bom_no, multiplier, drawing_no=None):
 		if not bom_no:
 			return
 
@@ -216,7 +252,7 @@ def _build_custom_assembly_items(doc):
 					"thickness_in_mm": 0,
 					"development_size_a": 0,
 					"development_size_b": 0,
-					"full_drawing_no": "",
+					"full_drawing_no": drawing_no or "",
 					"item_group": "",
 				}
 
@@ -227,6 +263,13 @@ def _build_custom_assembly_items(doc):
 	for row in doc.get("sub_assembly_items", []):
 		multiplier = row.get("qty")
 		add_items_from_bom(row.get("bom_no"), multiplier)
+
+	for row in doc.get("custom_selected_item") or []:
+		add_items_from_bom(
+			_get_selected_item_bom(row),
+			_selected_item_multiplier(row),
+			_row_val(row, "drawing_no"),
+		)
 
 	if assembly_map:
 		item_meta = frappe.get_all(
@@ -298,7 +341,17 @@ def get_total_weight(doc):
 		process_bom(row.bom_no, row.planned_qty)
 
 	for row in doc.get("sub_assembly_items") or []:
-		process_bom(row.bom_no, row.qty)
+		process_bom(_row_val(row, "bom_no"), _row_val(row, "qty"))
+
+	for row in doc.get("custom_selected_item") or []:
+		bom_no = _get_selected_item_bom(row)
+		multiplier = _selected_item_multiplier(row)
+		if bom_no:
+			process_bom(bom_no, multiplier)
+		elif _row_val(row, "item_code"):
+			itm = frappe.get_cached_doc("Item", _row_val(row, "item_code"))
+			qty = flt(multiplier if multiplier is not None else 1)
+			total_wt += flt(itm.weight_per_unit) * qty
 
 	return round(total_wt, 3)
 
@@ -328,7 +381,17 @@ def get_total_area(doc):
 		process_bom(row.bom_no, row.planned_qty)
 
 	for row in doc.get("sub_assembly_items") or []:
-		process_bom(row.bom_no, row.qty)
+		process_bom(_row_val(row, "bom_no"), _row_val(row, "qty"))
+
+	for row in doc.get("custom_selected_item") or []:
+		bom_no = _get_selected_item_bom(row)
+		multiplier = _selected_item_multiplier(row)
+		if bom_no:
+			process_bom(bom_no, multiplier)
+		elif _row_val(row, "item_code"):
+			itm = frappe.get_cached_doc("Item", _row_val(row, "item_code"))
+			qty = flt(multiplier if multiplier is not None else 1)
+			grand_area += flt(itm.custom_area) * qty
 
 	return round(grand_area, 4)
 
