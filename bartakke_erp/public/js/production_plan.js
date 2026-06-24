@@ -74,6 +74,10 @@ frappe.ui.form.on("Selected Items", {
 		recalculate_wo_metrics(frm);
 	},
 
+	required_qty(frm) {
+		recalculate_wo_metrics(frm);
+	},
+
 	planned_qty(frm) {
 		recalculate_wo_metrics(frm);
 	},

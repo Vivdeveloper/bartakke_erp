@@ -200,8 +200,12 @@ def _get_selected_item_bom(row):
 
 
 def _selected_item_multiplier(row):
-	multiplier = _row_val(row, "planned_qty")
-	return multiplier if multiplier is not None else 1
+	for fieldname in ("planned_qty", "required_qty"):
+		multiplier = _row_val(row, fieldname)
+		if multiplier not in (None, ""):
+			qty = flt(multiplier)
+			return qty if qty > 0 else 1
+	return 1
 
 
 def _row_val(row, fieldname, default=None):
@@ -321,21 +325,28 @@ def get_total_weight(doc):
 	allowed_groups = ["Specialised Item", "Standard Item"]
 	total_wt = 0
 
-	def process_bom(bom_no, multiplier):
+	def process_bom(bom_no, multiplier, recursive=False, visited=None):
 		nonlocal total_wt
 
 		if not bom_no:
 			return
 
+		if visited is None:
+			visited = set()
+		if bom_no in visited:
+			return
+		visited.add(bom_no)
+
 		bom = frappe.get_doc("BOM", bom_no)
+		mult = flt(multiplier if multiplier is not None else 1)
 
 		for item in bom.items:
-			if item.custom_item_group not in allowed_groups:
-				continue
-
-			itm = frappe.get_cached_doc("Item", item.item_code)
-			qty = flt(item.qty) * flt(multiplier if multiplier is not None else 1)
-			total_wt += flt(itm.weight_per_unit) * qty
+			qty = flt(item.qty) * mult
+			if item.custom_item_group in allowed_groups:
+				itm = frappe.get_cached_doc("Item", item.item_code)
+				total_wt += flt(itm.weight_per_unit) * qty
+			elif recursive and item.bom_no and not item.do_not_explode:
+				process_bom(item.bom_no, qty, recursive=True, visited=visited)
 
 	for row in doc.get("po_items") or []:
 		process_bom(row.bom_no, row.planned_qty)
@@ -347,7 +358,7 @@ def get_total_weight(doc):
 		bom_no = _get_selected_item_bom(row)
 		multiplier = _selected_item_multiplier(row)
 		if bom_no:
-			process_bom(bom_no, multiplier)
+			process_bom(bom_no, multiplier, recursive=True)
 		elif _row_val(row, "item_code"):
 			itm = frappe.get_cached_doc("Item", _row_val(row, "item_code"))
 			qty = flt(multiplier if multiplier is not None else 1)
@@ -361,21 +372,28 @@ def get_total_area(doc):
 	allowed_groups = ["Specialised Item", "Standard Item"]
 	grand_area = 0
 
-	def process_bom(bom_no, multiplier):
+	def process_bom(bom_no, multiplier, recursive=False, visited=None):
 		nonlocal grand_area
 
 		if not bom_no:
 			return
 
+		if visited is None:
+			visited = set()
+		if bom_no in visited:
+			return
+		visited.add(bom_no)
+
 		bom = frappe.get_doc("BOM", bom_no)
+		mult = flt(multiplier if multiplier is not None else 1)
 
 		for item in bom.items:
-			if item.custom_item_group not in allowed_groups:
-				continue
-
-			itm = frappe.get_cached_doc("Item", item.item_code)
-			qty = flt(item.qty) * flt(multiplier if multiplier is not None else 1)
-			grand_area += flt(itm.custom_area) * qty
+			qty = flt(item.qty) * mult
+			if item.custom_item_group in allowed_groups:
+				itm = frappe.get_cached_doc("Item", item.item_code)
+				grand_area += flt(itm.custom_area) * qty
+			elif recursive and item.bom_no and not item.do_not_explode:
+				process_bom(item.bom_no, qty, recursive=True, visited=visited)
 
 	for row in doc.get("po_items") or []:
 		process_bom(row.bom_no, row.planned_qty)
@@ -387,7 +405,7 @@ def get_total_area(doc):
 		bom_no = _get_selected_item_bom(row)
 		multiplier = _selected_item_multiplier(row)
 		if bom_no:
-			process_bom(bom_no, multiplier)
+			process_bom(bom_no, multiplier, recursive=True)
 		elif _row_val(row, "item_code"):
 			itm = frappe.get_cached_doc("Item", _row_val(row, "item_code"))
 			qty = flt(multiplier if multiplier is not None else 1)

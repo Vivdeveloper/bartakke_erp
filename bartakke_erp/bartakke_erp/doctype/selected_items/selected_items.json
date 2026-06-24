@@ -1,0 +1,75 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-06-05 14:46:51.345329",
+ "custom": 1,
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "item_name",
+  "bom_no",
+  "drawing_no",
+  "planned_qty"
+ ],
+ "fields": [
+  {
+   "columns": 3,
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "Item"
+  },
+  {
+   "columns": 2,
+   "depends_on": "eval:!['Specialised Item', 'General Assembly', 'Assembly Item', 'Sub Assembly', 'Standard Item', 'Cut-Out Item'].includes(doc.item_group)",
+   "fetch_from": "item_code.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Name"
+  },
+  {
+   "columns": 2,
+   "fetch_from": "item_code.default_bom",
+   "fieldname": "bom_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Bom No.",
+   "options": "BOM"
+  },
+  {
+   "columns": 2,
+   "fetch_from": "bom_no.custom_drawing_number",
+   "fieldname": "drawing_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Drawing No.",
+   "options": "Drawing"
+  },
+  {
+   "columns": 1,
+   "fieldname": "planned_qty",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Planned Qty"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-06-22 12:46:01.440756",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Selected Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
