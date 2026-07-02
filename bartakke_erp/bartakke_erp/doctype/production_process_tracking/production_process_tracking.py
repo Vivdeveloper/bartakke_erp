@@ -20,9 +20,9 @@ class ProductionProcessTracking(Document):
 		last = frappe.db.sql("""
 			SELECT MAX(CAST(lot_no AS UNSIGNED))
 			FROM `tabProduction Process Tracking`
-		""")[0][0] or 1000
+		""")[0][0] or 0
 
-		self.lot_no = last + 1
+		self.lot_no = "000" + str(last + 1)
 		for wo_name in {row.work_order_no for row in self.production_process_tracking_item if row.work_order_no}:
 			wo_doc = frappe.get_doc("Production Plan", wo_name)
 			if wo_doc.docstatus != 1:

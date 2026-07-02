@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "naming_series:",
+ "autoname": "field:lot_no",
  "creation": "2026-02-23 01:24:05.260511",
  "default_view": "List",
  "doctype": "DocType",
@@ -53,7 +53,9 @@
   {
    "fieldname": "lot_no",
    "fieldtype": "Data",
-   "label": "Lot No."
+   "label": "Lot No.",
+   "read_only": 1,
+   "unique": 1
   },
   {
    "fetch_from": "work_order_no.custom_indent",
@@ -200,11 +202,11 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-08 13:19:40.000500",
+ "modified": "2026-07-02 15:12:06.039798",
  "modified_by": "Administrator",
  "module": "Bartakke ERP",
  "name": "Production Process Tracking",
- "naming_rule": "By \"Naming Series\" field",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
