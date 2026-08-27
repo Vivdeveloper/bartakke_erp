@@ -1,0 +1,96 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:sf_code",
+ "creation": "2026-02-06 12:49:55.728837",
+ "custom": 1,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "sf_code",
+  "group",
+  "short_form",
+  "type",
+  "column_break_xalp",
+  "naming_series",
+  "item_group"
+ ],
+ "fields": [
+  {
+   "fieldname": "sf_code",
+   "fieldtype": "Int",
+   "label": "SF Code",
+   "unique": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "group",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Group",
+   "options": "A\nB\nC\nD\nE\nF\nG\nH\nI"
+  },
+  {
+   "columns": 3,
+   "fieldname": "short_form",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Short Form"
+  },
+  {
+   "columns": 3,
+   "fieldname": "type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Type"
+  },
+  {
+   "fieldname": "column_break_xalp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Naming Series",
+   "options": "sf_code"
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "label": "Item Group",
+   "options": "Item Group"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-04-21 10:18:41.064146",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Short Form",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "search_fields": "short_form",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

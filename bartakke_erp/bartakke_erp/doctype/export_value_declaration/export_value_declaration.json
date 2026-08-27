@@ -1,0 +1,284 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2025-12-19 12:20:21.916238",
+ "custom": 1,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "shipping_bill_no",
+  "invoice_no",
+  "column_break_wdsj",
+  "shipping_bill_date",
+  "invoice_date",
+  "nature_of_transaction_section",
+  "sale",
+  "gift",
+  "other",
+  "column_break_pwtv",
+  "sale_on_consignment_basic",
+  "sample",
+  "naming_series",
+  "method_of_valuation_see_export_valuation_rules_section",
+  "rule_3",
+  "rule_5",
+  "column_break_whvu",
+  "rule_4",
+  "rule_6",
+  "section_break_ebtl",
+  "weather_seller_and_buyer_are_related",
+  "column_break_rien",
+  "if_yes_weather_relationship_has_influenced_the_price",
+  "section_break_qqar",
+  "payment_terms_template",
+  "payment_schedule",
+  "terms",
+  "terms_and_conditions_details",
+  "previous_exports_of_identical__similar_goods_if_any_section",
+  "shipping_bill_no_copy",
+  "column_break_cgqz",
+  "shipping_bill_date_copy",
+  "section_break_weyr",
+  "declaration",
+  "section_break_pxjt",
+  "place",
+  "column_break_kejp",
+  "date"
+ ],
+ "fields": [
+  {
+   "fieldname": "shipping_bill_no",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Shipping Bill No.",
+   "unique": 1
+  },
+  {
+   "fieldname": "invoice_no",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Invoice No."
+  },
+  {
+   "fieldname": "column_break_wdsj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "shipping_bill_date",
+   "fieldtype": "Date",
+   "label": "Shipping Bill Date"
+  },
+  {
+   "fieldname": "invoice_date",
+   "fieldtype": "Date",
+   "label": "Invoice Date"
+  },
+  {
+   "fieldname": "nature_of_transaction_section",
+   "fieldtype": "Section Break",
+   "label": "Nature of Transaction"
+  },
+  {
+   "default": "1",
+   "fieldname": "sale",
+   "fieldtype": "Check",
+   "label": "Sale"
+  },
+  {
+   "default": "0",
+   "fieldname": "gift",
+   "fieldtype": "Check",
+   "label": "Gift"
+  },
+  {
+   "default": "0",
+   "fieldname": "other",
+   "fieldtype": "Check",
+   "label": "Other"
+  },
+  {
+   "fieldname": "column_break_pwtv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "sale_on_consignment_basic",
+   "fieldtype": "Check",
+   "label": "Sale On Consignment Basic"
+  },
+  {
+   "default": "0",
+   "fieldname": "sample",
+   "fieldtype": "Check",
+   "label": "Sample"
+  },
+  {
+   "default": "EVD/.FY./",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming series",
+   "options": "\nEVD/.FY./"
+  },
+  {
+   "fieldname": "method_of_valuation_see_export_valuation_rules_section",
+   "fieldtype": "Section Break",
+   "label": "Method of Valuation (See Export Valuation Rules)"
+  },
+  {
+   "default": "1",
+   "fieldname": "rule_3",
+   "fieldtype": "Check",
+   "label": "Rule 3"
+  },
+  {
+   "default": "0",
+   "fieldname": "rule_5",
+   "fieldtype": "Check",
+   "label": "Rule 5"
+  },
+  {
+   "fieldname": "column_break_whvu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "rule_4",
+   "fieldtype": "Check",
+   "label": "Rule 4"
+  },
+  {
+   "default": "0",
+   "fieldname": "rule_6",
+   "fieldtype": "Check",
+   "label": "Rule 6"
+  },
+  {
+   "fieldname": "section_break_ebtl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "No",
+   "fieldname": "weather_seller_and_buyer_are_related",
+   "fieldtype": "Select",
+   "label": "Weather seller and buyer Are Related",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "column_break_rien",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "No",
+   "fieldname": "if_yes_weather_relationship_has_influenced_the_price",
+   "fieldtype": "Select",
+   "label": "If yes, weather relationship has Influenced the price",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "section_break_qqar",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "payment_terms_template",
+   "fieldtype": "Link",
+   "label": "Payment Terms Template",
+   "options": "Payment Terms Template"
+  },
+  {
+   "fieldname": "payment_schedule",
+   "fieldtype": "Table",
+   "label": "Payment Schedule",
+   "options": "Payment Schedule"
+  },
+  {
+   "fieldname": "terms",
+   "fieldtype": "Link",
+   "label": "Terms",
+   "options": "Terms and Conditions"
+  },
+  {
+   "fieldname": "terms_and_conditions_details",
+   "fieldtype": "Text Editor",
+   "hidden": 1,
+   "label": "Terms and Conditions Details"
+  },
+  {
+   "fieldname": "previous_exports_of_identical__similar_goods_if_any_section",
+   "fieldtype": "Section Break",
+   "label": "Previous exports of identical / similar goods, if any"
+  },
+  {
+   "fieldname": "shipping_bill_no_copy",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Shipping Bill No.",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_cgqz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "shipping_bill_date_copy",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Shipping Bill Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_weyr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "declaration",
+   "fieldtype": "Small Text",
+   "label": "Declaration"
+  },
+  {
+   "fieldname": "section_break_pxjt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "place",
+   "fieldtype": "Data",
+   "label": "Place"
+  },
+  {
+   "fieldname": "column_break_kejp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-06-19 10:31:52.244361",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Export Value Declaration",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

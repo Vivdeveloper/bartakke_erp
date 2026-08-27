@@ -1,0 +1,144 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-06 12:12:09.386681",
+ "custom": 1,
+ "default_print_format": "Examination Report",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_eyhx",
+  "amended_from",
+  "name_of_the_exporter_and_iec_code_no",
+  "bin_pan_and_extension",
+  "description_of_goods",
+  "place_of_stuffing_with_full_address_as_per_lofsp",
+  "column_break_fvdv",
+  "net_weightin_kg",
+  "gross_weightin_kg",
+  "export_inv_no_and_date",
+  "no_of_palletscrates",
+  "name_and_address_of_consignee",
+  "name_and_address_of_buyer",
+  "section_break_ommx",
+  "examination_report_table"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_eyhx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Examination Report",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "Bartakke ElectroFab Pvt Ltd. IEC Code :-3104005702",
+   "fieldname": "name_of_the_exporter_and_iec_code_no",
+   "fieldtype": "Data",
+   "label": "Name of the Exporter and IEC Code No."
+  },
+  {
+   "default": "AACCB2416QFT001",
+   "fieldname": "bin_pan_and_extension",
+   "fieldtype": "Data",
+   "label": "Bin (Pan and Extension)"
+  },
+  {
+   "default": "Enclosure of control panel and Parts ",
+   "fieldname": "description_of_goods",
+   "fieldtype": "Data",
+   "label": "Description of Goods"
+  },
+  {
+   "default": "BARTAKKE ELECTROFAB PVT LTD\nL-20,ADDL-M.I.D.C, SATARA\nPIN-415004, MAHARASHTRA(INDIA)",
+   "fieldname": "place_of_stuffing_with_full_address_as_per_lofsp",
+   "fieldtype": "Data",
+   "label": "Place of Stuffing with full address as per LOFSP"
+  },
+  {
+   "fieldname": "column_break_fvdv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "net_weightin_kg",
+   "fieldtype": "Data",
+   "label": "Net Weight(In Kg)"
+  },
+  {
+   "fieldname": "gross_weightin_kg",
+   "fieldtype": "Data",
+   "label": "Gross Weight(In Kg)"
+  },
+  {
+   "fieldname": "export_inv_no_and_date",
+   "fieldtype": "Link",
+   "label": "Export Inv. No and Date",
+   "options": "Sales Invoice"
+  },
+  {
+   "fieldname": "no_of_palletscrates",
+   "fieldtype": "Data",
+   "label": "No. of Pallets/Crates"
+  },
+  {
+   "fieldname": "name_and_address_of_consignee",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name and Address of Consignee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "name_and_address_of_buyer",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name and Address of Buyer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_ommx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "examination_report_table",
+   "fieldtype": "Table",
+   "label": "Examination Report Table",
+   "options": "Examination Repot Table"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-03-06 16:38:14.726796",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Examination Report",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

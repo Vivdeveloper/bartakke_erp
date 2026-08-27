@@ -1,0 +1,134 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-12-19 11:52:52.236086",
+ "custom": 1,
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "name_of_the_shipper",
+  "shipper_registration_license_noiec_nocin_no",
+  "namedesignation_of_official_shipper_authorized_to_sign_document",
+  "24_x_7_contact_details_of_authorized_official_of_shipper",
+  "container_no",
+  "container_size_teufeuother",
+  "max_permissible_weight_pf_container_as_per_the_csc_plate",
+  "verified_gross_mass_of_container_method_1method_2",
+  "date_and_time_of_weighing",
+  "weighing_slip_no",
+  "weighbridge_registration_no_and_address",
+  "type",
+  "if_hazardous_un_no__imdg_class",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "default": "BARTAKKE ELECTROFAB PVT. LTD",
+   "fieldname": "name_of_the_shipper",
+   "fieldtype": "Data",
+   "label": "Name of the Shipper "
+  },
+  {
+   "fieldname": "shipper_registration_license_noiec_nocin_no",
+   "fieldtype": "Int",
+   "label": "Shipper Registration /license No.(IEC No/CIN No)"
+  },
+  {
+   "fieldname": "namedesignation_of_official_shipper_authorized_to_sign_document",
+   "fieldtype": "Data",
+   "label": "Name/designation of official to shipper authorized to sign document"
+  },
+  {
+   "fieldname": "24_x_7_contact_details_of_authorized_official_of_shipper",
+   "fieldtype": "Int",
+   "label": "24 x 7 contact details of authorized official of shipper"
+  },
+  {
+   "fieldname": "container_no",
+   "fieldtype": "Data",
+   "label": "Container No."
+  },
+  {
+   "fieldname": "container_size_teufeuother",
+   "fieldtype": "Data",
+   "label": "Container Size (TEU/FEU/Other)"
+  },
+  {
+   "fieldname": "max_permissible_weight_pf_container_as_per_the_csc_plate",
+   "fieldtype": "Data",
+   "label": "Max permissible weight pf container as per the CSC plate"
+  },
+  {
+   "fieldname": "verified_gross_mass_of_container_method_1method_2",
+   "fieldtype": "Data",
+   "label": "Verified gross mass of container (method 1/method 2)"
+  },
+  {
+   "fieldname": "date_and_time_of_weighing",
+   "fieldtype": "Datetime",
+   "label": "Date and Time of Weighing"
+  },
+  {
+   "fieldname": "weighing_slip_no",
+   "fieldtype": "Int",
+   "label": "Weighing slip no."
+  },
+  {
+   "fieldname": "weighbridge_registration_no_and_address",
+   "fieldtype": "Data",
+   "label": "Weighbridge registration no. and Address"
+  },
+  {
+   "default": "General",
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "Type ",
+   "options": "General\nNormal\nRefer\nHazardous\nOthers"
+  },
+  {
+   "default": "NO",
+   "fieldname": "if_hazardous_un_no__imdg_class",
+   "fieldtype": "Data",
+   "label": "If Hazardous, UN No. , IMDG class"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Gross Mass",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-03-05 16:00:29.219909",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Gross Mass",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

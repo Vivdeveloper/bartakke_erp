@@ -1,0 +1,706 @@
+[
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "material_request_type",
+    "value": "Purchase"
+   }
+  ],
+  "counter": 217,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Material Request",
+  "modified": "2026-08-26 08:38:29.835042",
+  "name": "PR-.YY.-",
+  "prefix": "PR-.YY.-",
+  "prefix_digits": 4,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "material_request_type",
+    "value": "Manufacture"
+   }
+  ],
+  "counter": 424,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Material Request",
+  "modified": "2026-08-26 15:25:53.050932",
+  "name": "IND-.YY.-",
+  "prefix": "IND-.YY.-",
+  "prefix_digits": 4,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "custom_is_jobwork_challan",
+    "value": "1"
+   }
+  ],
+  "counter": 328,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Purchase Order",
+  "modified": "2026-08-26 14:58:35.677982",
+  "name": "JWC-.",
+  "prefix": "JWC-.",
+  "prefix_digits": 4,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "custom_trade_type",
+    "value": "Export"
+   }
+  ],
+  "counter": 6,
+  "disabled": 1,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Sales Invoice",
+  "modified": "2026-06-04 18:42:37.465938",
+  "name": "COM-.",
+  "prefix": "COM-.",
+  "prefix_digits": 4,
+  "priority": 0
+ },
+ {
+  "conditions": [],
+  "counter": 40,
+  "disabled": 1,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Production Plan",
+  "modified": "2026-05-08 10:37:09.280733",
+  "name": "WO.YY.-",
+  "prefix": "WO.YY.-",
+  "prefix_digits": 4,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "is_return",
+    "value": "1"
+   }
+  ],
+  "counter": 14,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Purchase Invoice",
+  "modified": "2026-08-11 13:55:02.262790",
+  "name": "DN-.",
+  "prefix": "DN-.",
+  "prefix_digits": 4,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "asset_category",
+    "value": "Plant and Machinery"
+   }
+  ],
+  "counter": 581,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Asset",
+  "modified": "2026-06-24 11:43:07.386300",
+  "name": "FA/PLANT/.FY./",
+  "prefix": "FA/PLANT/.FY./",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "asset_category",
+    "value": "Furniture And Fixtures"
+   }
+  ],
+  "counter": 59,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Asset",
+  "modified": "2026-06-17 15:45:41.526870",
+  "name": "FA/FAF/.FY./",
+  "prefix": "FA/FAF/.FY./",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "asset_category",
+    "value": "Office Equipments"
+   }
+  ],
+  "counter": 69,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Asset",
+  "modified": "2026-06-17 16:30:40.946260",
+  "name": "FA/OFF/.FY./",
+  "prefix": "FA/OFF/.FY./",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "asset_category",
+    "value": "Vehicle"
+   }
+  ],
+  "counter": 40,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Asset",
+  "modified": "2026-06-17 17:07:58.647907",
+  "name": "FA/VEH/.FY./",
+  "prefix": "FA/VEH/.FY./",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "asset_category",
+    "value": "Electrification"
+   }
+  ],
+  "counter": 27,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Asset",
+  "modified": "2026-06-09 15:17:37.029481",
+  "name": "FA/ELEC/.FY./",
+  "prefix": "FA/ELEC/.FY./",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "asset_category",
+    "value": "Computer"
+   }
+  ],
+  "counter": 70,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Asset",
+  "modified": "2026-06-17 11:44:27.411604",
+  "name": "FA/COM/.FY./",
+  "prefix": "FA/COM/.FY./",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "asset_category",
+    "value": "Land & Building"
+   }
+  ],
+  "counter": 140,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Asset",
+  "modified": "2026-06-17 16:02:03.201691",
+  "name": "FA/LAND/.FY./",
+  "prefix": "FA/LAND/.FY./",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "asset_category",
+    "value": "Equipments and Tools"
+   }
+  ],
+  "counter": 19,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Asset",
+  "modified": "2026-06-09 15:18:40.833153",
+  "name": "FA/EQU/.FY./",
+  "prefix": "FA/EQU/.FY./",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "asset_category",
+    "value": "Dies & Fixtures"
+   }
+  ],
+  "counter": 13,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Asset",
+  "modified": "2026-06-24 11:02:09.633997",
+  "name": "FA/DIE/.FY./",
+  "prefix": "FA/DIE/.FY./",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "asset_category",
+    "value": "Steam Boiler Plant"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Asset",
+  "modified": "2026-06-09 15:13:22.678745",
+  "name": "FA/SBP/.FY./",
+  "prefix": "FA/SBP/.FY./",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Inter Company Journal Entry"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-06-09 17:50:19.916971",
+  "name": "ACC-inter-.YYYY.-",
+  "prefix": "ACC-inter-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Bank Entry"
+   }
+  ],
+  "counter": 3,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-07-17 12:06:43.996346",
+  "name": "ACC-Bank-.YYYY.-",
+  "prefix": "ACC-Bank-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Credit Card Entry"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-06-09 17:51:08.951713",
+  "name": "ACC-CC-.YYYY.-",
+  "prefix": "ACC-CC-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Debit Note"
+   }
+  ],
+  "counter": 7,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-07-21 14:14:13.183985",
+  "name": "ACC-DN-.YYYY.-",
+  "prefix": "ACC-DN-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Credit Note"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-06-09 17:53:07.628505",
+  "name": "ACC-CN-.YYYY.-",
+  "prefix": "ACC-CN-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Write Off Entry"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-06-09 17:53:22.161960",
+  "name": "ACC-Writeof-.YYYY.-",
+  "prefix": "ACC-Writeof-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Opening Entry"
+   }
+  ],
+  "counter": 604,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-06-24 16:48:07.715493",
+  "name": "ACC-opening-.YYYY.-",
+  "prefix": "ACC-opening-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Depreciation Entry"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-06-09 17:51:58.905322",
+  "name": "ACC-Dep-.YYYY.-",
+  "prefix": "ACC-Dep-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Exchange Rate Revaluation"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-06-09 17:53:35.031243",
+  "name": "ACC-Exchange-.YYYY.-",
+  "prefix": "ACC-Exchange-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Exchange Gain Or Loss"
+   }
+  ],
+  "counter": 2,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-06-29 12:04:12.970837",
+  "name": "ACC-EG/R-.YYYY.-",
+  "prefix": "ACC-EG/R-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Deferred Revenue"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-06-09 17:54:06.020379",
+  "name": "ACC-DR-.YYYY.-",
+  "prefix": "ACC-DR-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Reversal Of ITC"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-06-09 17:48:30.404969",
+  "name": "ACC-ReverseITC.YYYY.-",
+  "prefix": "ACC-ReverseITC.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Reclaim of ITC Reversal"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-06-09 17:27:18.469757",
+  "name": "ACC-ClaimITC-.YYYY.-",
+  "prefix": "ACC-ClaimITC-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Cash Entry"
+   }
+  ],
+  "counter": 26,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-06-09 17:45:59.514561",
+  "name": "ACC-Cash-.YYYY.-",
+  "prefix": "ACC-Cash-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Contra Entry"
+   }
+  ],
+  "counter": 5,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-07-20 11:23:06.609182",
+  "name": "ACC-Contra-.YYYY.-",
+  "prefix": "ACC-Contra-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [],
+  "counter": 3,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Export Value Declaration",
+  "modified": "2026-08-17 10:26:25.540185",
+  "name": "EVD/.FY./",
+  "prefix": "EVD/.FY./",
+  "prefix_digits": 4,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "is_return",
+    "value": "1"
+   }
+  ],
+  "counter": 0,
+  "disabled": 1,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Sales Invoice",
+  "modified": "2026-08-11 15:00:04.604445",
+  "name": "CN-.##./26-27",
+  "prefix": "CN-.##./26-27",
+  "prefix_digits": 2,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "stock_entry_type",
+    "value": "Job Work GRN"
+   }
+  ],
+  "counter": 265,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Stock Entry",
+  "modified": "2026-08-25 17:26:36.768924",
+  "name": "JWG-.",
+  "prefix": "JWG-.",
+  "prefix_digits": 4,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Journal Entry"
+   }
+  ],
+  "counter": 130,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-08-18 17:41:22.579484",
+  "name": "ACC-Journ-.YYYY.-",
+  "prefix": "ACC-Journ-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Excise Entry"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-06-09 17:52:19.796085",
+  "name": "ACC-Excise-.YYYY.-",
+  "prefix": "ACC-Excise-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "voucher_type",
+    "value": "Deferred Expense"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Journal Entry",
+  "modified": "2026-06-09 17:48:59.633200",
+  "name": "ACC-DE-.YYYY.-",
+  "prefix": "ACC-DE-.YYYY.-",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [],
+  "counter": 48,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "ECN Generation Report",
+  "modified": "2026-08-17 16:15:11.674591",
+  "name": "ECN-",
+  "prefix": "ECN-",
+  "prefix_digits": 4,
+  "priority": 0
+ }
+]

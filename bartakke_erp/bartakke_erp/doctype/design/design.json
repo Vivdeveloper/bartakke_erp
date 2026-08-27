@@ -1,0 +1,67 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:design",
+ "creation": "2025-10-31 17:01:00.731932",
+ "custom": 1,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "design_section",
+  "design",
+  "prefix",
+  "abbreviation"
+ ],
+ "fields": [
+  {
+   "fieldname": "design_section",
+   "fieldtype": "Section Break",
+   "label": "Design"
+  },
+  {
+   "fieldname": "design",
+   "fieldtype": "Data",
+   "label": "Design",
+   "unique": 1
+  },
+  {
+   "fieldname": "prefix",
+   "fieldtype": "Data",
+   "label": "Prefix"
+  },
+  {
+   "fieldname": "abbreviation",
+   "fieldtype": "Data",
+   "label": "Abbreviation"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-11-07 16:10:04.509583",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Design",
+ "naming_rule": "By fieldname",
+ "owner": "abhijeet@exacuer.com",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "search_fields": "prefix",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

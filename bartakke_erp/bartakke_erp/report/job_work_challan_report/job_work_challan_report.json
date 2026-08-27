@@ -1,0 +1,88 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [
+  {
+   "default": null,
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "mandatory": 0,
+   "options": null,
+   "wildcard_filter": 0
+  },
+  {
+   "default": null,
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date",
+   "mandatory": 0,
+   "options": null,
+   "wildcard_filter": 0
+  },
+  {
+   "default": null,
+   "fieldname": "purchase_order",
+   "fieldtype": "Link",
+   "label": "Job Work Challan",
+   "mandatory": 0,
+   "options": "Purchase Order",
+   "wildcard_filter": 0
+  },
+  {
+   "default": null,
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "mandatory": 0,
+   "options": "Supplier",
+   "wildcard_filter": 0
+  },
+  {
+   "default": null,
+   "fieldname": "trade_type",
+   "fieldtype": "Link",
+   "label": "Trade Type",
+   "mandatory": 0,
+   "options": "Trade Type",
+   "wildcard_filter": 0
+  },
+  {
+   "default": null,
+   "fieldname": "custom_jobworker__warehouse_",
+   "fieldtype": "Link",
+   "label": "Job Worker Warehouse",
+   "mandatory": 0,
+   "options": "Warehouse",
+   "wildcard_filter": 0
+  }
+ ],
+ "is_standard": "Yes",
+ "module": "Bartakke ERP",
+ "name": "Job Work Challan Report",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Purchase Order",
+ "report_name": "Job Work Challan Report",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "Accounts Manager"
+  },
+  {
+   "role": "Purchase User"
+  },
+  {
+   "role": "Manufacturing User"
+  }
+ ]
+}

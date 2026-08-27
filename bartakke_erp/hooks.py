@@ -40,7 +40,9 @@ app_license = "mit"
 # webform_include_css = {"doctype": "public/css/doctype.css"}
 
 # include js in page
-# page_js = {"page" : "public/js/file.js"}
+page_js = {
+	"print": "public/js/print_workflow_actions.js",
+}
 
 # include js in doctype views
 doctype_js = {
@@ -52,10 +54,135 @@ doctype_js = {
 	"Production Plan": "public/js/production_plan.js",
     "Sales Order": "public/js/sales_order.js",
     "Item": "public/js/item.js",
-    "Sales Order": "public/js/so.js"
+    "Sales Order": "public/js/so.js",
+    "Sales Invoice": "public/js/sales_invoice.js"
 }
 doctype_list_js = {"Production Plan": "public/js/production_plan_list.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
+
+# Fixtures
+# --------
+# Site-level customizations (Customize Form, Client/Server Scripts, Print Formats,
+# Workflows, Reports) that were done directly on the site rather than in code.
+# BT Barcode doctype customizations are excluded here — they live in bt_erp_barcode.
+# GST India / Income Tax India / Audit Trail customizations are excluded — those are
+# owned and managed by india_compliance/hrms/frappe respectively, not this app.
+# Exacuer CRM / MSME Compliance customizations are excluded — those live in their own apps.
+_excluded_modules = [
+	"GST India",
+	"Income Tax India",
+	"Audit Trail",
+	"Exacuer CRM",
+	"MSME Compliance",
+	"BT ERP Barcode",
+]
+_bt_barcode_doctypes = ["BT Barcode", "BT Barcode Item"]
+# These doctypes already have a dedicated bartakke_erp/custom/<doctype>.json bundle
+# (Custom Field + Property Setter, synced on every migrate) — do not duplicate them
+# here as well via the blanket fixtures export.
+_doctypes_with_custom_bundle = [
+	"Item",
+	"BOM",
+	"BOM Item",
+	"Material Request",
+	"Material Request Item",
+	"Material Request Plan Item",
+	"Production Plan",
+	"Production Plan Item",
+	"Production Plan Sub Assembly Item",
+	"Item Barcode",
+	"Item Default",
+	"Supplier",  # owned by msme_compliance/custom/supplier.json
+]
+
+fixtures = [
+	{
+		"doctype": "Custom Field",
+		"filters": [
+			["dt", "not in", _bt_barcode_doctypes + _doctypes_with_custom_bundle],
+			["module", "not in", _excluded_modules],
+		],
+	},
+	{
+		"doctype": "Property Setter",
+		"filters": [
+			["doc_type", "not in", _bt_barcode_doctypes + _doctypes_with_custom_bundle],
+			["module", "not in", _excluded_modules],
+		],
+	},
+	{
+		"doctype": "Client Script",
+		"filters": [
+			["dt", "not in", _bt_barcode_doctypes],
+			["module", "not in", ["Exacuer CRM"]],
+			["enabled", "=", 1],
+		],
+	},
+	{
+		"doctype": "Server Script",
+		"filters": [
+			["disabled", "=", 0],
+		],
+	},
+	{
+		"doctype": "Print Format",
+		"filters": [
+			["doc_type", "not in", _bt_barcode_doctypes],
+			["standard", "=", "No"],
+			["disabled", "=", 0],
+		],
+	},
+	{
+		"doctype": "Workflow",
+		"filters": [
+			["is_active", "=", 1],
+		],
+	},
+	{
+		"doctype": "Report",
+		"filters": [
+			["is_standard", "=", "No"],
+			["disabled", "=", 0],
+		],
+	},
+	{
+		"doctype": "Workspace",
+		"filters": [
+			["module", "in", ["", None]],
+		],
+	},
+	{
+		"doctype": "Document Naming Rule",
+	},
+	{
+		"doctype": "Role",
+		"filters": [
+			[
+				"name",
+				"in",
+				[
+					"Planning",
+					"Api User",
+					"Document approver",
+					"Production planning approver",
+					"Document verifier",
+				],
+			],
+		],
+	},
+	{
+		"doctype": "Number Card",
+		"filters": [
+			["module", "in", ["", None]],
+		],
+	},
+	{
+		"doctype": "Workflow State",
+	},
+	{
+		"doctype": "Workflow Action Master",
+	},
+]
 
 # Svg Icons
 # ------------------
@@ -166,6 +293,12 @@ doc_events = {
         "autoname": "bartakke_erp.bartakke_erp.api.item.autoname",
         "before_save": "bartakke_erp.bartakke_erp.api.item.before_save",
         "after_insert": "bartakke_erp.bartakke_erp.api.item.after_insert"
+	},
+	"Customer": {
+		"validate": "bartakke_erp.bartakke_erp.api.party.validate_unique_gstin",
+	},
+	"Supplier": {
+		"validate": "bartakke_erp.bartakke_erp.api.party.validate_unique_gstin",
 	}
 }
 

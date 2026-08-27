@@ -1,0 +1,97 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SLI-.####",
+ "creation": "2026-04-24 15:02:07.819691",
+ "custom": 1,
+ "default_print_format": "SHIPPERS LETTER OF INSTRUCTION",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "customer",
+  "consignee_address",
+  "to",
+  "to_address",
+  "mode_of_dispatch",
+  "nature_of_payment",
+  "nature_of_shipping_bill",
+  "terms_of_delivery"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Consignee",
+   "options": "Customer"
+  },
+  {
+   "fetch_from": "customer.primary_address",
+   "fieldname": "consignee_address",
+   "fieldtype": "Text Editor",
+   "label": "Consignee Address"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Link",
+   "label": "To",
+   "options": "Supplier"
+  },
+  {
+   "fetch_from": "to.primary_address",
+   "fieldname": "to_address",
+   "fieldtype": "Text Editor",
+   "label": "To Address"
+  },
+  {
+   "fieldname": "mode_of_dispatch",
+   "fieldtype": "Select",
+   "label": "Mode Of Dispatch",
+   "options": "\nBy Air\nBy Ship\nBy Road"
+  },
+  {
+   "fieldname": "nature_of_payment",
+   "fieldtype": "Link",
+   "label": "Nature Of Payment",
+   "options": "Nature of Payment"
+  },
+  {
+   "fieldname": "nature_of_shipping_bill",
+   "fieldtype": "Select",
+   "label": "Nature Of Shipping Bill",
+   "options": "\nNFEI/DFREE/DEPB/D/BK/\n100% EOU\nDFRC8"
+  },
+  {
+   "fieldname": "terms_of_delivery",
+   "fieldtype": "Small Text",
+   "label": "Terms Of Delivery"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-06-19 12:38:15.064345",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "SHIPPERS LETTER OF INSTRUCTION",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

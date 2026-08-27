@@ -1,0 +1,36 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "is_standard": "Yes",
+ "module": "Bartakke ERP",
+ "name": "Monthly Drawing Data",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Production Plan",
+ "report_name": "Monthly Drawing Data",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Manufacturing User"
+  },
+  {
+   "role": "Sales Manager"
+  },
+  {
+   "role": "Employee"
+  },
+  {
+   "role": "Stock Manager"
+  },
+  {
+   "role": "Planning"
+  },
+  {
+   "role": "Document verifier"
+  }
+ ]
+}

@@ -1,0 +1,155 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-03-05 17:44:25.289305",
+  "name": "Sent for modification",
+  "style": "",
+  "workflow_state_name": "Sent for modification"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-06-08 17:05:48.770031",
+  "name": "Won",
+  "style": "",
+  "workflow_state_name": "Won"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-06-08 17:06:10.352147",
+  "name": "Lost",
+  "style": "",
+  "workflow_state_name": "Lost"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-03-04 12:37:04.242497",
+  "name": "Pending Quality Approval",
+  "style": "",
+  "workflow_state_name": "Pending Quality Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-03-05 14:03:35.348791",
+  "name": "WorkOrder Pending",
+  "style": "",
+  "workflow_state_name": "WorkOrder Pending"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-03-05 17:33:35.717789",
+  "name": "Sent for Approval",
+  "style": "",
+  "workflow_state_name": "Sent for Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-03-06 12:01:32.214989",
+  "name": "cancelled",
+  "style": "",
+  "workflow_state_name": "cancelled"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-12-16 15:57:53.973449",
+  "name": "Waiting for Review",
+  "style": "",
+  "workflow_state_name": "Waiting for Review"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "remove",
+  "modified": "2025-09-05 09:00:42.550382",
+  "name": "Rejected",
+  "style": "Danger",
+  "workflow_state_name": "Rejected"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-07-09 16:15:30.171581",
+  "name": "Send For Approval",
+  "style": "",
+  "workflow_state_name": "Send For Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-03-04 11:29:16.572026",
+  "name": "Design Received",
+  "style": "",
+  "workflow_state_name": "Design Received"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-06-08 17:05:41.523392",
+  "name": "open",
+  "style": "",
+  "workflow_state_name": "open"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "question-sign",
+  "modified": "2025-09-05 09:00:42.546487",
+  "name": "Pending",
+  "style": "",
+  "workflow_state_name": "Pending"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-03-04 11:28:03.403054",
+  "name": "Design Issued",
+  "style": "",
+  "workflow_state_name": "Design Issued"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-03-04 17:52:49.254350",
+  "name": "submitted",
+  "style": "Success",
+  "workflow_state_name": "submitted"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "ok-sign",
+  "modified": "2025-09-05 09:00:42.548007",
+  "name": "Approved",
+  "style": "Success",
+  "workflow_state_name": "Approved"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-12-16 15:52:47.310581",
+  "name": "Draft",
+  "style": "",
+  "workflow_state_name": "Draft"
+ }
+]

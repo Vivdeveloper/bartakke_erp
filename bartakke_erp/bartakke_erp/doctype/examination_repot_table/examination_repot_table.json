@@ -1,0 +1,50 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-06 12:33:34.496581",
+ "custom": 1,
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "column_break_ahmg",
+  "container_info",
+  "information"
+ ],
+ "fields": [
+  {
+   "default": "Container No.\nContainer Size\nShipping line Seal No.\nShipper's RFID Seal No.\nTotal Packages",
+   "fieldname": "column_break_ahmg",
+   "fieldtype": "Column Break",
+   "options": "Container No.\nContainer Size\nShipping line Seal No.\nShipper's RFID Seal No.\nTotal Packages"
+  },
+  {
+   "fieldname": "container_info",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Container info",
+   "options": "\nContainer No.\nContainer Size\nShipping line Seal No.\nShipper's RFID Seal No.\nTotal Packages"
+  },
+  {
+   "fieldname": "information",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Information"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-06 12:53:47.884940",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Examination Repot Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

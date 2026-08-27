@@ -1,0 +1,120 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-01-21 11:55:29.075040",
+ "custom": 1,
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "item_name",
+  "qty",
+  "uom",
+  "hsn_code",
+  "description",
+  "column_break_awsg",
+  "width",
+  "depth",
+  "height",
+  "thickness",
+  "development_size_a",
+  "development_size_b"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "Item"
+  },
+  {
+   "fetch_from": "item_code.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Name"
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Qty "
+  },
+  {
+   "fetch_from": "item_code.stock_uom",
+   "fieldname": "uom",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "UOM"
+  },
+  {
+   "fetch_from": "item_code.gst_hsn_code",
+   "fieldname": "hsn_code",
+   "fieldtype": "Data",
+   "label": "HSN Code"
+  },
+  {
+   "fetch_from": "item_code.description",
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_awsg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "item_code.custom_w",
+   "fieldname": "width",
+   "fieldtype": "Data",
+   "label": "Width"
+  },
+  {
+   "fetch_from": "item_code.custom_d",
+   "fieldname": "depth",
+   "fieldtype": "Data",
+   "label": "Depth "
+  },
+  {
+   "fetch_from": "item_code.custom_h",
+   "fieldname": "height",
+   "fieldtype": "Data",
+   "label": "Height"
+  },
+  {
+   "fetch_from": "item_code.custom_t",
+   "fieldname": "thickness",
+   "fieldtype": "Data",
+   "label": "Thickness"
+  },
+  {
+   "fetch_from": "item_code.custom_development_size_a",
+   "fieldname": "development_size_a",
+   "fieldtype": "Data",
+   "label": "Development Size A"
+  },
+  {
+   "fetch_from": "item_code.custom_development_size_b",
+   "fieldname": "development_size_b",
+   "fieldtype": "Data",
+   "label": "Development Size B"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-01-27 13:10:12.023900",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Inter Plant Transfer Item Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

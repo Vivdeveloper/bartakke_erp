@@ -37,15 +37,48 @@ def before_save(doc, method=None):
         sync_full_drawing_number(doc)
     rename_item(doc)
 
+def _validate_drawing_no_unique(item_code, dn):
+    """Drawing No alone (independent of SF Code) must not repeat across Items/Drawings."""
+    other_item = frappe.db.get_value(
+        "Item", {"name": ["!=", item_code], "custom_drawing_no": dn}, "name"
+    )
+    if other_item:
+        frappe.throw(
+            _("Drawing No {0} is already used by Item {1}. Drawing No must be unique.").format(
+                frappe.bold(dn), frappe.bold(other_item)
+            ),
+            title=_("Duplicate Drawing No"),
+        )
+
+    other_drawing = frappe.db.get_value(
+        "Drawing", {"item_code": ["!=", item_code], "drawing_number": dn}, "name"
+    )
+    if other_drawing:
+        frappe.throw(
+            _("Drawing No {0} is already used by Drawing {1}. Drawing No must be unique.").format(
+                frappe.bold(dn), frappe.bold(other_drawing)
+            ),
+            title=_("Duplicate Drawing No"),
+        )
+
+
 def item_drawing(doc):
-    """If custom_sf_code + custom_drawing_no are set: check Drawing and other Item for same SF, drawing number, and sheet."""
-    sf = cstr(doc.get("custom_sf_code") or "").strip()
+    """Drawing No must be unique on its own when entered on a new Item, regardless of SF Code.
+    Additionally, if custom_sf_code + custom_drawing_no are both set: check Drawing and other
+    Item for same SF, drawing number, and sheet."""
     dn = cstr(doc.get("custom_drawing_no") or "").strip()
-    if not sf or not dn:
+    if not dn:
         return
 
     item_code = doc.get("name")
     if not item_code:
+        return
+
+    if doc.is_new():
+        _validate_drawing_no_unique(item_code, dn)
+
+    sf = cstr(doc.get("custom_sf_code") or "").strip()
+    if not sf:
         return
 
     sh = cstr(doc.get("custom_sheet") or "").strip()

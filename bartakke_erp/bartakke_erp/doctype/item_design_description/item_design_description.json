@@ -1,0 +1,132 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:bepl_code",
+ "creation": "2025-11-17 11:25:02.112485",
+ "custom": 1,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_fvcf",
+  "bepl_code",
+  "material",
+  "width",
+  "height",
+  "column_break_awva",
+  "design",
+  "depth",
+  "thickness",
+  "color",
+  "section_break_qndo",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_fvcf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "columns": 1,
+   "fieldname": "bepl_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "BEPL Code",
+   "unique": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "material",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Material",
+   "options": "Material"
+  },
+  {
+   "columns": 1,
+   "fieldname": "width",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Width",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "height",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Height",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "column_break_awva",
+   "fieldtype": "Column Break"
+  },
+  {
+   "columns": 1,
+   "fieldname": "design",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Design",
+   "options": "Design"
+  },
+  {
+   "fieldname": "depth",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Depth",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "thickness",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Thickness",
+   "non_negative": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "color",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "color",
+   "options": "Color"
+  },
+  {
+   "fieldname": "section_break_qndo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "columns": 3,
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-11-28 15:03:38.723320",
+ "modified_by": "abhijeet@exacuer.com",
+ "module": "Bartakke ERP",
+ "name": "Item Design Description",
+ "naming_rule": "By fieldname",
+ "owner": "abhijeet@exacuer.com",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

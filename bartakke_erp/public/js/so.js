@@ -5,6 +5,15 @@ frappe.ui.form.on('Sales Order', {
         frm.add_custom_button(__('Production Plan'), () => {
             open_production_plan_dialog(frm);
         }, __('Get Items From'));
+
+        if (!frm.is_new()) {
+            frm.add_custom_button(__('Proforma Invoice'), () => {
+                frappe.model.open_mapped_doc({
+                    method: 'bartakke_erp.bartakke_erp.api.proforma_invoice.make_proforma_invoice',
+                    frm: frm,
+                });
+            }, __('Create'));
+        }
     }
 });
 

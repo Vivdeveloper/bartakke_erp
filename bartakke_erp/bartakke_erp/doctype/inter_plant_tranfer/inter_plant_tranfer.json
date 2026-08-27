@@ -1,0 +1,175 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2026-01-21 11:43:05.550824",
+ "custom": 1,
+ "default_print_format": "InterPlant Transfer -2",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_npzu",
+  "naming_series",
+  "bill_to",
+  "transferred_from_address",
+  "shipped_to",
+  "transferred_to_address",
+  "wo_no",
+  "ewaybill_no",
+  "challan_amount",
+  "amended_from",
+  "hsn",
+  "column_break_puzc",
+  "date_of_issue",
+  "development_size",
+  "color",
+  "purpose",
+  "section_break_izbh",
+  "table_zstq",
+  "letter_head"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_npzu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "read_only": 1
+  },
+  {
+   "fieldname": "bill_to",
+   "fieldtype": "Link",
+   "label": "Transferred from ",
+   "options": "Inter Plant Unit"
+  },
+  {
+   "fetch_from": "bill_to.unit_address",
+   "fieldname": "transferred_from_address",
+   "fieldtype": "Long Text",
+   "label": "Transferred from Address",
+   "read_only": 1
+  },
+  {
+   "fieldname": "shipped_to",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Transferred To",
+   "options": "Inter Plant Unit"
+  },
+  {
+   "fieldname": "transferred_to_address",
+   "fieldtype": "Long Text",
+   "label": "Transferred To Address",
+   "read_only": 1
+  },
+  {
+   "fieldname": "wo_no",
+   "fieldtype": "Link",
+   "label": "Wo No",
+   "options": "Production Plan"
+  },
+  {
+   "fieldname": "ewaybill_no",
+   "fieldtype": "Data",
+   "label": "EWaybill No"
+  },
+  {
+   "fieldname": "challan_amount",
+   "fieldtype": "Float",
+   "label": "Challan Amount",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Inter Plant Tranfer",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "hsn",
+   "fieldtype": "Data",
+   "label": "HSN"
+  },
+  {
+   "fieldname": "column_break_puzc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date_of_issue",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Date of Issue"
+  },
+  {
+   "fieldname": "development_size",
+   "fieldtype": "Data",
+   "label": "Development Size"
+  },
+  {
+   "fieldname": "color",
+   "fieldtype": "Data",
+   "label": "Color"
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Purpose"
+  },
+  {
+   "fieldname": "section_break_izbh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_zstq",
+   "fieldtype": "Table",
+   "label": " Details of Inter Plant Transfer",
+   "options": "Inter Plant Transfer Item Table"
+  },
+  {
+   "default": "Bartakke Letter Head 2",
+   "fieldname": "letter_head",
+   "fieldtype": "Link",
+   "label": "Letter Head",
+   "options": "Letter Head"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-06-03 12:04:48.294322",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "Inter Plant Tranfer",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,273 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-08-05 16:58:13.724096",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_xdkc",
+  "amended_from",
+  "proposed_changes",
+  "need_for_changes",
+  "column_break_fbbr",
+  "date",
+  "section_break_cbcp",
+  "proposal_raised_by",
+  "column_break_uwqm",
+  "proposal_accepted",
+  "column_break_khcy",
+  "proposal_rejected",
+  "section_break_nmmy",
+  "design_type",
+  "column_break_lyiu",
+  "part_description",
+  "column_break_juqw",
+  "added_specification",
+  "column_break_huhi",
+  "deleted_specification",
+  "section_break_isey",
+  "implementation",
+  "after_trial",
+  "old_stock_disposal",
+  "column_break_zpch",
+  "from_lot_no",
+  "supplied_panel",
+  "target_date",
+  "column_break_rcql",
+  "from_wo_no__date",
+  "verification_appicable",
+  "verification_date",
+  "section_break_stip",
+  "additional_remark",
+  "column_break_vimo",
+  "checked_by",
+  "approved_by",
+  "section_break_cork",
+  "informed_to_other_related"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_xdkc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "ECN Generation Report",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "proposed_changes",
+   "fieldtype": "Small Text",
+   "label": "Proposed changes"
+  },
+  {
+   "fieldname": "need_for_changes",
+   "fieldtype": "Small Text",
+   "label": "Need for changes"
+  },
+  {
+   "fieldname": "column_break_fbbr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "section_break_cbcp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "proposal_raised_by",
+   "fieldtype": "Link",
+   "label": "Proposal raised by",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "column_break_uwqm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "proposal_accepted",
+   "fieldtype": "Select",
+   "label": "Proposal accepted",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "column_break_khcy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "proposal_rejected",
+   "fieldtype": "Select",
+   "label": "Proposal rejected",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "section_break_nmmy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "design_type",
+   "fieldtype": "Data",
+   "label": "Design Type"
+  },
+  {
+   "fieldname": "column_break_lyiu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "part_description",
+   "fieldtype": "Data",
+   "label": "Part Description"
+  },
+  {
+   "fieldname": "column_break_juqw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "added_specification",
+   "fieldtype": "Data",
+   "label": "Added Specification"
+  },
+  {
+   "fieldname": "column_break_huhi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "deleted_specification",
+   "fieldtype": "Data",
+   "label": "Deleted Specification"
+  },
+  {
+   "fieldname": "section_break_isey",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "implementation",
+   "fieldtype": "Check",
+   "label": "Implementation"
+  },
+  {
+   "fieldname": "after_trial",
+   "fieldtype": "Data",
+   "label": "After trial"
+  },
+  {
+   "fieldname": "old_stock_disposal",
+   "fieldtype": "Data",
+   "label": "Old stock disposal"
+  },
+  {
+   "fieldname": "column_break_zpch",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "from_lot_no",
+   "fieldtype": "Link",
+   "label": "From Lot No.",
+   "options": "Production Process Tracking"
+  },
+  {
+   "fieldname": "supplied_panel",
+   "fieldtype": "Data",
+   "label": "Supplied Panel"
+  },
+  {
+   "fieldname": "target_date",
+   "fieldtype": "Date",
+   "label": "Target date"
+  },
+  {
+   "fieldname": "column_break_rcql",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "from_wo_no__date",
+   "fieldtype": "Date",
+   "label": "From W/O no / date"
+  },
+  {
+   "default": "0",
+   "fieldname": "verification_appicable",
+   "fieldtype": "Check",
+   "label": "Verification Appicable"
+  },
+  {
+   "fieldname": "verification_date",
+   "fieldtype": "Date",
+   "label": "Verification date"
+  },
+  {
+   "fieldname": "section_break_stip",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "additional_remark",
+   "fieldtype": "Data",
+   "label": "Additional Remark"
+  },
+  {
+   "fieldname": "column_break_vimo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "checked_by",
+   "fieldtype": "Link",
+   "label": "Checked By",
+   "options": "User"
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "User"
+  },
+  {
+   "fieldname": "section_break_cork",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "informed_to_other_related",
+   "fieldtype": "Link",
+   "label": "Informed to other related ",
+   "options": "User"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-08-08 12:35:49.902735",
+ "modified_by": "Administrator",
+ "module": "Bartakke ERP",
+ "name": "ECN Generation Report",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

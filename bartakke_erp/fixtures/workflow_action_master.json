@@ -1,0 +1,128 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-03-04 12:37:59.191999",
+  "name": "Pending Quality Approval",
+  "workflow_action_name": "Pending Quality Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-03-05 13:01:40.305724",
+  "name": "WorkOrder Pending",
+  "workflow_action_name": "WorkOrder Pending"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-03-05 17:41:59.973070",
+  "name": "re-open",
+  "workflow_action_name": "re-open"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-03-05 17:45:09.254197",
+  "name": "Sent for modification",
+  "workflow_action_name": "Sent for modification"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-03-06 12:05:47.130238",
+  "name": "cancelled",
+  "workflow_action_name": "cancelled"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-06-08 17:09:16.540777",
+  "name": "Mark Won",
+  "workflow_action_name": "Mark Won"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-06-08 17:09:26.862046",
+  "name": "Mark Lost",
+  "workflow_action_name": "Mark Lost"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2025-09-05 09:00:42.584022",
+  "name": "Review",
+  "workflow_action_name": "Review"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-03-05 12:55:07.787361",
+  "name": "Submitted",
+  "workflow_action_name": "Submitted"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-07-09 16:20:25.155403",
+  "name": "Re-Work",
+  "workflow_action_name": "Re-Work"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-03-05 12:46:21.637268",
+  "name": "Submit",
+  "workflow_action_name": "Submit"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-03-05 17:47:04.756663",
+  "name": "Send for approval",
+  "workflow_action_name": "Send for approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-03-06 12:06:04.556788",
+  "name": "cancel",
+  "workflow_action_name": "cancel"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2025-12-16 15:56:54.910768",
+  "name": "Send to Review",
+  "workflow_action_name": "Send to Review"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-03-04 11:35:28.013383",
+  "name": "Issue Design",
+  "workflow_action_name": "Issue Design"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-03-04 11:35:46.032544",
+  "name": "Receive Design",
+  "workflow_action_name": "Receive Design"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2025-09-05 09:00:42.579991",
+  "name": "Reject",
+  "workflow_action_name": "Reject"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2025-09-05 09:00:42.577363",
+  "name": "Approve",
+  "workflow_action_name": "Approve"
+ }
+]
