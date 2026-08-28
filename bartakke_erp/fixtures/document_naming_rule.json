@@ -7,12 +7,12 @@
     "value": "Purchase"
    }
   ],
-  "counter": 217,
+  "counter": 223,
   "disabled": 0,
   "docstatus": 0,
   "doctype": "Document Naming Rule",
   "document_type": "Material Request",
-  "modified": "2026-08-26 08:38:29.835042",
+  "modified": "2026-08-28 10:35:48.091863",
   "name": "PR-.YY.-",
   "prefix": "PR-.YY.-",
   "prefix_digits": 4,
@@ -26,12 +26,12 @@
     "value": "Manufacture"
    }
   ],
-  "counter": 424,
+  "counter": 435,
   "disabled": 0,
   "docstatus": 0,
   "doctype": "Document Naming Rule",
   "document_type": "Material Request",
-  "modified": "2026-08-26 15:25:53.050932",
+  "modified": "2026-08-28 15:49:39.249876",
   "name": "IND-.YY.-",
   "prefix": "IND-.YY.-",
   "prefix_digits": 4,
@@ -45,12 +45,12 @@
     "value": "1"
    }
   ],
-  "counter": 328,
+  "counter": 333,
   "disabled": 0,
   "docstatus": 0,
   "doctype": "Document Naming Rule",
   "document_type": "Purchase Order",
-  "modified": "2026-08-26 14:58:35.677982",
+  "modified": "2026-08-28 15:06:37.476800",
   "name": "JWC-.",
   "prefix": "JWC-.",
   "prefix_digits": 4,
@@ -641,12 +641,12 @@
     "value": "Journal Entry"
    }
   ],
-  "counter": 130,
+  "counter": 135,
   "disabled": 0,
   "docstatus": 0,
   "doctype": "Document Naming Rule",
   "document_type": "Journal Entry",
-  "modified": "2026-08-18 17:41:22.579484",
+  "modified": "2026-08-28 10:05:51.272766",
   "name": "ACC-Journ-.YYYY.-",
   "prefix": "ACC-Journ-.YYYY.-",
   "prefix_digits": 5,

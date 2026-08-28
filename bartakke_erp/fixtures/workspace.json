@@ -1,5 +1,6 @@
 [
  {
+  "app": null,
   "charts": [],
   "content": "[{\"id\":\"fuMrCa8J-j\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"HR workspace\",\"col\":12}},{\"id\":\"Jr0k9scVOW\",\"type\":\"card\",\"data\":{\"card_name\":\"HR\",\"col\":4}},{\"id\":\"pr9AfXSghk\",\"type\":\"card\",\"data\":{\"card_name\":\"Hiring\",\"col\":4}},{\"id\":\"luJiyO_ZVZ\",\"type\":\"card\",\"data\":{\"card_name\":\"Master\",\"col\":4}},{\"id\":\"5y7kXAbazd\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"NFd_m3jzpv\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h3\\\"><b>Holiday</b></span>\",\"col\":12}},{\"id\":\"A1DNWhtNIq\",\"type\":\"card\",\"data\":{\"card_name\":\"Attendance \",\"col\":4}},{\"id\":\"g6jRZVlPd6\",\"type\":\"card\",\"data\":{\"card_name\":\"Leaves\",\"col\":4}},{\"id\":\"XUj0Ps0Cbv\",\"type\":\"card\",\"data\":{\"card_name\":\"Expense \",\"col\":4}}]",
   "custom_blocks": [
@@ -10,12 +11,15 @@
   ],
   "docstatus": 0,
   "doctype": "Workspace",
+  "external_link": null,
   "for_user": "",
   "hide_custom": 0,
   "icon": "share-people",
   "indicator_color": "",
   "is_hidden": 0,
   "label": "HR Workspace",
+  "link_to": null,
+  "link_type": null,
   "links": [
    {
     "dependencies": null,
@@ -430,6 +434,7 @@
   "type": "Workspace"
  },
  {
+  "app": null,
   "charts": [],
   "content": "[{\"id\":\"VR8uXKF0gQ\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Employee Portal\",\"col\":12}},{\"id\":\"ZShvNmxTTq\",\"type\":\"card\",\"data\":{\"card_name\":\"Employee Details \",\"col\":4}},{\"id\":\"lJwX_qU3vR\",\"type\":\"card\",\"data\":{\"card_name\":\"Recruitment\",\"col\":4}},{\"id\":\"fBHxHWzxIr\",\"type\":\"card\",\"data\":{\"card_name\":\"Employee Attendence \",\"col\":4}},{\"id\":\"hFXJdWPmaS\",\"type\":\"card\",\"data\":{\"card_name\":\"Leave & Expense \",\"col\":4}},{\"id\":\"tkneLfg5yC\",\"type\":\"card\",\"data\":{\"card_name\":\"Grievance\",\"col\":4}},{\"id\":\"7MBdqLJPlo\",\"type\":\"card\",\"data\":{\"card_name\":\"Task\",\"col\":4}}]",
   "custom_blocks": [
@@ -440,12 +445,15 @@
   ],
   "docstatus": 0,
   "doctype": "Workspace",
+  "external_link": null,
   "for_user": "",
   "hide_custom": 0,
   "icon": "color-rank",
   "indicator_color": "",
   "is_hidden": 0,
   "label": "Employee Portal",
+  "link_to": null,
+  "link_type": null,
   "links": [
    {
     "dependencies": null,
@@ -778,6 +786,7 @@
   "type": "Workspace"
  },
  {
+  "app": null,
   "charts": [],
   "content": "[{\"id\":\"t5TplIm4kd\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Sales workspace\",\"col\":12}},{\"id\":\"1m-1o3Sq9y\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h3\\\"><b>Sales Module</b></span>\",\"col\":12}},{\"id\":\"nGVvSpSPFj\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Quotation Item\",\"col\":3}},{\"id\":\"5DEYtO36R5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Accessories\",\"col\":3}},{\"id\":\"d-xPq2xULb\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Quotation\",\"col\":3}},{\"id\":\"S8IrQ--LM5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Indent\",\"col\":3}},{\"id\":\"Lq5k2eptLW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Order Acceptance\",\"col\":3}},{\"id\":\"j1bmuwbstx\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Delivery Note\",\"col\":3}},{\"id\":\"Y1bzJ0qQOe\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Tax Invoice\",\"col\":3}},{\"id\":\"ZcMTe9HRvN\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Commercial Invoice\",\"col\":3}},{\"id\":\"Ngwymvn7Ip\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Payment Entry\",\"col\":3}},{\"id\":\"lMBSmlNKsZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer\",\"col\":3}},{\"id\":\"XBWRCUxfWl\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Indent Item\",\"col\":3}},{\"id\":\"3rMV2VDD81\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Creation Request Form\",\"col\":3}},{\"id\":\"J3ZAmxv-wX\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Barcode Generation\",\"col\":3}},{\"id\":\"-1H82wROXk\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Order In Hand\",\"col\":3}},{\"id\":\"YurnFUI--V\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Invoice Report\",\"col\":3}},{\"id\":\"q0wKyM-4Pv\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Accounts Tax Invoice\",\"col\":3}},{\"id\":\"t9dVpAF4IU\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"U6I1vfbcA9\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b></b></span><span class=\\\"h3\\\"><b>Other Shortcuts</b></span><b></b>\",\"col\":12}},{\"id\":\"uCC-IgUqCu\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Terms and Conditions\",\"col\":4}},{\"id\":\"5fuBAHec-L\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Payment Terms Template\",\"col\":4}},{\"id\":\"E5Ak-tm7Zb\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Payment Term\",\"col\":4}},{\"id\":\"W10Dl-UcYH\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"eOq-qufM1D\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales Reports\",\"col\":4}},{\"id\":\"xRbeWGA7Bz\",\"type\":\"card\",\"data\":{\"card_name\":\"Export Documents\",\"col\":4}}]",
   "custom_blocks": [
@@ -788,12 +797,15 @@
   ],
   "docstatus": 0,
   "doctype": "Workspace",
+  "external_link": null,
   "for_user": "",
   "hide_custom": 0,
   "icon": "tag",
   "indicator_color": "",
   "is_hidden": 0,
   "label": "Sales Module",
+  "link_to": null,
+  "link_type": null,
   "links": [
    {
     "dependencies": null,
@@ -1250,6 +1262,7 @@
   "type": "Workspace"
  },
  {
+  "app": null,
   "charts": [],
   "content": "[{\"id\":\"_S8DfNNwqo\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Purchase Block\",\"col\":12}},{\"id\":\"rpabsCK23v\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h3\\\"><b>Purchase Module</b></span>\",\"col\":12}},{\"id\":\"3uZUXt1sNr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Request\",\"col\":3}},{\"id\":\"BpQ8nhwsQP\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Request for Quotation\",\"col\":3}},{\"id\":\"u7UF0wWz93\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Supplier Quotation\",\"col\":3}},{\"id\":\"1nvfaUzRqY\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Order\",\"col\":3}},{\"id\":\"hZhMyfPIeN\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Supplier\",\"col\":3}},{\"id\":\"8o-qf2x99c\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"GRN\",\"col\":3}},{\"id\":\"B-kinlTlQB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Scrap Challan\",\"col\":3}},{\"id\":\"9o_ePHhLJd\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Scrap Invoice\",\"col\":3}},{\"id\":\"LnVYeTcgEi\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Invoice\",\"col\":3}},{\"id\":\"7yZnAt1L3z\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}},{\"id\":\"QZskbtDmhw\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Debit Note\",\"col\":3}},{\"id\":\"ohPyU73uVH\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"47_SJydRVU\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h3\\\"><b>Other Shortcuts</b></span>\",\"col\":12}},{\"id\":\"DvkmaECPVe\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Terms and Conditions\",\"col\":4}},{\"id\":\"0HUcj4bD_0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Payment Terms Template\",\"col\":4}},{\"id\":\"2qmFgVr00r\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Payment Term\",\"col\":4}},{\"id\":\"y5m21XxZTG\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Ko0WQpcOB2\",\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h3\\\"><b>Reports</b></span>\",\"col\":12}},{\"id\":\"27QubkXJkl\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"PO Register Report\",\"col\":3}},{\"id\":\"aihwVzlRMf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Scrap Invoice Report\",\"col\":3}}]",
   "custom_blocks": [
@@ -1260,12 +1273,15 @@
   ],
   "docstatus": 0,
   "doctype": "Workspace",
+  "external_link": null,
   "for_user": "",
   "hide_custom": 0,
   "icon": "color-review-points",
   "indicator_color": "",
   "is_hidden": 0,
   "label": "Purchase Module",
+  "link_to": null,
+  "link_type": null,
   "links": [],
   "modified": "2026-08-10 16:16:58.180031",
   "module": null,
@@ -1514,6 +1530,7 @@
   "type": "Workspace"
  },
  {
+  "app": null,
   "charts": [
    {
     "chart_name": "Warehouse wise Stock Value",
@@ -1529,12 +1546,15 @@
   ],
   "docstatus": 0,
   "doctype": "Workspace",
+  "external_link": null,
   "for_user": "",
   "hide_custom": 0,
   "icon": "color-energy-points",
   "indicator_color": "",
   "is_hidden": 0,
   "label": "Store Module",
+  "link_to": null,
+  "link_type": null,
   "links": [
    {
     "dependencies": null,
@@ -2040,6 +2060,7 @@
   "type": "Workspace"
  },
  {
+  "app": null,
   "charts": [],
   "content": "[{\"id\":\"lQKEtO3z-H\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Manufacturing Block\",\"col\":12}},{\"id\":\"PT2ZTPgtzH\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h3\\\"><b>Item</b></span>\",\"col\":12}},{\"id\":\"m5B47-niF1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"STANDARD ITEM\",\"col\":3}},{\"id\":\"xL01PjDNab\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"SPECIALISED ITEM\",\"col\":3}},{\"id\":\"TO56UQB2CL\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"CUT-OUT ITEM\",\"col\":3}},{\"id\":\"a8CMdkI_AW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Store Item\",\"col\":3}},{\"id\":\"0vkCXD_YYz\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 20px;\\\"><b>BOM</b></span>\",\"col\":12}},{\"id\":\"tH5Sm7MxcR\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"(SBA) BOM\",\"col\":3}},{\"id\":\"32i-LhK450\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"(ASS) BOM\",\"col\":3}},{\"id\":\"iLpYPrx28U\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"(GA) BOM\",\"col\":3}},{\"id\":\"0u9Z0qrvof\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"(CAT) BOM\",\"col\":3}},{\"id\":\"scAIXJnaW4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"(C Code) BOM\",\"col\":3}},{\"id\":\"EHakCJlHGs\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Word Replace\",\"col\":3}},{\"id\":\"VargZ-9yXR\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Search & Replace\",\"col\":3}},{\"id\":\"FPzpSu4okV\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Drawing Upload</b></span>\",\"col\":12}},{\"id\":\"PTbEVT3_JR\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Drawing Upload\",\"col\":3}},{\"id\":\"2pv4u9qO3Y\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"BT ERP BOM TOOL\",\"col\":3}},{\"id\":\"yXX383YLvw\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pdf And Dxf File Settings\",\"col\":3}},{\"id\":\"rTzhwtY6PY\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"PDF Upload\",\"col\":3}},{\"id\":\"BnUAJzJWPE\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Transaction</b></span>\",\"col\":12}},{\"id\":\"oLvqpa3vkI\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Work Order\",\"col\":3}},{\"id\":\"9Ep9vzQWx5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"WORK ORDER LIST\",\"col\":3}},{\"id\":\"YxX786z31B\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"WorkOrder Planning Sheet\",\"col\":3}},{\"id\":\"heC_c-Fz6c\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Creation Request Form\",\"col\":3}},{\"id\":\"eKdllgJQ8H\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Report</b></span>\",\"col\":12}},{\"id\":\"uZ0rV3psOF\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}},{\"id\":\"HANi0TJ7D2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"ECN Report\",\"col\":3}}]",
   "custom_blocks": [
@@ -2050,12 +2071,15 @@
   ],
   "docstatus": 0,
   "doctype": "Workspace",
+  "external_link": null,
   "for_user": "",
   "hide_custom": 0,
   "icon": "organization",
   "indicator_color": "",
   "is_hidden": 0,
   "label": "Manufacturing module",
+  "link_to": null,
+  "link_type": null,
   "links": [
    {
     "dependencies": null,
@@ -2478,6 +2502,7 @@
   "type": "Workspace"
  },
  {
+  "app": null,
   "charts": [],
   "content": "[{\"id\":\"_whz1AQjsh\",\"type\":\"header\",\"data\":{\"text\":\"<br>\",\"col\":12}},{\"id\":\"4BvMNrXEsR\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Accounts\",\"col\":12}},{\"id\":\"ToOBXLOxhC\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"6jf-yD22hz\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Shortcuts</b></span>\",\"col\":12}},{\"id\":\"QN3sL0z5Jp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Tax Invoice\",\"col\":3}},{\"id\":\"EspiXYYhcU\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Invoice\",\"col\":3}},{\"id\":\"LkDYgvoPu3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Payment Entry\",\"col\":3}}]",
   "custom_blocks": [
@@ -2488,12 +2513,15 @@
   ],
   "docstatus": 0,
   "doctype": "Workspace",
+  "external_link": null,
   "for_user": "",
   "hide_custom": 0,
   "icon": "expenses",
   "indicator_color": "",
   "is_hidden": 0,
   "label": "Accounting Module",
+  "link_to": null,
+  "link_type": null,
   "links": [],
   "modified": "2026-07-02 15:41:11.319920",
   "module": null,
@@ -2553,17 +2581,21 @@
   "type": "Workspace"
  },
  {
+  "app": null,
   "charts": [],
   "content": "[{\"id\":\"KGrLRl7b77\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Admin</span>\",\"col\":12}},{\"id\":\"WKVHtBUPX9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pending Tax invoice\",\"col\":3}},{\"id\":\"nuEUuNuulF\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Order\",\"col\":3}},{\"id\":\"6iD8oZ81By\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Request\",\"col\":3}}]",
   "custom_blocks": [],
   "docstatus": 0,
   "doctype": "Workspace",
+  "external_link": null,
   "for_user": "",
   "hide_custom": 0,
   "icon": "",
   "indicator_color": "",
   "is_hidden": 0,
   "label": "Admin",
+  "link_to": null,
+  "link_type": null,
   "links": [],
   "modified": "2026-07-30 15:10:27.473762",
   "module": null,
@@ -2627,6 +2659,7 @@
   "type": "Workspace"
  },
  {
+  "app": null,
   "charts": [],
   "content": "[{\"id\":\"1YAYD9_jLP\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Production Planning\",\"col\":12}},{\"id\":\"PCZkQwuBeo\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Indent\",\"col\":4}},{\"id\":\"ax4r_qucWk\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Design Issued\",\"col\":4}},{\"id\":\"QUXKGiQFSz\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Work Order List\",\"col\":4}},{\"id\":\"WBFUaRinHY\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Pending Issue to Shop\",\"col\":4}},{\"id\":\"OG53Yhk_dU\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Issue to Shop\",\"col\":4}},{\"id\":\"5_7eGwl4ol\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Ready For Dispatch\",\"col\":4}},{\"id\":\"ZhgA7gCeHX\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Dispatched\",\"col\":4}},{\"id\":\"eAzzDk0Dyv\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Work Order Tracking\",\"col\":4}},{\"id\":\"HItaUza28q\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Planning Sheet\",\"col\":3}}]",
   "custom_blocks": [
@@ -2637,12 +2670,15 @@
   ],
   "docstatus": 0,
   "doctype": "Workspace",
+  "external_link": null,
   "for_user": "",
   "hide_custom": 0,
   "icon": null,
   "indicator_color": "green",
   "is_hidden": 0,
   "label": "Production Planning Workspace",
+  "link_to": null,
+  "link_type": null,
   "links": [],
   "modified": "2026-07-02 15:41:11.348663",
   "module": null,

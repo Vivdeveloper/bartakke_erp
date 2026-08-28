@@ -3,6 +3,7 @@
   "docstatus": 0,
   "doctype": "Workflow",
   "document_type": "Quotation",
+  "enable_action_confirmation": 0,
   "is_active": 1,
   "modified": "2026-06-08 17:10:42.681395",
   "name": "Quotation",
@@ -13,6 +14,7 @@
     "allow_edit": "All",
     "avoid_status_override": 0,
     "doc_status": "0",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -26,6 +28,7 @@
     "allow_edit": "All",
     "avoid_status_override": 0,
     "doc_status": "0",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -39,6 +42,7 @@
     "allow_edit": "All",
     "avoid_status_override": 0,
     "doc_status": "0",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -58,6 +62,7 @@
     "next_state": "Won",
     "send_email_to_creator": 0,
     "state": "open",
+    "transition_tasks": null,
     "workflow_builder_id": null
    },
    {
@@ -68,6 +73,7 @@
     "next_state": "Lost",
     "send_email_to_creator": 0,
     "state": "open",
+    "transition_tasks": null,
     "workflow_builder_id": null
    },
    {
@@ -78,6 +84,7 @@
     "next_state": "open",
     "send_email_to_creator": 0,
     "state": "Won",
+    "transition_tasks": null,
     "workflow_builder_id": null
    },
    {
@@ -88,6 +95,7 @@
     "next_state": "open",
     "send_email_to_creator": 0,
     "state": "Lost",
+    "transition_tasks": null,
     "workflow_builder_id": null
    }
   ],
@@ -99,6 +107,7 @@
   "docstatus": 0,
   "doctype": "Workflow",
   "document_type": "Sales Invoice",
+  "enable_action_confirmation": 0,
   "is_active": 1,
   "modified": "2026-07-09 16:20:48.303709",
   "name": "Tax Inovice approval",
@@ -109,6 +118,7 @@
     "allow_edit": "Sales User",
     "avoid_status_override": 0,
     "doc_status": "0",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -122,6 +132,7 @@
     "allow_edit": "Sales User",
     "avoid_status_override": 0,
     "doc_status": "0",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -135,6 +146,7 @@
     "allow_edit": "Document approver",
     "avoid_status_override": 0,
     "doc_status": "0",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -148,6 +160,7 @@
     "allow_edit": "Document approver",
     "avoid_status_override": 0,
     "doc_status": "1",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -161,6 +174,7 @@
     "allow_edit": "Sales User",
     "avoid_status_override": 0,
     "doc_status": "2",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -180,6 +194,7 @@
     "next_state": "Send For Approval",
     "send_email_to_creator": 0,
     "state": "Draft",
+    "transition_tasks": null,
     "workflow_builder_id": null
    },
    {
@@ -190,6 +205,7 @@
     "next_state": "Approved",
     "send_email_to_creator": 0,
     "state": "Send For Approval",
+    "transition_tasks": null,
     "workflow_builder_id": null
    },
    {
@@ -200,6 +216,7 @@
     "next_state": "Rejected",
     "send_email_to_creator": 0,
     "state": "Send For Approval",
+    "transition_tasks": null,
     "workflow_builder_id": null
    },
    {
@@ -210,6 +227,7 @@
     "next_state": "Draft",
     "send_email_to_creator": 0,
     "state": "Rejected",
+    "transition_tasks": null,
     "workflow_builder_id": null
    }
   ],
@@ -221,6 +239,7 @@
   "docstatus": 0,
   "doctype": "Workflow",
   "document_type": "Purchase Order",
+  "enable_action_confirmation": 0,
   "is_active": 1,
   "modified": "2026-07-14 14:01:21.400423",
   "name": "Purchase order approval",
@@ -231,6 +250,7 @@
     "allow_edit": "Purchase User",
     "avoid_status_override": 0,
     "doc_status": "0",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -244,6 +264,7 @@
     "allow_edit": "Purchase User",
     "avoid_status_override": 0,
     "doc_status": "0",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -257,6 +278,7 @@
     "allow_edit": "Purchase User",
     "avoid_status_override": 0,
     "doc_status": "0",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -270,6 +292,7 @@
     "allow_edit": "Purchase User",
     "avoid_status_override": 0,
     "doc_status": "1",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -283,6 +306,7 @@
     "allow_edit": "Purchase User",
     "avoid_status_override": 0,
     "doc_status": "2",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -302,6 +326,7 @@
     "next_state": "Pending",
     "send_email_to_creator": 0,
     "state": "Draft",
+    "transition_tasks": null,
     "workflow_builder_id": null
    },
    {
@@ -312,6 +337,7 @@
     "next_state": "Approved",
     "send_email_to_creator": 0,
     "state": "Pending",
+    "transition_tasks": null,
     "workflow_builder_id": null
    },
    {
@@ -322,6 +348,7 @@
     "next_state": "Rejected",
     "send_email_to_creator": 0,
     "state": "Pending",
+    "transition_tasks": null,
     "workflow_builder_id": null
    },
    {
@@ -332,6 +359,7 @@
     "next_state": "Draft",
     "send_email_to_creator": 0,
     "state": "Rejected",
+    "transition_tasks": null,
     "workflow_builder_id": null
    },
    {
@@ -342,6 +370,7 @@
     "next_state": "cancelled",
     "send_email_to_creator": 0,
     "state": "Approved",
+    "transition_tasks": null,
     "workflow_builder_id": null
    }
   ],
@@ -353,6 +382,7 @@
   "docstatus": 0,
   "doctype": "Workflow",
   "document_type": "Material Request",
+  "enable_action_confirmation": 0,
   "is_active": 1,
   "modified": "2026-07-22 16:17:09.755038",
   "name": "purchase request",
@@ -363,6 +393,7 @@
     "allow_edit": "All",
     "avoid_status_override": 0,
     "doc_status": "0",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -376,6 +407,7 @@
     "allow_edit": "All",
     "avoid_status_override": 0,
     "doc_status": "0",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -389,6 +421,7 @@
     "allow_edit": "All",
     "avoid_status_override": 0,
     "doc_status": "1",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -402,6 +435,7 @@
     "allow_edit": "All",
     "avoid_status_override": 0,
     "doc_status": "0",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -415,6 +449,7 @@
     "allow_edit": "All",
     "avoid_status_override": 0,
     "doc_status": "2",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -428,6 +463,7 @@
     "allow_edit": "Planning",
     "avoid_status_override": 0,
     "doc_status": "0",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -441,6 +477,7 @@
     "allow_edit": "All",
     "avoid_status_override": 0,
     "doc_status": "1",
+    "evaluate_as_expression": 0,
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -460,6 +497,7 @@
     "next_state": "Sent for Approval",
     "send_email_to_creator": 0,
     "state": "Draft",
+    "transition_tasks": null,
     "workflow_builder_id": null
    },
    {
@@ -470,6 +508,7 @@
     "next_state": "Approved",
     "send_email_to_creator": 0,
     "state": "Sent for Approval",
+    "transition_tasks": null,
     "workflow_builder_id": null
    },
    {
@@ -480,6 +519,7 @@
     "next_state": "Rejected",
     "send_email_to_creator": 0,
     "state": "Sent for Approval",
+    "transition_tasks": null,
     "workflow_builder_id": null
    },
    {
@@ -490,6 +530,7 @@
     "next_state": "Design Issued",
     "send_email_to_creator": 0,
     "state": "Draft",
+    "transition_tasks": null,
     "workflow_builder_id": null
    },
    {
@@ -500,6 +541,7 @@
     "next_state": "submitted",
     "send_email_to_creator": 0,
     "state": "Design Issued",
+    "transition_tasks": null,
     "workflow_builder_id": null
    }
   ],
