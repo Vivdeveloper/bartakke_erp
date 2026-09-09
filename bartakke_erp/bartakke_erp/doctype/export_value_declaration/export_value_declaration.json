@@ -3,6 +3,7 @@
  "autoname": "naming_series:",
  "creation": "2025-12-19 12:20:21.916238",
  "custom": 1,
+ "default_print_format": "Export Valuation Declaration1",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -33,7 +34,6 @@
   "payment_terms_template",
   "payment_schedule",
   "terms",
-  "terms_and_conditions_details",
   "previous_exports_of_identical__similar_goods_if_any_section",
   "shipping_bill_no_copy",
   "column_break_cgqz",
@@ -194,13 +194,7 @@
    "fieldname": "terms",
    "fieldtype": "Link",
    "label": "Terms",
-   "options": "Terms and Conditions"
-  },
-  {
-   "fieldname": "terms_and_conditions_details",
-   "fieldtype": "Text Editor",
-   "hidden": 1,
-   "label": "Terms and Conditions Details"
+   "options": "Incoterm"
   },
   {
    "fieldname": "previous_exports_of_identical__similar_goods_if_any_section",
@@ -256,7 +250,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-19 10:31:52.244361",
+ "modified": "2026-08-24 10:54:27.431032",
  "modified_by": "Administrator",
  "module": "Bartakke ERP",
  "name": "Export Value Declaration",

@@ -10,11 +10,12 @@
  "field_order": [
   "customer",
   "consignee_address",
+  "contact_no",
   "to",
   "to_address",
+  "contact_noto",
   "mode_of_dispatch",
   "nature_of_payment",
-  "nature_of_shipping_bill",
   "terms_of_delivery"
  ],
  "fields": [
@@ -31,6 +32,11 @@
    "label": "Consignee Address"
   },
   {
+   "fieldname": "contact_no",
+   "fieldtype": "Data",
+   "label": "Contact No"
+  },
+  {
    "fieldname": "to",
    "fieldtype": "Link",
    "label": "To",
@@ -43,33 +49,33 @@
    "label": "To Address"
   },
   {
+   "fieldname": "contact_noto",
+   "fieldtype": "Data",
+   "label": "Contact No(To)"
+  },
+  {
    "fieldname": "mode_of_dispatch",
    "fieldtype": "Select",
    "label": "Mode Of Dispatch",
-   "options": "\nBy Air\nBy Ship\nBy Road"
+   "options": "\nBy Air\nBy Sea\nBy Road"
   },
   {
    "fieldname": "nature_of_payment",
    "fieldtype": "Link",
    "label": "Nature Of Payment",
-   "options": "Nature of Payment"
-  },
-  {
-   "fieldname": "nature_of_shipping_bill",
-   "fieldtype": "Select",
-   "label": "Nature Of Shipping Bill",
-   "options": "\nNFEI/DFREE/DEPB/D/BK/\n100% EOU\nDFRC8"
+   "options": "Payment Term"
   },
   {
    "fieldname": "terms_of_delivery",
-   "fieldtype": "Small Text",
-   "label": "Terms Of Delivery"
+   "fieldtype": "Link",
+   "label": "Terms Of Delivery",
+   "options": "Incoterm"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-19 12:38:15.064345",
+ "modified": "2026-08-26 16:04:44.568303",
  "modified_by": "Administrator",
  "module": "Bartakke ERP",
  "name": "SHIPPERS LETTER OF INSTRUCTION",
