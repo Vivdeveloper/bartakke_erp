@@ -25,6 +25,25 @@ def _item_full_drawing_number(doc):
 
 def validate(doc, method=None):
     item_drawing(doc)
+    _validate_full_drawing_number_unique(doc)
+
+
+def _validate_full_drawing_number_unique(doc):
+    """Full Drawing Number must not repeat across Items."""
+    full = _item_full_drawing_number(doc) or cstr(doc.get("custom_full_drawing_number_") or "").strip()
+    if not full:
+        return
+
+    other_item = frappe.db.get_value(
+        "Item", {"name": ["!=", doc.get("name") or ""], "custom_full_drawing_number_": full}, "name"
+    )
+    if other_item:
+        frappe.throw(
+            _("Full Drawing Number {0} is already used by Item {1}. Full Drawing Number must be unique.").format(
+                frappe.bold(full), frappe.bold(other_item)
+            ),
+            title=_("Duplicate Full Drawing Number"),
+        )
 
 def after_insert(doc, method=None):
     create_drawing(doc)

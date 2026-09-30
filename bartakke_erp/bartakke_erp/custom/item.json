@@ -1575,7 +1575,7 @@
    "length": 0,
    "link_filters": null,
    "mandatory_depends_on": null,
-   "modified": "2026-04-07 17:19:36.201932",
+   "modified": "2026-09-30 12:00:00.000000",
    "modified_by": "Administrator",
    "module": null,
    "name": "Item-custom_full_drawing_number_",
@@ -1597,7 +1597,7 @@
    "show_dashboard": 0,
    "sort_options": 0,
    "translatable": 0,
-   "unique": 0,
+   "unique": 1,
    "width": null
   },
   {
