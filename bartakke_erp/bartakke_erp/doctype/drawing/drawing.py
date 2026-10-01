@@ -289,43 +289,25 @@ class Drawing(Document):
         self._validate_parent_revision_digits()
         self._stamp_canonical_revision_metadata()
 
-    def _validate_duplicate_sf_drawing_number_sheet(self):
-        """One Drawing per (sf_code, drawing_number, sheet); sheet blank matches blank only."""
+    def _validate_duplicate_full_drawing_number(self):
+        """Only the full id ({sf}-{drawing_number}-{revision}[/sheet]) must be unique."""
         if self._integration_hooks_skipped():
             return
-        sf = cstr(self.sf_code or "").strip()
-        dn = cstr(self.drawing_number or "").strip()
-        if not sf or not dn:
+        if not cstr(self.sf_code or "").strip() or not cstr(self.drawing_number or "").strip():
             return
-        sh = _norm_sheet_drawing(self.sheet)
-
-        filters = {"sf_code": sf, "drawing_number": dn}
-        if self.name:
-            filters["name"] = ["!=", self.name]
-
-        for row in frappe.get_all(
-            "Drawing",
-            filters=filters,
-            fields=["name", "item_code", "sheet"],
-        ):
-            if _norm_sheet_drawing(row.get("sheet")) != sh:
-                continue
-            frappe.throw(
-                _(
-                    "Duplicate Drawing: SF Code {0}, Drawing Number {1}, and Sheet {2} already exist on {3} "
-                    "(Item Code {4})."
-                ).format(
-                    frappe.bold(sf),
-                    frappe.bold(dn),
-                    frappe.bold(sh or _("(blank)")),
-                    frappe.bold(row.name),
-                    frappe.bold(cstr(row.get("item_code") or "").strip() or _("(not set)")),
-                ),
-                title=_("Duplicate Drawing"),
-            )
+        full = self._drawing_revision_id()
+        if full == self.name or not frappe.db.exists("Drawing", full):
+            return
+        frappe.throw(
+            _("Duplicate Drawing: Full Drawing Number {0} already exists (Item Code {1}).").format(
+                frappe.bold(full),
+                frappe.bold(cstr(frappe.db.get_value("Drawing", full, "item_code") or "").strip() or _("(not set)")),
+            ),
+            title=_("Duplicate Drawing"),
+        )
 
     def validate(self):
-        self._validate_duplicate_sf_drawing_number_sheet()
+        self._validate_duplicate_full_drawing_number()
 
     def _push_revision_to_item(self):
         """Keep Item.custom_revision and Item.custom_sheet in sync with this Drawing."""

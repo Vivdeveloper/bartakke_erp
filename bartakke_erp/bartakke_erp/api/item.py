@@ -24,19 +24,21 @@ def _item_full_drawing_number(doc):
 
 
 def validate(doc, method=None):
-    item_drawing(doc)
     _validate_full_drawing_number_unique(doc)
 
 
 def _validate_full_drawing_number_unique(doc):
-    """Full Drawing Number must not repeat across Items."""
+    """Full Drawing Number must not repeat across Items/Drawings (Drawing No alone may repeat)."""
     full = _item_full_drawing_number(doc) or cstr(doc.get("custom_full_drawing_number_") or "").strip()
     if not full:
         return
 
+    item_code = doc.get("name") or ""
     other_item = frappe.db.get_value(
-        "Item", {"name": ["!=", doc.get("name") or ""], "custom_full_drawing_number_": full}, "name"
+        "Item", {"name": ["!=", item_code], "custom_full_drawing_number_": full}, "name"
     )
+    if not other_item:
+        other_item = frappe.db.get_value("Drawing", {"name": full, "item_code": ["!=", item_code]}, "item_code")
     if other_item:
         frappe.throw(
             _("Full Drawing Number {0} is already used by Item {1}. Full Drawing Number must be unique.").format(
@@ -55,107 +57,6 @@ def before_save(doc, method=None):
         ensure_drawing_for_item(doc)
         sync_full_drawing_number(doc)
     rename_item(doc)
-
-def _validate_drawing_no_unique(item_code, dn):
-    """Drawing No alone (independent of SF Code) must not repeat across Items/Drawings."""
-    other_item = frappe.db.get_value(
-        "Item", {"name": ["!=", item_code], "custom_drawing_no": dn}, "name"
-    )
-    if other_item:
-        frappe.throw(
-            _("Drawing No {0} is already used by Item {1}. Drawing No must be unique.").format(
-                frappe.bold(dn), frappe.bold(other_item)
-            ),
-            title=_("Duplicate Drawing No"),
-        )
-
-    other_drawing = frappe.db.get_value(
-        "Drawing", {"item_code": ["!=", item_code], "drawing_number": dn}, "name"
-    )
-    if other_drawing:
-        frappe.throw(
-            _("Drawing No {0} is already used by Drawing {1}. Drawing No must be unique.").format(
-                frappe.bold(dn), frappe.bold(other_drawing)
-            ),
-            title=_("Duplicate Drawing No"),
-        )
-
-
-def item_drawing(doc):
-    """Drawing No must be unique on its own when entered on a new Item, regardless of SF Code.
-    Additionally, if custom_sf_code + custom_drawing_no are both set: check Drawing and other
-    Item for same SF, drawing number, and sheet."""
-    dn = cstr(doc.get("custom_drawing_no") or "").strip()
-    if not dn:
-        return
-
-    item_code = doc.get("name")
-    if not item_code:
-        return
-
-    if doc.is_new():
-        _validate_drawing_no_unique(item_code, dn)
-
-    sf = cstr(doc.get("custom_sf_code") or "").strip()
-    if not sf:
-        return
-
-    sh = cstr(doc.get("custom_sheet") or "").strip()
-
-    errors = []
-    drawing_owner = None
-
-    for dr in frappe.get_all(
-        "Drawing",
-        filters={"sf_code": sf, "drawing_number": dn},
-        fields=["name", "item_code", "sheet"],
-    ):
-        if cstr(dr.get("sheet") or "").strip() != sh:
-            continue
-        owner = dr.get("item_code")
-        if owner and owner != item_code:
-            drawing_owner = owner
-            errors.append(
-                _(
-                    "A Drawing ({0}) already exists for SF Code {1}, Drawing Number {2}, and Sheet {3}, linked to Item {4}."
-                ).format(
-                    frappe.bold(dr.get("name")),
-                    frappe.bold(sf),
-                    frappe.bold(dn),
-                    frappe.bold(sh or _("(blank)")),
-                    frappe.bold(owner),
-                )
-            )
-            break
-
-    other_item = None
-    for it in frappe.get_all(
-        "Item",
-        filters={"name": ["!=", item_code], "custom_sf_code": sf, "custom_drawing_no": dn},
-        fields=["name", "custom_sheet"],
-    ):
-        if cstr(it.get("custom_sheet") or "").strip() != sh:
-            continue
-        other_item = it.get("name")
-        break
-
-    if other_item and not (drawing_owner and other_item == drawing_owner):
-        errors.append(
-            _(
-                "Another Item ({0}) already uses SF Code {1}, Drawing Number {2}, and Sheet {3}."
-            ).format(
-                frappe.bold(other_item),
-                frappe.bold(sf),
-                frappe.bold(dn),
-                frappe.bold(sh or _("(blank)")),
-            )
-        )
-
-    if errors:
-        frappe.throw(
-            "\n\n".join(errors),
-            title=_("Duplicate SF Code / Drawing Number / Sheet"),
-        )
 
 def create_drawing(doc):
     if not frappe.db.exists("Drawing", {'item_code': doc.get('name')}) and doc.get('custom_sf_code') and doc.get('custom_drawing_no'):

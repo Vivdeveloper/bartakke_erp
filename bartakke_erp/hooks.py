@@ -151,9 +151,8 @@ fixtures = [
 			["module", "in", ["", None]],
 		],
 	},
-	{
-		"doctype": "Document Naming Rule",
-	},
+	# Document Naming Rule is intentionally NOT a fixture: its live `counter` would be
+	# overwritten with the exported value on every migrate, resetting naming series.
 	{
 		"doctype": "Role",
 		"filters": [
