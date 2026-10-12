@@ -239,8 +239,36 @@ def get_revision(doc):
         sync_full_drawing_number(item_doc)
         item_doc.flags.ignore_validate = True
         item_doc.save(ignore_permissions=True)
+        sync_bom_drawing_numbers(item_doc.name)
 
     return new_revision
+
+
+# (doctype, item field, drawing field) for every BOM table that shows the Item's
+# full drawing number. Drawing rename only rewrites rows still holding the exact
+# old name, so rows that were already stale (or Data fields, which rename never
+# touches) kept the old revision — re-sync them here by item code instead.
+BOM_DRAWING_FIELDS = (
+    ("BOM", "item", "custom_drawing_number"),
+    ("BOM Item", "item_code", "custom_drawing_number"),
+    ("BOM Assembly Item", "item_code", "drawing_no"),
+    ("BOM Sub Assembly Item", "item_code", "drawing_no"),
+)
+
+
+def sync_bom_drawing_numbers(item_code):
+    full = frappe.db.get_value("Item", item_code, "custom_full_drawing_number_")
+    if not full:
+        return
+
+    for doctype, item_field, drawing_field in BOM_DRAWING_FIELDS:
+        table = frappe.qb.DocType(doctype)
+        (
+            frappe.qb.update(table)
+            .set(table[drawing_field], full)
+            .where(table[item_field] == item_code)
+            .where(table[drawing_field].isnull() | (table[drawing_field] != full))
+        ).run()
 
 def autoname(doc, method=None):
     if doc.custom_parent_item_group not in DIMENSIONAL_ITEM_GROUPS:

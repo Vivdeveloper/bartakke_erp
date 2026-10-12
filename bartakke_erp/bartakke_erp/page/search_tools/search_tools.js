@@ -177,7 +177,9 @@ bartakke_erp.pages.SearchToolsPage = class SearchToolsPage {
 
 				return `<tr>
 					<td>${idx + 1}</td>
-					<td class="ellipsis" title="${esc(row.item_name || "")}">${esc(row.item_name || "")}</td>
+					<td class="ellipsis" title="${esc(row.item_name || "")}">
+						<a href="${esc(frappe.utils.get_form_link("Item", row.item_code))}" target="_blank" rel="noopener">${esc(row.item_name || row.item_code)}</a>
+					</td>
 					<td>${esc(row.custom_material || "")}</td>
 					<td>${esc(row.custom_sf_code || "")}</td>
 					<td>${esc(row.custom_drawing_no || "")}</td>
