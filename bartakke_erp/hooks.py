@@ -270,6 +270,10 @@ fixtures = [
 #     "Subcontracting Receipt": "bartakke_erp.bartakke_erp.overrides.subcontracting_receipt.OverrideSubcontractingReceipt",
 # }
 
+override_doctype_class = {
+	"Salary Slip": "bartakke_erp.bartakke_erp.overrides.salary_slip.OverrideSalarySlip",
+}
+
 # Document Events
 # ---------------
 # Hook on document methods and events
