@@ -1,6 +1,6 @@
 import frappe
 from frappe.utils import add_days, date_diff, flt, getdate
-from hrms.payroll.doctype.salary_slip.salary_slip import SalarySlip, verify_lwp_days_corrected
+from hrms.payroll.doctype.salary_slip.salary_slip import SalarySlip
 
 # Salary Structure Assignment amounts of "exclude holidays" structures (BEPL-Wages)
 # are monthly figures for a 26 working-day month, i.e. per-day wage = amount / 26.
@@ -32,10 +32,9 @@ class OverrideSalarySlip(SalarySlip):
 			and frappe.get_cached_value("Salary Structure", self.salary_structure, "custom_exclude_holidays")
 		)
 
-	def get_working_days_details(self, lwp=None, for_preview=0, lwp_days_corrected=None):
-		super().get_working_days_details(
-			lwp=lwp, for_preview=for_preview, lwp_days_corrected=lwp_days_corrected
-		)
+	def get_working_days_details(self, lwp=None, for_preview=0, **kwargs):
+		# kwargs: lwp_days_corrected, only passed by HRMS v16
+		super().get_working_days_details(lwp=lwp, for_preview=for_preview, **kwargs)
 		if for_preview or not self.excludes_holidays():
 			return
 
@@ -46,12 +45,12 @@ class OverrideSalarySlip(SalarySlip):
 		if frappe.db.get_single_value("Payroll Settings", "payroll_based_on") == "Attendance":
 			payment_days -= flt(self.absent_days)
 
-		if (
-			lwp_days_corrected
-			and lwp_days_corrected > 0
-			and verify_lwp_days_corrected(self.employee, self.start_date, self.end_date, lwp_days_corrected)
-		):
-			payment_days += lwp_days_corrected
+		lwp_days_corrected = kwargs.get("lwp_days_corrected")
+		if lwp_days_corrected and lwp_days_corrected > 0:
+			from hrms.payroll.doctype.salary_slip.salary_slip import verify_lwp_days_corrected
+
+			if verify_lwp_days_corrected(self.employee, self.start_date, self.end_date, lwp_days_corrected):
+				payment_days += lwp_days_corrected
 
 		self.total_working_days = count_working_days(self.start_date, self.end_date)
 		self.payment_days = max(payment_days, 0)
